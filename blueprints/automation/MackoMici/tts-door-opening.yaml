@@ -1,0 +1,120 @@
+blueprint:
+  name: TTS on door opening with persons at home
+  description: Sends TTS message to a media_player when door is oppened with the person
+    at home
+  domain: automation
+  input:
+    door_sensor:
+      name: Door sensor
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: door
+    persons:
+      name: Persons
+      selector:
+        entity:
+          domain: person
+    minutes:
+      name: Minutes
+      description: Minutes between person at home and door trigged
+      default: 5
+      selector:
+        number:
+          min: 1.0
+          max: 30.0
+          step: 1.0
+          unit_of_measurement: min
+          mode: slider
+    delay:
+      name: Delay
+      description: Várakozás az üzenet lejátszása előtt
+      default: 30
+      selector:
+        number:
+          min: 1.0
+          max: 60.0
+          step: 1.0
+          unit_of_measurement: sec
+          mode: slider
+    message-single:
+      name: Message single person
+      description: Message to salute single person. One possible message per line.
+        Use <person> tag to be replaced by person name.
+      selector:
+        text:
+          multiline: true
+    message-multiple:
+      name: Message multiple persons
+      description: Message multiple persons. One possible message per line. Use <persons>
+        tag to be replaced by person name.
+      selector:
+        text:
+          multiline: true
+    persons-concat:
+      name: Text to concatenate the persons name
+      description: String to be used as concatenate between names
+      default: ' and '
+      selector:
+        text:
+          multiline: false
+    target:
+      name: Target devices
+      description: Target devices to play the TTS message
+      selector:
+        entity:
+          domain: media_player
+    condition:
+      name: Condition to run
+      description: Add a value_template value for major condition to execute the automation
+      default: 'True'
+      selector:
+        text: {}
+    actions:
+      name: Additional actions
+      description: After the execution of the automation, run those actions.
+      default: []
+      selector:
+        action: {}
+  source_url: https://gist.github.com/MackoMici/5c0c8eec7c17d5715593fb42ff43f79f
+variables:
+  persons_str: !input 'persons'
+  persons_list: '{{ persons_str.split('','') | map(''trim'') | list }}'
+  timeout: !input 'minutes'
+  concat_str: !input 'persons-concat'
+  addactions: !input 'actions'
+  persons_count: "{%- set first = true -%} {%- set data = namespace(nomes=[]) -%}\
+    \ {%- for person in persons_list -%}\n  {%- if is_state(person | regex_replace(find='person.',\
+    \ replace='sensor.mobil_') | lower, 'home') and\n  (now() - states[person | regex_replace(find='person.',\
+    \ replace='sensor.mobil_') | lower].last_changed).total_seconds() < timeout*60\
+    \ -%}\n    {%- set data.nomes = data.nomes + [states[person].name] -%}\n  {%-\
+    \ endif -%}\n{%- endfor -%} {{ data.nomes }}"
+  persons_names: '{%- set finalstr = '', ''.join(persons_count) -%} {{ concat_str.join(finalstr.rsplit('',
+    '',1)) }}'
+  single_msg: !input 'message-single'
+  multiple_msg: !input 'message-multiple'
+trigger:
+- platform: state
+  entity_id: !input 'door_sensor'
+  to: 'on'
+action:
+- delay: !input 'delay'
+- condition: template
+  value_template: !input 'condition'
+- condition: template
+  value_template: '{{ persons_count|length > 0 }}'
+- service: tts.google_translate_say
+  data:
+    entity_id: !input 'target'
+    language: hu
+    cache: false
+    message: "{%- set single_lst = single_msg.split('\\n') -%}\n{%- set multiple_lst\
+      \ = multiple_msg.split('\\n') -%}\n{%- if persons_count|length > 1 -%}\n  {{\
+      \ multiple_lst | random | replace('<persons>', persons_names) }}\n{%- elif persons_count|length\
+      \ > 0 -%}\n  {{ single_lst | random | replace('<person>', persons_names) }}\n\
+      {%- endif -%}\n"
+- condition: template
+  value_template: '{{ addactions|length > 0 }}'
+- choose: []
+  default: !input 'actions'
+mode: single

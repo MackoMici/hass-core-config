@@ -1,0 +1,252 @@
+blueprint:
+  name: Fűttés automatikus vezérlés
+  description: Külső- belső hőmérséklet, alvás és távolét figyelés a termosztát szabályozáshoz.
+  domain: automation
+  input:
+    thermostat:
+      name: Termosztát
+      description: A használni kívánt termosztát.
+      selector:
+        entity:
+          domain: climate
+    elofutes_boolean:
+      name: Előfűtés
+      description: Ha nem vagyunk otthon de szeretnénk meleg lakásba hazaérni.
+      selector:
+        entity:
+          domain: input_boolean
+    window_sensor:
+      name: Ablak szenzor
+      description: Aklab nyitás érzékelő.
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: window
+    in_temp_sensor:
+      name: Hőmérséklet szenzor
+      description: Belső hőmérséklet szenzor.
+      selector:
+        entity:
+          domain: sensor
+    out_temp_sensor:
+      name: Hőmérséklet szenzor
+      description: Külső hőmérséklet szenzor.
+      selector:
+        entity:
+          domain: sensor
+    groupname:
+      name: Person Group
+      description: The group of people that have to be home.
+      default: []
+      selector:
+        entity:
+          domain: group
+    min_temp:
+      name: Kinti minimális hőmérséklet
+      description: Ha a külső hőmérséklet ennél nagyobb kikapcsol a fűttés.
+      default: 14
+      selector:
+        number:
+          min: 12.0
+          max: 18.0
+          step: 0.5
+          mode: slider
+    day_temp_heat:
+      name: Nappali hőmérséklet
+      description: Mennyire fűtsük a lakást napközben ha otthon vagyunk.
+      selector:
+        entity:
+          domain: input_number
+    night_temp_heat:
+      name: Éjszakai hőmérséklet
+      description: Mennyire fűtsük a lakást éjszaka vagy ha nem vagyunk otthon.
+      selector:
+        entity:
+          domain: input_number
+    time_start:
+      name: Fűttés kezdete
+      description: Reggel mikor kezdjen el fűtteni.
+      default: 06:00:00
+      selector:
+        time: {}
+    time_sleep:
+      name: Fűttés vége
+      description: Este mikor kapcsolja ki a fűttést.
+      default: '20:30:00'
+      selector:
+        time: {}
+  source_url: https://gist.github.com/MackoMici/c127d5eb877dab4dc0cf1c1341f57763
+variables:
+  day_temp_heat: !input 'day_temp_heat'
+  day_temp: '{{ states(day_temp_heat) | float(0) }}'
+  night_temp_heat: !input 'night_temp_heat'
+  night_temp: '{{ states(night_temp_heat) | float(0) }}'
+  thermostat: !input 'thermostat'
+  thermostat_temp: '{{ state_attr(thermostat, "temperature") }}'
+trigger:
+- platform: homeassistant
+  event: start
+- platform: event
+  event_type: automation_reloaded
+- platform: time
+  at:
+  - !input 'time_start'
+  - !input 'time_sleep'
+- platform: state
+  entity_id: !input 'groupname'
+- platform: state
+  entity_id: !input 'in_temp_sensor'
+- platform: state
+  entity_id: !input 'out_temp_sensor'
+- platform: state
+  entity_id: !input 'elofutes_boolean'
+- platform: state
+  entity_id: !input 'window_sensor'
+action:
+- choose:
+  - conditions:
+    - condition: state
+      entity_id: !input 'elofutes_boolean'
+      state: 'on'
+    - condition: state
+      entity_id: !input 'window_sensor'
+      state: 'off'
+    - condition: state
+      entity_id: !input 'groupname'
+      state: home
+    sequence:
+    - service: input_boolean.turn_off
+      target:
+        entity_id: !input 'elofutes_boolean'
+  - conditions:
+    - condition: state
+      entity_id: !input 'elofutes_boolean'
+      state: 'on'
+    - condition: state
+      entity_id: !input 'window_sensor'
+      state: 'off'
+    - condition: state
+      entity_id: !input 'groupname'
+      state: not_home
+    - condition: template
+      value_template: '{{ day_temp != thermostat_temp }}'
+    sequence:
+    - service: climate.set_temperature
+      data:
+        entity_id: !input 'thermostat'
+        temperature: '{{ day_temp }}'
+    - service: climate.set_hvac_mode
+      data:
+        entity_id: !input 'thermostat'
+        hvac_mode: heat
+  - conditions:
+    - condition: numeric_state
+      entity_id: !input 'out_temp_sensor'
+      below: !input 'min_temp'
+    - condition: time
+      after: !input 'time_sleep'
+      before: !input 'time_start'
+    - condition: state
+      entity_id: !input 'window_sensor'
+      state: 'off'
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: !input 'elofutes_boolean'
+        state: 'on'
+      - condition: template
+        value_template: '{{ night_temp == thermostat_temp }}'
+      - condition: state
+        entity_id: !input 'groupname'
+        state: not_home
+    sequence:
+    - service: climate.set_temperature
+      data:
+        entity_id: !input 'thermostat'
+        temperature: '{{ night_temp }}'
+    - service: climate.set_hvac_mode
+      data:
+        entity_id: !input 'thermostat'
+        hvac_mode: heat
+  - conditions:
+    - condition: numeric_state
+      entity_id: !input 'out_temp_sensor'
+      below: !input 'min_temp'
+    - condition: state
+      entity_id: !input 'window_sensor'
+      state: 'off'
+    - condition: time
+      after: !input 'time_start'
+      before: !input 'time_sleep'
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: !input 'elofutes_boolean'
+        state: 'on'
+      - condition: template
+        value_template: '{{ day_temp == thermostat_temp }}'
+      - condition: state
+        entity_id: !input 'groupname'
+        state: not_home
+    sequence:
+    - service: climate.set_temperature
+      data:
+        entity_id: !input 'thermostat'
+        temperature: '{{ day_temp }}'
+    - service: climate.set_hvac_mode
+      data:
+        entity_id: !input 'thermostat'
+        hvac_mode: heat
+  - conditions:
+    - condition: numeric_state
+      entity_id: !input 'out_temp_sensor'
+      below: !input 'min_temp'
+    - condition: state
+      entity_id: !input 'groupname'
+      state: not_home
+    - condition: state
+      entity_id: !input 'window_sensor'
+      state: 'off'
+    - condition: not
+      conditions:
+      - condition: state
+        entity_id: !input 'elofutes_boolean'
+        state: 'on'
+      - condition: template
+        value_template: '{{ night_temp == thermostat_temp }}'
+    sequence:
+    - service: climate.set_temperature
+      data:
+        entity_id: !input 'thermostat'
+        temperature: '{{ night_temp }}'
+    - service: climate.set_hvac_mode
+      data:
+        entity_id: !input 'thermostat'
+        hvac_mode: heat
+  - conditions:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: !input 'window_sensor'
+        state: 'on'
+      - condition: and
+        conditions:
+        - condition: numeric_state
+          entity_id: !input 'out_temp_sensor'
+          above: !input 'min_temp'
+        - condition: not
+          conditions:
+          - condition: state
+            entity_id: !input 'elofutes_boolean'
+            state: 'on'
+          - condition: state
+            entity_id: !input 'thermostat'
+            attribute: hvac_mode
+            state: 'off'
+    sequence:
+    - service: climate.set_hvac_mode
+      data:
+        entity_id: !input 'thermostat'
+        hvac_mode: 'off'
+mode: queued
+max: 5

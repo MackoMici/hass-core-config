@@ -1,0 +1,97 @@
+blueprint:
+  name: Bathroom Humidity Management
+  description: Turn a fan on and off based on the difference between a humidity sensor
+    and a baseline
+  domain: automation
+  input:
+    humidity_sensor:
+      name: Humidity Sensor
+      description: A sensor that measures the humidity of the area
+      selector:
+        entity:
+          domain: sensor
+    absolutehumidity_sensor:
+      name: AbsoluteHumidity Sensor
+      description: A sensor that measures the absolute humidity of the area
+      selector:
+        entity:
+          domain: sensor
+    reference_humidity:
+      name: Reference Humidity
+      description: A percentage point value that indicates the baseline humidity if
+        there is no reference sensor available
+      default: 55
+    reference_humidity_sensor:
+      name: Reference Humidity Sensor
+      description: A sensor that indicates the baseline humidity of the location
+      selector:
+        entity:
+          domain: sensor
+      default: []
+    outdoor_absolutehumidity_sensor:
+      name: Outdoor Absolutehumidity Sensor
+      description: A sensor that indicates the baseline absolute humidity of the outdoor
+      selector:
+        entity:
+          domain: sensor
+      default: []
+    fan_switch:
+      name: Fan Switch
+      description: A switch that turns the fan on and off
+      selector:
+        entity:
+          domain: switch
+    rising_threshold:
+      name: Rising Threshold
+      description: How many percentage points above the reference humidity the sensor
+        can rise before the fan is turned on
+      selector:
+        number:
+          min: 0.0
+          max: 100.0
+          step: 1.0
+          mode: slider
+      default: 8
+    falling_threshold:
+      name: Falling Threshold
+      description: How many percentage points above the reference humidity the sensor
+        must fall to before the fan is turned off
+      selector:
+        number:
+          min: 0.0
+          max: 100.0
+          step: 1.0
+          mode: slider
+      default: 5
+  source_url: https://gist.github.com/MackoMici/6fdf26c8790fd1d47574ad4b2ab0bac2
+trigger:
+- entity_id: !input 'humidity_sensor'
+  platform: state
+- entity_id: !input 'reference_humidity_sensor'
+  platform: state
+condition:
+- condition: template
+  value_template: '{{ mode != switch_state }}'
+action:
+- service: switch.turn_{{mode}}
+  entity_id: !input 'fan_switch'
+variables:
+  reference_humidity: !input 'reference_humidity'
+  humidity_sensor: !input 'humidity_sensor'
+  absolutehumidity_sensor: !input 'absolutehumidity_sensor'
+  absolutehumidity: '{{ states(absolutehumidity_sensor) }}'
+  reference_humidity_sensor: !input 'reference_humidity_sensor'
+  outdoor_absolutehumidity_sensor: !input 'outdoor_absolutehumidity_sensor'
+  outdoor_absolutehumidity: '{{ states(outdoor_absolutehumidity_sensor) }}'
+  fan_switch: !input 'fan_switch'
+  switch_state: '{{ states(fan_switch) }}'
+  rising_threshold: !input 'rising_threshold'
+  falling_threshold: !input 'falling_threshold'
+  difference: '{{ states(humidity_sensor)|float(0) - (states(reference_humidity_sensor)|float(0)
+    or reference_humidity|float(0)) }}'
+  mode: '{% if switch_state == ''off'' and difference|float(0) > rising_threshold|float(0)
+    and outdoor_absolutehumidity|float(0) < absolutehumidity|float(0) %} on {% elif
+    switch_state == ''on'' and difference|float(0) > falling_threshold|float(0) and
+    outdoor_absolutehumidity|float(0) < absolutehumidity|float(0) %} on {% else %}
+    off {% endif %}'
+mode: single

@@ -1,0 +1,55 @@
+blueprint:
+  name: Xiaomi Clean Zone
+  domain: script
+  input:
+    vacuum:
+      name: Vacuum
+      selector:
+        entity:
+          domain: vacuum
+    repeat_vacuum:
+      name: Repeat Vacuum
+      selector:
+        number:
+          min: 1.0
+          max: 5.0
+          mode: slider
+          step: 1.0
+      default: 1
+    room_zone:
+      name: Room zone
+      selector:
+        object: {}
+  source_url: https://gist.github.com/MackoMici/4e403feab81c37081da188cc423c0dec
+mode: single
+variables:
+  vacuum: !input 'vacuum'
+sequence:
+- repeat:
+    while:
+    - condition: state
+      entity_id: !input 'vacuum'
+      state: docked
+      attribute: status
+    - condition: template
+      value_template: '{{ repeat.index <= 20 }}'
+    sequence:
+    - service: vacuum.xiaomi_clean_zone
+      data:
+        repeats: !input 'repeat_vacuum'
+        zone: !input 'room_zone'
+- service: input_datetime.set_datetime
+  target:
+    entity_id: '{{ states[''input_boolean''] | selectattr(''entity_id'', ''search'',
+      ''_takaritas'') | selectattr(''state'', ''eq'', ''on'') |  map(attribute="entity_id")
+      | join('', '') | regex_replace(find=''input_boolean'', replace=''input_datetime'')
+      }}
+
+      '
+  data:
+    datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+- service: input_boolean.turn_off
+  target:
+    entity_id: '{{ states[''input_boolean''] | selectattr(''entity_id'', ''search'',
+      ''_takaritas'') | selectattr(''state'', ''eq'', ''on'') | map(attribute="entity_id")
+      | join('', '') }}'

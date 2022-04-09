@@ -1,0 +1,27 @@
+alias: Valaki hazajött
+sequence:
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.u1006_media_player
+      language: hu
+      cache: false
+      message: >-
+        {% set odakinn=states("sensor.kulteri_homerseklet") %}
+        {% set idebenn=states("sensor.belteri_homerseklet") %}
+        {% if not is_state("weather.pirate_weather_daily", "unavailable") %}
+          {% set odakinn=state_attr("weather.pirate_weather_daily", "temperature") %}
+        {% endif %}
+        {{ ['Most épp', 'Jelenleg', 'Pillanatnyilag'] | random }}
+        {{ odakinn | round }} 
+        fok 
+        {{ ['a kinti hőmérséklet', 'van odakinn'] | random }} 
+        és 
+        {{ idebenn | round }} 
+        fok 
+        {{ ['van', 'van idebenn'] | random }}
+        a lakásban.
+        {% if is_state("binary_sensor.haloszoba_ablak_contact", "on") %}
+          Figyelem! A hálószoba ablak nyitva van.
+        {% endif %}
+mode: single
+icon: mdi:home
