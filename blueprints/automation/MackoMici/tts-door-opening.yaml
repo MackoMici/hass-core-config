@@ -10,11 +10,13 @@ blueprint:
         entity:
           domain: binary_sensor
           device_class: door
+          multiple: false
     persons:
       name: Persons
       selector:
         entity:
           domain: person
+          multiple: false
     minutes:
       name: Minutes
       description: Minutes between person at home and door trigged
@@ -64,6 +66,7 @@ blueprint:
       selector:
         entity:
           domain: media_player
+          multiple: false
     condition:
       name: Condition to run
       description: Add a value_template value for major condition to execute the automation
@@ -84,11 +87,10 @@ variables:
   concat_str: !input 'persons-concat'
   addactions: !input 'actions'
   persons_count: "{%- set first = true -%} {%- set data = namespace(nomes=[]) -%}\
-    \ {%- for person in persons_list -%}\n  {%- if is_state(person | regex_replace(find='person.',\
-    \ replace='sensor.mobil_') | lower, 'home') and\n  (now() - states[person | regex_replace(find='person.',\
-    \ replace='sensor.mobil_') | lower].last_changed).total_seconds() < timeout*60\
-    \ -%}\n    {%- set data.nomes = data.nomes + [states[person].name] -%}\n  {%-\
-    \ endif -%}\n{%- endfor -%} {{ data.nomes }}"
+    \ {%- for person in persons_list -%}\n  {%- if is_state(person, 'home') and (now()\
+    \ - states[person].last_changed).total_seconds() < timeout*60 -%}\n    {%- set\
+    \ data.nomes = data.nomes + [states[person].name] -%}\n  {%- endif -%}\n{%- endfor\
+    \ -%} {{ data.nomes }}"
   persons_names: '{%- set finalstr = '', ''.join(persons_count) -%} {{ concat_str.join(finalstr.rsplit('',
     '',1)) }}'
   single_msg: !input 'message-single'
@@ -103,10 +105,9 @@ action:
   value_template: !input 'condition'
 - condition: template
   value_template: '{{ persons_count|length > 0 }}'
-- service: tts.google_translate_say
+- service: tts.microsoft_say
   data:
     entity_id: !input 'target'
-    language: hu
     cache: false
     message: "{%- set single_lst = single_msg.split('\\n') -%}\n{%- set multiple_lst\
       \ = multiple_msg.split('\\n') -%}\n{%- if persons_count|length > 1 -%}\n  {{\

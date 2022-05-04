@@ -9,12 +9,14 @@ blueprint:
       selector:
         entity:
           domain: climate
+          multiple: false
     elofutes_boolean:
       name: Előfűtés
       description: Ha nem vagyunk otthon de szeretnénk meleg lakásba hazaérni.
       selector:
         entity:
           domain: input_boolean
+          multiple: false
     window_sensor:
       name: Ablak szenzor
       description: Aklab nyitás érzékelő.
@@ -22,18 +24,21 @@ blueprint:
         entity:
           domain: binary_sensor
           device_class: window
+          multiple: false
     in_temp_sensor:
       name: Hőmérséklet szenzor
       description: Belső hőmérséklet szenzor.
       selector:
         entity:
           domain: sensor
+          multiple: false
     out_temp_sensor:
       name: Hőmérséklet szenzor
       description: Külső hőmérséklet szenzor.
       selector:
         entity:
           domain: sensor
+          multiple: false
     groupname:
       name: Person Group
       description: The group of people that have to be home.
@@ -41,6 +46,7 @@ blueprint:
       selector:
         entity:
           domain: group
+          multiple: false
     min_temp:
       name: Kinti minimális hőmérséklet
       description: Ha a külső hőmérséklet ennél nagyobb kikapcsol a fűttés.
@@ -57,12 +63,14 @@ blueprint:
       selector:
         entity:
           domain: input_number
+          multiple: false
     night_temp_heat:
       name: Éjszakai hőmérséklet
       description: Mennyire fűtsük a lakást éjszaka vagy ha nem vagyunk otthon.
       selector:
         entity:
           domain: input_number
+          multiple: false
     time_start:
       name: Fűttés kezdete
       description: Reggel mikor kezdjen el fűtteni.
@@ -241,12 +249,10 @@ action:
             state: 'on'
           - condition: state
             entity_id: !input 'thermostat'
-            attribute: hvac_mode
             state: 'off'
     sequence:
     - service: climate.set_hvac_mode
       data:
         entity_id: !input 'thermostat'
         hvac_mode: 'off'
-mode: queued
-max: 5
+mode: single

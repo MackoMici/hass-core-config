@@ -12,9 +12,60 @@ default_config:
     # log level for all python scripts
 #    homeassistant.components.python_script: warning
 
+lovelace:
+  mode: yaml
+  resources:
+    - url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js
+      type: module
+    - url: /hacsfiles/bar-card/bar-card.js
+      type: module
+    - url: /hacsfiles/button-card/button-card.js
+      type: module
+    - url: /hacsfiles/ha-floorplan/floorplan.js
+      type: module
+    - url: /hacsfiles/lovelace-canary/canary.js
+      type: module
+    - url: /hacsfiles/lovelace-card-mod/card-mod.js
+      type: module
+    - url: /hacsfiles/lovelace-layout-card/layout-card.js
+      type: module
+    - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+      type: module
+    - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
+      type: module
+    - url: /hacsfiles/numberbox-card/numberbox-card.js
+      type: module
+    - url: /hacsfiles/simple-thermostat/simple-thermostat.js
+      type: module
+    - url: /hacsfiles/thermal_comfort_icons/thermal_comfort_icons.js
+      type: module
+    - url: /hacsfiles/vacuum-card/vacuum-card.js
+      type: module
+    - url: /hacsfiles/weather-chart-card/weather-chart-card.js
+      type: module
+    - url: /local/card-tools.js
+      type: module
+    - url: /local/flower-card.js
+      type: module
+    - url: https://fonts.googleapis.com/css2?family=Oxygen&family=Ubuntu:wght@300&display=swap
+      type: css
+  dashboards:
+    lovelace-floorplan:
+      mode: yaml
+      filename: floorplan.yaml
+      title: Floorplan
+      icon: mdi:floor-plan
+      show_in_sidebar: true
+    lovelace-mobil:
+      mode: yaml
+      filename: mobil.yaml
+      title: Mobil
+      icon: mdi:cellphone
+      show_in_sidebar: true
+
 homeassistant:
   allowlist_external_dirs:
-    - /home/homeassistant/.homeassistant
+    - /home/zoolesz/.homeassistant
 
 browser_mod:
   prefix: "browser_"
@@ -22,7 +73,7 @@ browser_mod:
 #python_script:
 
 samsungtv_smart:
-  - host: 192.168.1.147
+  - host: !secret samsung_host
     app_list: {
       "Netflix": "3201907018807/org.tizen.netflixapp",
       "Youtube": "111299001912/9Ur5IzDKqV.TizenYouTube",
@@ -38,6 +89,7 @@ lyric:
 google:
   client_id: !secret google_id
   client_secret: !secret google_secret
+  calendar_access: read_only
 
 weather:
   - platform: pirateweather
@@ -85,7 +137,12 @@ template:
 
 # Text to speech
 tts:
-  - platform: google_translate
+  - platform: microsoft
+    api_key: !secret tts_api_key
+    language: hu-hu
+    type: TamasNeural
+    region: westeurope
+    rate: -10
 
 frontend:
   themes: !include_dir_merge_named themes
@@ -96,3 +153,7 @@ notify: !include notify.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+input_boolean: !include input_boolean.yaml
+input_number: !include input_number.yaml
+input_datetime: !include input_datetime.yaml
+plant: !include plants.yaml

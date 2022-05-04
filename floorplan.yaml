@@ -1,0 +1,1036 @@
+views:
+  - type: custom:grid-layout
+    path: 0
+    layout:
+      grid-gap: var(--custom-layout-card-padding)
+      grid-template-columns: repeat(4, 1fr) 0
+      grid-template-rows: repeat(2, fit-content(100%)) 0fr
+      grid-template-areas: |
+        "sidebar  floorplan  floorplan  floorplan"
+        "sidebar  floorplan  floorplan  floorplan"
+        "sidebar  floorplan  floorplan  floorplan"
+    theme: waves-dark
+    icon: mdi:floor-plan
+    badges: []
+    cards:
+      - type: custom:floorplan-card
+        full_height: true
+        style: |
+          ha-card {
+            box-shadow: none;
+            --ha-card-background: 'rgba(0, 0, 0, 0)';
+          }
+        view_layout:
+          grid-area: floorplan
+        config:
+          image: /local/floorplan/House.svg
+          stylesheet: /local/floorplan/House.css
+          defaults:
+            hover_action: hover-info
+            tap_action: more-info
+          rules:
+            - name: Világítás
+              entities:
+                - entity: switch.sonoff_haloszoba
+                  element: area.haloszoba
+                - entity: switch.sonoff_eloszoba
+                  element: area.eloszoba
+              tap_action: toggle
+              state_action:
+                service: floorplan.class_set
+                service_data: '${(entity.state === "on") ? "light-on" : "light-off"}'
+            - name: Időjárás adatok 1
+              entities:
+                - sensor.pirateweather_temperature
+              state_action:
+                - service: floorplan.text_set
+                  service_data: '${(entity.state !== undefined) ? Math.round(entity.state * 10) / 10 + "°C" : "unknown"}'
+            - name: Időjárás adatok 2
+              entities:
+                - sensor.pirateweather_humidity
+                - sensor.pirateweather_wind_speed
+              state_action:
+                - service: floorplan.text_set
+                  service_data: '${(entity.state !== undefined) ? Math.round(entity.state * 10) / 10 : "unknown"}'
+            - name: Időjárás szöveg
+              entities:
+                - weather.pirate_weather
+              state_action:
+                - service: floorplan.text_set
+                  service_data: |
+                    >
+                      var strName = '';
+                      switch (entity.state) { 
+                        case 'clear-night': strName = 'Tiszta este'; break;
+                        case 'cloudy': strName = 'Felhős idő'; break;
+                        case 'exceptional': strName = 'Extrém idő'; break;
+                        case 'fog': strName = 'Köd'; break;
+                        case 'hail': strName = 'Jégeső'; break;
+                        case 'lightning': strName = 'Vihar'; break;
+                        case 'lightning-rainy': strName = 'Viharos eső'; break;
+                        case 'partlycloudy': strName = 'Részben felhős idő'; break;
+                        case 'pouring': strName = 'Szakadó eső'; break;
+                        case 'rainy': strName = 'Esős idő'; break;
+                        case 'snowy': strName = 'Havazás'; break;
+                        case 'snowy-rainy': strName = 'Havas eső'; break;
+                        case 'sunny': strName = 'Napos idő'; break;
+                        case 'windy': strName = 'Szeles idő'; break;
+                        case 'windy-variant': strName = 'Változóan szeles idő'; break;
+                        default: srtName = 'unknown'; break; 
+                      } 
+                      return strName;
+            - name: Időjárás ikon
+              entity: weather.pirate_weather
+              element: weather.condition
+              state_action:
+                service: floorplan.image_set
+                service_data:
+                  image: /local/floorplan/weather_icons/${entity.state}.svg
+                  cache: true
+            - name: Időjárás
+              element: things.weather
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  command: popup
+                  large: true
+                  hide_header: true
+                  card:
+                    type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout:
+                      grid-template-columns: repeat(2, 1fr)
+                      grid-template-rows: 1fr
+                      grid-template-areas: |
+                        "hourly daily"
+                        "wind rain"
+                    cards:
+                      - type: custom:weather-chart-card
+                        entity: weather.pirate_weather
+                        view_layout:
+                          grid-area: hourly
+                      - type: custom:weather-chart-card
+                        entity: weather.pirate_weather_daily
+                        view_layout:
+                          grid-area: daily
+                      - type: iframe
+                        url: https://embed.windy.com/embed2.html?lat=46.329&lon=18.700&zoom=11&overlay=wind&message=true&marker=true&calendar=now&type=map&location=coordinates&metricWind=km%2Fh&metricTemp=%C2%B0C
+                        aspect_ratio: 50%
+                        view_layout:
+                          grid-area: wind
+                      - type: iframe
+                        url: https://embed.windy.com/embed2.html?lat=46.329&lon=18.700&zoom=11&overlay=rain&message=true&marker=true&calendar=now&type=map&location=coordinates&metricWind=km%2Fh&metricTemp=%C2%B0C
+                        aspect_ratio: 50%
+                        view_layout:
+                          grid-area: rain
+            - name: Hőmérséklet
+              entities:
+                - sensor.haloszoba_temperature
+                - sensor.konyha_temperature
+                - sensor.nappali_temperature
+                - sensor.ebedlo_temperature
+                - sensor.gyerekszoba_temperature
+                - sensor.furdoszoba_homerseklet
+              state_action:
+                - service: floorplan.text_set
+                  service_data: '${(entity.state !== undefined) ? Math.round(entity.state * 10) / 10 : "unknown"}'
+            - name: Páratartalom
+              entities:
+                - sensor.haloszoba_humidity
+                - sensor.konyha_humidity
+                - sensor.nappali_humidity
+                - sensor.ebedlo_humidity
+                - sensor.gyerekszoba_humidity
+                - sensor.furdoszoba_paratartalom
+              state_action:
+                - service: floorplan.text_set
+                  service_data: '${ (entity.state !== undefined) ? Math.round(entity.state * 10) / 10 : "unknown" }'
+            - name: Elemek
+              entities:
+                - sensor.haloszoba_ablak_battery
+                - sensor.nappali_ablak_battery
+                - sensor.haloszoba_battery
+                - sensor.konyha_battery
+                - sensor.nappali_battery
+                - sensor.ebedlo_battery
+                - sensor.gyerekszoba_battery
+                - sensor.furdoszoba_battery
+                - sensor.furdoszoba_2_battery
+                - sensor.bejarati_ajto_battery
+              state_action:
+                service: floorplan.image_set
+                service_data:
+                  image: /local/floorplan/battery/battery-${Math.round(entity.state / 10) * 10}.png
+                  cache: true
+            - name: Szellőztetés
+              entity: switch.sonoff_furdo_szelloztetes
+              element: switch.furdo_fan
+              tap_action: toggle
+              state_action:
+                service: floorplan.class_set
+                service_data: '${(entity.state === "on") ? "spinning" : ""}'
+            - name: Klíma
+              entity: climate.gree_klima
+              element: things.klima
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  command: popup
+                  hide_header: true
+                  style:
+                    hui-vertical-stack-card:
+                      $: |
+                        simple-thermostat {
+                          font-variant: small-caps;
+                        }
+                        mini-graph-card {
+                          font-variant: small-caps;
+                        }
+                  card:
+                    type: vertical-stack
+                    in_card: true
+                    cards:
+                      - type: custom:simple-thermostat
+                        entity: climate.gree_klima
+                        layout:
+                          mode:
+                            headings: false
+                            names: false
+                        step_size: '0.5'
+                        header: false
+                        sensors:
+                          - attribute: preset_mode
+                            name: Mód
+                          - attribute: swing_mode
+                            name: Keringetés
+                        control:
+                          hvac: true
+                          preset:
+                            _hide_when_off: true
+                            eco:
+                              name: Eco
+                              icon: mdi:leaf
+                            away:
+                              name: Away
+                              icon: mdi:map-marker-off
+                            boost:
+                              name: boost
+                              icon: mdi:rocket-launch
+                            none:
+                              name: None
+                              icon: mdi:home
+                            sleep:
+                              name: Sleep
+                              icon: mdi:sleep
+                          fan:
+                            _hide_when_off: true
+                            auto:
+                              name: Auto
+                              icon: mdi:fan-auto
+                            low:
+                              name: Alacsony
+                              icon: mdi:fan-speed-1
+                            medium low: false
+                            medium:
+                              name: Közepes
+                              icon: mdi:fan-speed-2
+                            medium high: false
+                            high:
+                              name: Magas
+                              icon: mdi:fan-speed-3
+                          swing:
+                            _hide_when_off: true
+                            'off':
+                              name: Ki
+                              icon: mdi:power
+                            vertical:
+                              name: Függőleges
+                              icon: mdi:arrow-expand-vertical
+                            horizontal: false
+                            both: false
+                      - type: custom:mini-graph-card
+                        entities:
+                          - entity: sensor.belteri_homerseklet
+                        hours_to_show: 24
+                        points_per_hour: 1
+                        height: 150
+                        font_size_header: 16
+                        decimals: 1
+                        show:
+                          extrema: true
+                          name: false
+                          icon: false
+                          labels: true
+                        color_thresholds:
+                          - value: 18
+                            color: '#6666ff'
+                          - value: 20
+                            color: '#ccccff'
+                          - value: 22
+                            color: '#f3f300'
+                          - value: 24
+                            color: '#f39c12'
+                          - value: 26
+                            color: '#d35400'
+                          - value: 28
+                            color: '#c0392b'
+              state_action:
+                service: floorplan.class_set
+                service_data: '${ (entity.state === "off") ? "thing-off" : "thing-on" }'
+            - name: Fűtés
+              entity: climate.honeywell_home_termosztat
+              element: things.termosztat
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  command: popup
+                  hide_header: true
+                  style:
+                    hui-vertical-stack-card:
+                      $: |
+                        numberbox-card {
+                          padding: .2em 0 1em 0;
+                        }
+                        hui-horizontal-stack-card {
+                          font-variant: small-caps;
+                        }
+                        mini-graph-card {
+                          font-variant: small-caps;
+                        }
+                  card:
+                    type: vertical-stack
+                    in_card: true
+                    cards:
+                      - type: horizontal-stack
+                        cards:
+                          - type: custom:button-card
+                            tap_action:
+                              action: toggle
+                            entity: input_boolean.elofutes
+                            aspect_ratio: 1/1
+                            show_label: true
+                            label: |
+                              [[[
+                                var mode = states['climate.honeywell_home_termosztat'].attributes.hvac_action;
+                                return (mode === "idle" ? "Tétlen" : (mode === "heating" ? "Fűtés" : "Kikapcsolva"));
+                              ]]]
+                          - type: vertical-stack
+                            cards:
+                              - type: entities
+                                title: Nappali hőmérséklet
+                                style: |
+                                  #states {
+                                    padding: 0px 0px !important
+                                  }
+                                  .card-header {
+                                    padding: 0px 0px !important;
+                                  }
+                                entities:
+                                  - type: custom:numberbox-card
+                                    entity: input_number.nappali_homerseklet
+                                    name: false
+                                    unit: °C
+                                    icon: false
+                                    speed: 250
+                                    style: |
+                                      .grid-left {
+                                        font-size: 20px !important;
+                                        font-weight: 300 !important;
+                                      }
+                                      .cur-num {
+                                        font-size: 32px !important; 
+                                        font-weight: 600 !important;
+                                      }
+                                    icon_plus: mdi:chevron-up
+                                    icon_minus: mdi:chevron-down
+                              - type: entities
+                                title: Éjszakai hőmérséklet
+                                style: |
+                                  #states {
+                                    padding: 0px 0px !important
+                                  }
+                                  .card-header {
+                                    padding: 0px 0px !important;
+                                  }
+                                entities:
+                                  - type: custom:numberbox-card
+                                    entity: input_number.ejszakai_homerseklet
+                                    name: false
+                                    unit: °C
+                                    icon: false
+                                    speed: 250
+                                    style: |
+                                      .grid-left {
+                                        font-size: 20px !important;
+                                        font-weight: 300 !important;
+                                      }
+                                      .cur-num {
+                                        font-size: 32px !important; 
+                                        font-weight: 600 !important;
+                                      }
+                                    icon_plus: mdi:chevron-up
+                                    icon_minus: mdi:chevron-down
+                      - type: custom:mini-graph-card
+                        entities:
+                          - entity: sensor.belteri_homerseklet
+                        hours_to_show: 24
+                        points_per_hour: 1
+                        font_size_header: 16
+                        decimals: 1
+                        show:
+                          extrema: true
+                          name: false
+                          icon: false
+                          labels: true
+                        color_thresholds:
+                          - value: 18
+                            color: '#6666ff'
+                          - value: 20
+                            color: '#ccccff'
+                          - value: 22
+                            color: '#f3f300'
+                          - value: 24
+                            color: '#f39c12'
+                          - value: 25
+                            color: '#d35400'
+                          - value: 26
+                            color: '#c0392b'
+              state_action:
+                service: floorplan.class_set
+                service_data: '${ (entity.state === "off") ? "thing-off" : "thing-on" }'
+            - name: Növény
+              entity: plant.ficus
+              element: flora
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  command: popup
+                  hide_header: true
+                  card:
+                    type: custom:flower-card
+                    entity: plant.ficus
+                    style: |
+                      ha-card {
+                        font-variant: small-caps;
+                      }
+              state_action:
+                service: floorplan.style_set
+                service_data:
+                  style: >
+                    opacity: ${ entity.attributes.problem === "none" ? "0" : "1" };
+                    fill: ${ entity.attributes.problem === "none" ? "" : "#C1424299" };
+                    transition: ${ entity.attributes.problem === "none" ? "fill 5s ease" : "" };
+            - name: tablet
+              entity: light.u1006_screen
+              element: tablet
+              tap_action: toggle              
+              state_action:
+                service: floorplan.style_set
+                service_data:
+                  style: >
+                    opacity: ${  entity.state === "on" ? "1" : "0" };
+                    fill: ${ entity.state === "on" ? "#F9D27C99" : "" };
+                    transition: ${ entity.state === "off" ? "fill 5s ease" : "" };
+            - name: Tv
+              entity: media_player.samsung_q80_series_65
+              elements: 
+               - things.tv
+               - things.arnyek
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  command: popup
+                  hide_header: true
+                  card:
+                    type: custom:mini-media-player
+                    style: |
+                      ha-card {
+                        font-variant: small-caps;
+                      }
+                    in_card: true
+                    entity: media_player.samsung_q80_series_65
+                    name: Living Room Samsung Q80 Tv
+                    icon: mdi:television
+                    tap_action: none
+                    hide:
+                      source: true
+                    shortcuts:
+                      columns: 3
+                      buttons:
+                        - type: service
+                          name: Plex
+                          id: media_player.select_source
+                          data:
+                            entity_id: media_player.samsung_q80_series_65
+                            source: Plex
+                        - type: service
+                          name: Netflix
+                          id: media_player.select_source
+                          data:
+                            entity_id: media_player.samsung_q80_series_65
+                            source: Netflix
+                        - type: service
+                          name: YouTube
+                          id: media_player.select_source
+                          data:
+                            entity_id: media_player.samsung_q80_series_65
+                            source: Youtube
+                        - type: service
+                          name: HBO Max
+                          id: media_player.select_source
+                          data:
+                            entity_id: media_player.samsung_q80_series_65
+                            source: HBO Max
+                        - type: service
+                          name: TARR MobilTv
+                          id: media_player.select_source
+                          data:
+                            entity_id: media_player.samsung_q80_series_65
+                            source: TARR MobilTv
+                    artwork: material
+              state_action:
+                service: floorplan.class_set
+                service_data: '${ (entity.state === "off") ? "thing-off" : "thing-on" }'
+            - name: Binary Sensor
+              entities:
+               - entity: binary_sensor.sonoff_bejarati_ajto
+                 element: bejarat
+               - entity: binary_sensor.haloszoba_ablak_contact
+                 element: haloszoba_ablak
+               - entity: binary_sensor.nappali_ablak_contact
+                 element: nappali_ablak
+              state_action:
+                service: floorplan.class_set
+                service_data: '${ (entity.state === "on") ? "binary-sensor-on" : "binary-sensor-off" }'
+            - name: Vacuum
+              entity: vacuum.viomi_se
+              elements:
+                - vacuum
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  command: popup
+                  hide_header: true
+                  style:
+                    hui-vertical-stack-card:
+                      $: |
+                        hui-grid-card {
+                          padding: 2em 0 0 0;
+                          font-variant: small-caps;
+                        }
+                        vacuum-card {
+                          font-variant: small-caps;
+                        }
+                  card:
+                    type: vertical-stack
+                    in_card: true
+                    cards:
+                      - type: custom:vacuum-card
+                        entity: vacuum.viomi_se
+                        image: default
+                        compact_view: false
+                        stats:
+                          default:
+                            - attribute: filter_left
+                              unit: óra
+                              subtitle: Filter
+                            - attribute: side_brush_left
+                              unit: óra
+                              subtitle: Side brush
+                            - attribute: main_brush_left
+                              unit: óra
+                              subtitle: Main brush
+                            - attribute: mop_left
+                              unit: óra
+                              subtitle: Mop
+                          cleaning:
+                            - attribute: s_area
+                              unit: m2
+                              subtitle: Cleaning area
+                            - attribute: s_time
+                              unit: perc
+                              subtitle: Cleaning time
+                      - type: grid
+                        cards:
+                          - type: custom:button-card
+                            entity: input_boolean.nappali_takaritas
+                            show_label: true
+                            label: >-
+                              [[[ var clean_ago = Math.floor((Date.now() -
+                              Date.parse(states['input_datetime.nappali_takaritas'].state))
+                              / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                              Math.floor(clean_ago / 24) + " napja" : clean_ago
+                              + " órája"); ]]]
+                            hold_action:
+                              action: more-info
+                          - type: custom:button-card
+                            entity: input_boolean.ebedlo_takaritas
+                            show_label: true
+                            label: >-
+                              [[[ var clean_ago = Math.floor((Date.now() -
+                              Date.parse(states['input_datetime.ebedlo_takaritas'].state))
+                              / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                              Math.floor(clean_ago / 24) + " napja" : clean_ago
+                              + " órája"); ]]]
+                            hold_action:
+                              action: more-info
+                          - type: custom:button-card
+                            entity: input_boolean.konyha_takaritas
+                            show_label: true
+                            label: >-
+                              [[[ var clean_ago = Math.floor((Date.now() -
+                              Date.parse(states['input_datetime.konyha_takaritas'].state))
+                              / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                              Math.floor(clean_ago / 24) + " napja" : clean_ago
+                              + " órája"); ]]]
+                            hold_action:
+                              action: more-info
+                          - type: custom:button-card
+                            entity: input_boolean.haloszoba_takaritas
+                            show_label: true
+                            label: >-
+                              [[[ var clean_ago = Math.floor((Date.now() -
+                              Date.parse(states['input_datetime.haloszoba_takaritas'].state))
+                              / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                              Math.floor(clean_ago / 24) + " napja" : clean_ago
+                              + " órája"); ]]]
+                            hold_action:
+                              action: more-info
+                          - type: custom:button-card
+                            entity: input_boolean.eloszoba_takaritas
+                            show_label: true
+                            label: >-
+                              [[[ var clean_ago = Math.floor((Date.now() -
+                              Date.parse(states['input_datetime.eloszoba_takaritas'].state))
+                              / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                              Math.floor(clean_ago / 24) + " napja" : clean_ago
+                              + " órája"); ]]]
+                            hold_action:
+                              action: more-info
+                          - type: custom:button-card
+                            entity: input_boolean.folyoso_takaritas
+                            show_label: true
+                            label: >-
+                              [[[ var clean_ago = Math.floor((Date.now() -
+                              Date.parse(states['input_datetime.folyoso_takaritas'].state))
+                              / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                              Math.floor(clean_ago / 24) + " napja" : clean_ago
+                              + " órája"); ]]]
+                            hold_action:
+                              action: more-info
+                          - type: custom:button-card
+                            entity: input_boolean.gyerekszoba_takaritas
+                            show_label: true
+                            label: >-
+                              [[[ var clean_ago = Math.floor((Date.now() -
+                              Date.parse(states['input_datetime.gyerekszoba_takaritas'].state))
+                              / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                              Math.floor(clean_ago / 24) + " napja" : clean_ago
+                              + " órája"); ]]]
+                            hold_action:
+                              action: more-info
+                          - type: custom:button-card
+                            entity: script.clean_house
+                            icon: mdi:play
+                            show_label: true
+                            label: indítás
+                            name: Takarítás
+                            tap_action:
+                              action: call-service
+                              service_data:
+                                entity_id: script.clean_house
+                              service: script.clean_house
+                        columns: 4
+                        square: false
+            - name: Information
+              elements:
+                - information
+              tap_action:
+                action: fire-dom-event
+                browser_mod:
+                  command: popup
+                  large: true
+                  hide_header: true
+                  card:
+                    type: custom:layout-card
+                    layout_type: custom:grid-layout
+                    layout:
+                      grid-template-columns: repeat(2, 1fr)
+                      grid-template-rows: 1fr
+                      grid-template-areas: |
+                        "hass mikrotik"
+                        "tablet nas"
+                    cards:
+                      - type: entities
+                        style: |
+                          ha-card {
+                            font-variant: small-caps;
+                          }
+                        view_layout:
+                          grid-area: hass
+                        title: Home Assistant
+                        entities:
+                          - entity: sensor.template_hass_version
+                          - entity: sensor.hacs
+                          - entity: sensor.home_assistant_v2_db_size
+                            name: Adatbázis mérete
+                          - entity: sensor.home_assistant_log_size
+                            name: Log méret
+                          - entity: sensor.ha_uptime
+                            icon: mdi:history
+                            name: Uptime
+                      - type: entities
+                        style: |
+                          ha-card {
+                            font-variant: small-caps;
+                          }
+                        view_layout:
+                          grid-area: tablet
+                        title: Alldocube iPlay 10 Pro
+                        show_header_toggle: false
+                        entities:
+                          - entity: light.u1006_screen
+                          - entity: sensor.tablet_uptime
+                            icon: mdi:history
+                            name: Uptime
+                          - entity: sensor.u1006_battery_temperature
+                            name: Akkumlátor hőmérséklet
+                          - type: custom:bar-card
+                            width: 55%
+                            height: 2em
+                            decimal: 0
+                            unit_of_measurement: '%'
+                            positions:
+                              icon: outside
+                              indicator: 'off'
+                              name: outside
+                            entity_row: true
+                            entities:
+                              - entity: sensor.u1006_battery_level
+                                name: Akkrumlátor
+                              - entity: sensor.tablet_ram_use
+                                name: Memória 3GB
+                                icon: mdi:memory
+                              - entity: sensor.tablet_storage_use
+                                name: Tárhely 25GB
+                                icon: mdi:sd
+                      - type: entities
+                        style: |
+                          ha-card {
+                            font-variant: small-caps;
+                          }
+                        view_layout:
+                          grid-area: nas
+                        title: Debian Server
+                        entities:
+                          - entity: sensor.processor_temperature
+                            name: Processzor hőmérséklet
+                            icon: mdi:restart
+                          - type: custom:bar-card
+                            width: 55%
+                            height: 2em
+                            decimal: 0
+                            unit_of_measurement: '%'
+                            positions:
+                              icon: outside
+                              indicator: 'off'
+                              name: outside
+                            entity_row: true
+                            entities:
+                              - entity: sensor.processor_use
+                                name: Processzor
+                              - entity: sensor.memory_use_percent
+                                name: Memória 8GB
+                              - entity: sensor.disk_use_percent
+                                name: SSD 120GB
+                              - entity: sensor.disk_use_percent_mnt_hdd1
+                                name: HDD1 2TB
+                              - entity: sensor.disk_use_percent_mnt_hdd2
+                                name: HDD2 4TB
+                      - type: entities
+                        style: |
+                          ha-card {
+                            font-variant: small-caps;
+                          }
+                        view_layout:
+                          grid-area: mikrotik
+                        title: Mikrotik hAP ac^2
+                        entities:
+                          - entity: binary_sensor.mikrotik_router_firmware_update
+                            name: Firmware update
+                            icon: mdi:update
+                          - entity: sensor.mikrotik_router_uptime
+                            icon: mdi:history
+                            name: Uptime
+                          - type: custom:bar-card
+                            width: 55%
+                            height: 2em
+                            decimal: 0
+                            unit_of_measurement: '%'
+                            positions:
+                              icon: outside
+                              indicator: 'off'
+                              name: outside
+                            entity_row: true
+                            entities:
+                              - entity: sensor.mikrotik_router_cpu_load
+                                icon: mdi:cpu-32-bit
+                                name: Processzor
+                              - entity: sensor.mikrotik_router_memory_usage
+                                name: Memória 256MB
+                                icon: mdi:memory
+                              - entity: sensor.mikrotik_router_hdd_usage
+                                icon: mdi:harddisk
+                                name: Tárhely 16MB
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                style: |
+                  ha-card {
+                    font-variant: small-caps;
+                  }
+                entity: person.hunyadvari_zoltan
+                aspect_ratio: 1/1
+                label: |
+                  [[[
+                    return 'Battery: ' + states['sensor.oneplus_a5000_battery_level'].state + '%';
+                  ]]]
+                styles:
+                  card:
+                    - background-image: url("/local/person/zoolesz.png")
+                    - background-size: 100% 100%
+                  state:
+                    - font-weight: bold
+                    - background-color: rgba(0, 0, 0, 0.4)
+                    - color: var(--text-primary-color)
+                    - transform: initial
+                    - width: 100%
+                    - align-self: start
+                    - line-height: 30px
+                  label:
+                    - font-weight: bold
+                    - background-color: rgba(0, 0, 0, 0.4)
+                    - color: var(--text-primary-color)
+                    - transform: initial
+                    - width: 100%
+                    - align-self: end
+                    - line-height: 30px
+                show_icon: false
+                show_name: false
+                show_state: true
+                show_label: true
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    hide_header: true
+                    style:
+                      hui-vertical-stack-card:
+                        $: |
+                          hui-entities-card {
+                            font-variant: small-caps;
+                          }
+                          hui-history-graph-card {
+                            font-variant: small-caps;
+                          }
+                          hui-glance-card {
+                            font-variant: small-caps;
+                          }
+                    card:
+                      type: vertical-stack
+                      in_card: true
+                      cards:
+                        - type: entities
+                          entities:
+                            - entity: person.hunyadvari_zoltan
+                              secondary_info: last-changed
+                        - type: history-graph
+                          entities:
+                            - entity: person.hunyadvari_zoltan
+                        - type: glance
+                          show_state: false
+                          state_color: false
+                          entities:
+                            - entity: sensor.oneplus_a5000_wifi_connection
+                              name: Wifi
+                              icon: mdi:wifi
+                              card_mod:
+                                style: |
+                                  state-badge {
+                                    color: {{ is_state(config.entity, "MiciMacko 5GHz") | iif('#297fb9', '#E8E9F3') }};
+                                  }
+                            - entity: binary_sensor.oneplus_a5000_bluetooth_state
+                              name: Bluetooth
+                              icon: mdi:bluetooth
+                              card_mod:
+                                style: |
+                                  state-badge {
+                                    color: {{ is_state(config.entity, "on") | iif('#297fb9', '#E8E9F3') }};
+                                  }
+                            - entity: sensor.oneplus_a5000_battery_state
+                              name: Battery
+                              icon: mdi:battery
+                              card_mod:
+                                style: |
+                                  state-badge {
+                                    color: {{ is_state(config.entity, "charging") | iif('#297fb9', '#E8E9F3') }};
+                                  }
+                        - type: map
+                          default_zoom: 16
+                          entities:
+                            - device_tracker.oneplus_a5000
+              - type: custom:button-card
+                style: |
+                  ha-card { 
+                    font-variant: small-caps; 
+                  }
+                entity: person.szakacs_katalin
+                aspect_ratio: 1/1
+                label: |
+                  [[[
+                    return 'Battery: ' + states['sensor.sm_a705fn_battery_level'].state + '%';
+                  ]]]
+                styles:
+                  card:
+                    - background-image: url("/local/person/kata.png")
+                    - background-size: 100% 100%
+                  state:
+                    - font-weight: bold
+                    - background-color: rgba(0, 0, 0, 0.4)
+                    - color: var(--text-primary-color)
+                    - transform: initial
+                    - width: 100%
+                    - align-self: start
+                    - line-height: 30px
+                  label:
+                    - font-weight: bold
+                    - background-color: rgba(0, 0, 0, 0.4)
+                    - color: var(--text-primary-color)
+                    - transform: initial
+                    - width: 100%
+                    - align-self: end
+                    - line-height: 30px
+                show_icon: false
+                show_name: false
+                show_state: true
+                show_label: true
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    command: popup
+                    hide_header: true
+                    style:
+                      hui-vertical-stack-card:
+                        $: |
+                          hui-entities-card {
+                            font-variant: small-caps;
+                          }
+                          hui-history-graph-card {
+                            font-variant: small-caps;
+                          }
+                          hui-glance-card {
+                            font-variant: small-caps;
+                          }
+                    card:
+                      type: vertical-stack
+                      in_card: true
+                      cards:
+                        - type: entities
+                          entities:
+                            - entity: person.szakacs_katalin
+                              secondary_info: last-changed
+                        - type: history-graph
+                          entities:
+                            - entity: person.szakacs_katalin
+                        - type: glance
+                          show_state: false
+                          state_color: false
+                          entities:
+                            - entity: sensor.sm_a705fn_wifi_connection
+                              name: Wifi
+                              icon: mdi:wifi
+                              card_mod:
+                                style: |
+                                  state-badge {
+                                    color: {{ is_state(config.entity, 'MiciMacko 5GHz') | iif('#297fb9', '#E8E9F3') }};
+                                  }
+                            - entity: binary_sensor.sm_a705fn_bluetooth_state
+                              name: Bluetooth
+                              icon: mdi:bluetooth
+                              card_mod:
+                                style: |
+                                  state-badge {
+                                    color: {{ is_state(config.entity, 'on') | iif('#297fb9', '#E8E9F3') }};
+                                  }
+                            - entity: sensor.sm_a705fn_battery_state
+                              name: Battery
+                              icon: mdi:battery
+                              card_mod:
+                                style: |
+                                  state-badge {
+                                    color: {{ is_state(config.entity, 'charging') | iif('#297fb9', '#E8E9F3') }};
+                                  }
+                        - type: map
+                          default_zoom: 16
+                          entities:
+                            - device_tracker.sm_a705fn
+          - type: picture-elements
+            style: |
+              ha-card {
+                font-variant: small-caps;
+                box-shadow: none;
+                --ha-card-background: 'rgba(0, 0, 0, 0)';
+              }
+            image: /local/background/time.png
+            elements:
+              - entity: sensor.time
+                style:
+                  color: '#EAC117'
+                  filter: opacity(60%)
+                  font-size: 8vw
+                  font-weight: bold
+                  left: 50%
+                  top: 50%
+                  text-shadow: 0px 10px 10px var(--divider-color)
+                  z-index: 0
+                type: state-label
+              - entity: sensor.week_day
+                style:
+                  filter: opacity(50%)
+                  font-size: 5vw
+                  font-weight: bold
+                  left: 50%
+                  top: 15%
+                  text-shadow: 0px 10px 10px var(--divider-color)
+                  z-index: 1
+                type: state-label
+              - entity: sensor.current_date
+                style:
+                  filter: opacity(100%)
+                  font-size: 2vw
+                  left: 50%
+                  top: 80%
+                  text-shadow: 0px 10px 10px var(--divider-color)
+                  z-index: 2
+                type: state-label
+          - type: custom:atomic-calendar-revive
+            style: |
+              ha-card {
+                font-variant: small-caps;
+                box-shadow: none;
+                --ha-card-background: 'rgba(0, 0, 0, 0)';
+                margin-top: -20px;
+              }
+            entities:
+              - entity: calendar.macko_mici_gmail_com
+              - entity: calendar.zoltan_hunyadvari_gmail_com
+              - entity: calendar.unnepnapok_magyarorszag
+              - entity: calendar.szakacskata_gmail_com
+            maxEventCount: 5
+            maxDaysToShow: 7
+            showLoader: false
+            refreshInterval: 3600
+        view_layout:
+          grid-area: sidebar

@@ -4,7 +4,6 @@
 
 automations.yaml
 google_calendars.yaml
-groups.yaml
 scenes.yaml
 scripts.yaml
 secrets.yaml

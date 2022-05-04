@@ -1,10 +1,6 @@
 #floorplan  {
-  padding: 10px;
+  padding-bottom: 10px;
 }
-
-/* #floorplan svg{
-  height: 100vh!important;
-} */
 
 svg tspan {
   fill: var(--primary-text-color);
@@ -14,7 +10,7 @@ svg tspan {
 
 svg, svg * {
   vector-effect: non-scaling-stroke !important;
-  pointer-events: all !important;
+/*  pointer-events: all !important;*/
 }
 
 /* Hover over */
@@ -31,22 +27,10 @@ svg, svg * {
 }
 
 .binary-sensor-off {
-  fill: #7CB1F9 !important;
-  transition: fill 5s ease;
-}
-
-/* Buttons */
-
-.background-on {
-  fill: #1ABA92 !important;
-}
-
-.background-off {
-  fill: #d32f2f !important;
-}
-
-.background-on tspan {
-  fill: white !important;
+  opacity: 0 !important;
+  transition: opacity .25s;
+  -moz-transition: opacity .25s;
+  -webkit-transition: opacity .25s; 
 }
 
 /* Light Control */
@@ -64,31 +48,17 @@ path[id*="area."]{
 
 /* Things Control */
 
-[id*="thing."].thing-on{
+[id*="things."].thing-on{
   opacity: 1 !important;
-  filter: drop-shadow(0px -5px 3px #ffedde);
-  fill: #fffae54f !important;
+  fill: #7CB1F98F !important;
 }
 
-[id*="thing."]{
+[id*="things."]{
   opacity: 0 !important;
   transition: opacity .25s;
   -moz-transition: opacity .25s;
   -webkit-transition: opacity .25s;
 }
-
-/* Temperature text */
-
-.static-temp, .static-temp tspan {
-  fill: #ffffff !important;
-}
-
-/* Humidity text */
-
-.static-humi, .static-humi tspan {
-  fill: #ffffff !important;
-}
-
 
 /* Spinning fan */
 

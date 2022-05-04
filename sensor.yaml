@@ -1,20 +1,13 @@
-- platform: pirateweather
-  api_key: !secret pirateweather_api_key
-  scan_interval: '00:20:00'
-  monitored_conditions:
-    - temperature
-    - precip_probability
-    - precip_type
-    - humidity
-    - cloud_cover
-    - nearest_storm_distance
-    - precip_intensity
-    - wind_speed
-
-- platform: time_date
-  display_options:
-    - time
-    - date
+- platform: template
+  sensors:
+    bejarati_ajto_battery:
+      friendly_name: "Bejárati Ajtó elem"
+      value_template: >
+        {% if states('sensor.sonoff_bejarati_ajto_battery_voltage') != None %}
+          {% set max = 3 | int %}
+          {% set current = states('sensor.sonoff_bejarati_ajto_battery_voltage') | int %}
+          {{ (current/(max/100)) | int }}
+        {% endif %}
 
 - platform: abalin_nameday
   country: hu
@@ -24,35 +17,14 @@
   resources:
     - type: disk_use_percent
       arg: /
+    - type: disk_use_percent
+      arg: /mnt/hdd1
+    - type: disk_use_percent
+      arg: /mnt/hdd2
     - type: memory_use_percent
+    - type: processor_use
+    - type: processor_temperature
     - type: last_boot
-
-- platform: netdata
-  host: "192.168.1.100"
-  port: "19999"
-  name: Debian Server
-  resources:
-    disk_space_hdd2_free:
-      data_group: "disk_space._mnt_hdd2"
-      element: "avail"
-    disk_space_hdd2_used:
-      data_group: "disk_space._mnt_hdd2"
-      element: "used"
-    disk_space_hdd1_free:
-      data_group: "disk_space._mnt_hdd1"
-      element: "avail"
-    disk_space_hdd1_used:
-      data_group: "disk_space._mnt_hdd1"
-      element: "used"
-    system.uptime:
-      data_group: "system.uptime"
-      element: "uptime"
-    mem.available:
-      data_group: "mem.available"
-      element: "MemAvailable"
-    mem.committed:
-      data_group: "mem.committed"
-      element: "Committed_AS"
 
 - platform: template
   sensors:
@@ -89,7 +61,7 @@
   sensors:
     tablet_uptime:
       value_template: >-
-        {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.tablet_last_reboot'))) | int // 60 %}
+        {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.u1006_last_reboot'))) | int // 60 %}
         {% set hours = mins // 60 %}
         {% set days = mins // 1440 %}
         {% if days > 1 %}
@@ -102,24 +74,13 @@
 
 - platform: template
   sensors:
-    bejarati_ajto_battery:
-      friendly_name: "Bejárati Ajtó elem"
-      value_template: >
-        {% if state_attr('binary_sensor.sonoff_bejarati_ajto', 'battery_level') != None %}
-          {% set max = 3 | int %}
-          {% set current = state_attr('binary_sensor.sonoff_bejarati_ajto', 'battery_level') | int %}
-          {{ (current/(max/100)) | int }}
-        {% endif %}
-
-- platform: template
-  sensors:
     week_day:
       value_template: >-
-        {% set days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'] %}
-        {{ days[now().weekday()] }}
+        {%- set days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'] %}
+        {{ days[now().weekday()]}}
     current_date:
       value_template: >-
-        {% set months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'] %}
+        {%- set months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'] %}
         {{ (now().timestamp() | timestamp_custom('%d, # %Y')).replace('#', months[now().month-1]) }}
 
 - platform: template
@@ -127,13 +88,18 @@
     tablet_ram_use:
       value_template: >-
         {% if is_number(states.sensor.u1006_ram_free_memory.state) %}
-          {{ 100 - states.sensor.u1006_ram_free_memory.state | float(0) / (states.sensor.u1006_ram_total_memory.state | float(0) / 100) }}
+          {{100 - states.sensor.u1006_ram_free_memory.state | float(0) / (states.sensor.u1006_ram_total_memory.state | float(0) / 100)}}
         {% endif %}
     tablet_storage_use:
       value_template: >-
         {% if is_number(states.sensor.u1006_internal_storage_free_space.state) %}
-          {{ 100 - states.sensor.u1006_internal_storage_free_space.state | float(0) / (states.sensor.u1006_internal_storage_total_space.state | float(0) / 100) }}
+          {{100 - states.sensor.u1006_internal_storage_free_space.state | float(0) / (states.sensor.u1006_internal_storage_total_space.state | float(0) / 100)}}
         {% endif %}
+
+- platform: time_date
+  display_options:
+    - time
+    - date
 
 - platform: template
   sensors:
@@ -147,7 +113,7 @@
 
 - platform: template
   sensors:
-    mobil_szakacs_kata:
+    mobil_szakacs_katalin:
       value_template: >-
         {% if states('sensor.sm_a705fn_wifi_connection') == "MiciMacko 5GHz" %}
           home
@@ -155,30 +121,58 @@
           not_home
         {% endif %}
 
-- platform: template
-  sensors:
-    debian_server_hdd1_percent:
-      value_template: >
-        {{ states.sensor.debian_server_disk_space_hdd1_used.state | float(0) / ((states.sensor.debian_server_disk_space_hdd1_free.state | float(0) + states.sensor.debian_server_disk_space_hdd1_used.state | float(0)) / 100) }}
-    debian_server_hdd2_percent:
-      value_template: >
-        {{ states.sensor.debian_server_disk_space_hdd2_used.state | float(0) / ((states.sensor.debian_server_disk_space_hdd2_free.state | float(0) + states.sensor.debian_server_disk_space_hdd2_used.state | float(0)) / 100) }}
-    debian_server_mem_percent:
-      value_template: >
-        {{ states.sensor.debian_server_mem_committed.state | float(0) / ((states.sensor.debian_server_mem_committed.state | float(0) + states.sensor.debian_server_mem_available.state | float(0)) / 100) }}
+- platform: pirateweather
+  api_key: !secret pirateweather_api_key
+  scan_interval: '00:20:00'
+  monitored_conditions:
+    - temperature
+    - precip_probability
+    - precip_type
+    - humidity
+    - cloud_cover
+    - nearest_storm_distance
+    - precip_intensity
+    - wind_speed
 
-- platform: template
-  sensors:
-    debian_server_uptime:
-      friendly_name: 'Debian Server Uptime'
-      value_template: >-
-        {% set mins = (states.sensor.debian_server_system_uptime.state | int) // 60 %}
-        {% set hours = mins // 60 %}
-        {% set days = mins // 1440 %}
-        {% if days > 1 %}
-          {{ days }} napja
-        {% elif hours > 1 %}
-          {{ hours }} órája
-        {% else %}
-          {{ mins }} perce
-        {% endif %}
+- platform: min_max
+  name: Beltéri hőmérséklet
+  type: mean
+  entity_ids:
+    - sensor.ebedlo_temperature
+    - sensor.nappali_temperature
+    - sensor.indoor_temperature
+
+- platform: min_max
+  name: Beltéri páratartalom
+  type: mean
+  entity_ids:
+    - sensor.ebedlo_humidity
+    - sensor.nappali_humidity
+
+- platform: min_max
+  name: Kültéri hőmérséklet
+  type: mean
+  entity_ids:
+    - sensor.pirateweather_temperature
+    - sensor.outdoor_temperature
+
+- platform: min_max
+  name: Kültéri páratartalom
+  type: mean
+  entity_ids:
+    - sensor.pirateweather_humidity
+    - sensor.outdoor_humidity
+
+- platform: min_max
+  name: Fürdőszoba hőmérséklet
+  type: mean
+  entity_ids:
+    - sensor.furdoszoba_temperature
+    - sensor.furdoszoba_2_temperature
+
+- platform: min_max
+  name: Fürdőszoba páratartalom
+  type: mean
+  entity_ids:
+    - sensor.furdoszoba_humidity
+    - sensor.furdoszoba_2_humidity

@@ -1,0 +1,578 @@
+views:
+  - theme: waves-dark
+    title: Kapcsoló
+    path: kapcsolo
+    icon: mdi:gesture-tap-button
+    type: custom:masonry-layout
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - show_name: true
+                show_icon: true
+                type: button
+                tap_action:
+                  action: toggle
+                name: Előszoba világítás
+                entity: switch.sonoff_eloszoba
+                icon: mdi:ceiling-light
+              - show_name: true
+                show_icon: true
+                type: button
+                tap_action:
+                  action: toggle
+                entity: switch.sonoff_haloszoba
+                name: Hálószoba világítás
+                icon: mdi:ceiling-light
+          - type: horizontal-stack
+            cards:
+              - type: button
+                tap_action:
+                  action: toggle
+                entity: switch.sonoff_furdo_szelloztetes
+                name: Fürdőszoba szellőztetés
+              - show_name: true
+                show_icon: true
+                type: button
+                tap_action:
+                  action: toggle
+                entity: switch.sonoff_tablet_konnektor
+                icon: mdi:power-socket-de
+  - theme: waves-dark
+    title: Fűtés
+    path: futes
+    icon: mdi:radiator
+    type: custom:masonry-layout
+    badges: []
+    cards:
+      - type: vertical-stack
+        in_card: true
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                tap_action:
+                  action: toggle
+                entity: input_boolean.elofutes
+                aspect_ratio: 1/1
+                show_label: true
+                label: |
+                  [[[
+                    var mode = states['climate.honeywell_home_termosztat'].attributes.hvac_action;
+                    return (mode === "idle" ? "Tétlen" : (mode === "heating" ? "Fűtés" : "Kikapcsolva"));
+                  ]]]
+              - type: vertical-stack
+                cards:
+                  - type: entities
+                    title: Nappali hőmérséklet
+                    style: |
+                      #states {
+                        padding: 0px 0px !important
+                      }
+                      .card-header {
+                        padding: 0px 0px !important;
+                      }
+                    entities:
+                      - type: custom:numberbox-card
+                        entity: input_number.nappali_homerseklet
+                        name: false
+                        unit: °C
+                        icon: false
+                        speed: 250
+                        style: |
+                          .grid-left {
+                            font-size: 20px !important;
+                            font-weight: 300 !important;
+                          }
+                          .cur-num {
+                            font-size: 32px !important; 
+                            font-weight: 600 !important;
+                          }
+                        icon_plus: mdi:chevron-up
+                        icon_minus: mdi:chevron-down
+                  - type: entities
+                    title: Éjszakai hőmérséklet
+                    style: |
+                      #states {
+                        padding: 0px 0px !important
+                      }
+                      .card-header {
+                        padding: 0px 0px !important;
+                      }
+                    entities:
+                      - type: custom:numberbox-card
+                        entity: input_number.ejszakai_homerseklet
+                        name: false
+                        unit: °C
+                        icon: false
+                        speed: 250
+                        style: |
+                          .grid-left {
+                            font-size: 20px !important;
+                            font-weight: 300 !important;
+                          }
+                          .cur-num {
+                            font-size: 32px !important; 
+                            font-weight: 600 !important;
+                          }
+                        icon_plus: mdi:chevron-up
+                        icon_minus: mdi:chevron-down
+          - type: glance
+            show_name: true
+            show_icon: true
+            show_state: true
+            entities:
+              - entity: sensor.ebedlo_temperature
+                name: Ebédlő hőmérséklet
+              - entity: sensor.nappali_temperature
+                name: Nappali hőmérséklet
+              - entity: sensor.haloszoba_temperature
+                name: Hálószoba hőmérséklet
+              - entity: sensor.konyha_temperature
+                name: Konyha hőmérséklet
+              - entity: sensor.gyerekszoba_temperature
+                name: Gyerekszoba hőmérséklet
+              - entity: sensor.furdoszoba_homerseklet
+                name: Fürdőszoba hőmérséklet
+                icon: mdi:thermometer
+            columns: 3
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.belteri_homerseklet
+            hours_to_show: 24
+            points_per_hour: 1
+            font_size_header: 16
+            decimals: 1
+            show:
+              extrema: true
+              name: false
+              icon: false
+              labels: true
+            color_thresholds:
+              - value: 18
+                color: '#6666ff'
+              - value: 20
+                color: '#ccccff'
+              - value: 22
+                color: '#f3f300'
+              - value: 24
+                color: '#f39c12'
+              - value: 25
+                color: '#d35400'
+              - value: 26
+                color: '#c0392b'
+  - theme: waves-dark
+    title: Klíma
+    path: klima
+    icon: mdi:snowflake
+    type: custom:masonry-layout
+    badges: []
+    cards:
+      - type: vertical-stack
+        in_card: true
+        cards:
+          - type: custom:simple-thermostat
+            entity: climate.gree_klima
+            layout:
+              mode:
+                headings: false
+                names: false
+            step_size: '0.5'
+            header: false
+            sensors:
+              - attribute: preset_mode
+                name: Mód
+              - attribute: swing_mode
+                name: Keringetés
+            control:
+              hvac: true
+              preset:
+                _hide_when_off: true
+                eco:
+                  name: Eco
+                  icon: mdi:leaf
+                away:
+                  name: Away
+                  icon: mdi:map-marker-off
+                boost:
+                  name: boost
+                  icon: mdi:rocket-launch
+                none:
+                  name: None
+                  icon: mdi:home
+                sleep:
+                  name: Sleep
+                  icon: mdi:sleep
+              fan:
+                _hide_when_off: true
+                auto:
+                  name: Auto
+                  icon: mdi:fan-auto
+                low:
+                  name: Alacsony
+                  icon: mdi:fan-speed-1
+                medium low: false
+                medium:
+                  name: Közepes
+                  icon: mdi:fan-speed-2
+                medium high: false
+                high:
+                  name: Magas
+                  icon: mdi:fan-speed-3
+              swing:
+                _hide_when_off: true
+                'off':
+                  name: Ki
+                  icon: mdi:power
+                vertical:
+                  name: Függőleges
+                  icon: mdi:arrow-expand-vertical
+                horizontal: false
+                both: false
+          - type: custom:mini-graph-card
+            entities:
+              - entity: sensor.belteri_homerseklet
+            hours_to_show: 24
+            points_per_hour: 1
+            height: 150
+            font_size_header: 16
+            decimals: 1
+            show:
+              extrema: true
+              name: false
+              icon: false
+              labels: true
+            color_thresholds:
+              - value: 18
+                color: '#6666ff'
+              - value: 20
+                color: '#ccccff'
+              - value: 22
+                color: '#f3f300'
+              - value: 24
+                color: '#f39c12'
+              - value: 26
+                color: '#d35400'
+              - value: 28
+                color: '#c0392b'
+  - theme: waves-dark
+    title: Időjárás
+    path: idjaras
+    icon: mdi:weather-partly-snowy-rainy
+    type: custom:masonry-layout
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:weather-chart-card
+            entity: weather.pirate_weather
+            view_layout:
+              grid-area: hourly
+          - type: custom:weather-chart-card
+            entity: weather.pirate_weather_daily
+            show_main: false
+            show_attributes: false
+            view_layout:
+              grid-area: daily
+          - type: iframe
+            url: >-
+              https://embed.windy.com/embed2.html?lat=46.329&lon=18.700&detailLat=46.329&detailLon=18.700&width=650&height=450&zoom=11&level=surface&overlay=wind&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1
+            aspect_ratio: 50%
+            view_layout:
+              grid-area: wind
+          - type: iframe
+            url: >-
+              https://embed.windy.com/embed2.html?lat=46.329&lon=18.700&detailLat=46.329&detailLon=18.700&width=650&height=450&zoom=11&level=surface&overlay=rain&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1
+            aspect_ratio: 50%
+            view_layout:
+              grid-area: rain
+  - theme: waves-dark
+    title: Porszívó
+    path: porszivo
+    icon: mdi:robot-vacuum
+    type: custom:masonry-layout
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:vacuum-card
+            entity: vacuum.viomi_se
+            image: default
+            compact_view: false
+            stats:
+              default:
+                - attribute: filter_left
+                  unit: óra
+                  subtitle: Filter
+                - attribute: side_brush_left
+                  unit: óra
+                  subtitle: Side brush
+                - attribute: main_brush_left
+                  unit: óra
+                  subtitle: Main brush
+                - attribute: mop_left
+                  unit: óra
+                  subtitle: Mop
+              cleaning:
+                - attribute: s_area
+                  unit: m2
+                  subtitle: Cleaning area
+                - attribute: s_time
+                  unit: perc
+                  subtitle: Cleaning time
+          - type: grid
+            cards:
+              - type: custom:button-card
+                entity: input_boolean.nappali_takaritas
+                show_label: true
+                label: >-
+                  [[[ var clean_ago = Math.floor((Date.now() -
+                  Date.parse(states['input_datetime.nappali_takaritas'].state))
+                  / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                  Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája");
+                  ]]]
+                hold_action:
+                  action: more-info
+              - type: custom:button-card
+                entity: input_boolean.ebedlo_takaritas
+                show_label: true
+                label: >-
+                  [[[ var clean_ago = Math.floor((Date.now() -
+                  Date.parse(states['input_datetime.ebedlo_takaritas'].state)) /
+                  1000 / 60 / 60); return (clean_ago > 0.024 ?
+                  Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája");
+                  ]]]
+                hold_action:
+                  action: more-info
+              - type: custom:button-card
+                entity: input_boolean.konyha_takaritas
+                show_label: true
+                label: >-
+                  [[[ var clean_ago = Math.floor((Date.now() -
+                  Date.parse(states['input_datetime.konyha_takaritas'].state)) /
+                  1000 / 60 / 60); return (clean_ago > 0.024 ?
+                  Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája");
+                  ]]]
+                hold_action:
+                  action: more-info
+              - type: custom:button-card
+                entity: input_boolean.haloszoba_takaritas
+                show_label: true
+                label: >-
+                  [[[ var clean_ago = Math.floor((Date.now() -
+                  Date.parse(states['input_datetime.haloszoba_takaritas'].state))
+                  / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                  Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája");
+                  ]]]
+                hold_action:
+                  action: more-info
+              - type: custom:button-card
+                entity: input_boolean.eloszoba_takaritas
+                show_label: true
+                label: >-
+                  [[[ var clean_ago = Math.floor((Date.now() -
+                  Date.parse(states['input_datetime.eloszoba_takaritas'].state))
+                  / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                  Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája");
+                  ]]]
+                hold_action:
+                  action: more-info
+              - type: custom:button-card
+                entity: input_boolean.folyoso_takaritas
+                show_label: true
+                label: >-
+                  [[[ var clean_ago = Math.floor((Date.now() -
+                  Date.parse(states['input_datetime.folyoso_takaritas'].state))
+                  / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                  Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája");
+                  ]]]
+                hold_action:
+                  action: more-info
+              - type: custom:button-card
+                entity: input_boolean.gyerekszoba_takaritas
+                show_label: true
+                label: >-
+                  [[[ var clean_ago = Math.floor((Date.now() -
+                  Date.parse(states['input_datetime.gyerekszoba_takaritas'].state))
+                  / 1000 / 60 / 60); return (clean_ago > 0.024 ?
+                  Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája");
+                  ]]]
+                hold_action:
+                  action: more-info
+              - type: custom:button-card
+                entity: script.clean_house
+                icon: mdi:play
+                show_label: true
+                label: indítás
+                name: Takarítás
+                tap_action:
+                  action: call-service
+                  service_data:
+                    entity_id: script.clean_house
+                  service: script.clean_house
+            columns: 4
+            square: false
+  - theme: waves-dark
+    title: Növények
+    path: novenyek
+    icon: mdi:leaf
+    type: custom:masonry-layout
+    badges: []
+    cards:
+      - type: custom:flower-card
+        entity: plant.ficus
+  - theme: waves-dark
+    title: Tv
+    path: tv
+    icon: mdi:television
+    type: custom:masonry-layout
+    badges: []
+    cards:
+      - type: custom:mini-media-player
+        in_card: true
+        entity: media_player.samsung_q80_series_65
+        name: Living Room Samsung Q80 Tv
+        icon: mdi:television
+        tap_action: none
+        hide:
+          source: true
+        shortcuts:
+          columns: 3
+          buttons:
+            - type: service
+              name: Plex
+              id: media_player.select_source
+              data:
+                entity_id: media_player.samsung_q80_series_65
+                source: Plex
+            - type: service
+              name: Netflix
+              id: media_player.select_source
+              data:
+                entity_id: media_player.samsung_q80_series_65
+                source: Netflix
+            - type: service
+              name: YouTube
+              id: media_player.select_source
+              data:
+                entity_id: media_player.samsung_q80_series_65
+                source: Youtube
+            - type: service
+              name: HBO Max
+              id: media_player.select_source
+              data:
+                entity_id: media_player.samsung_q80_series_65
+                source: HBO Max
+            - type: service
+              name: TARR MobilTv
+              id: media_player.select_source
+              data:
+                entity_id: media_player.samsung_q80_series_65
+                source: TARR MobilTv
+        artwork: material
+  - theme: waves-dark
+    title: Információ
+    path: informacio
+    icon: mdi:information-outline
+    type: custom:masonry-layout
+    badges: []
+    cards:
+      - type: vertical-stack
+        in_card: true
+        cards:
+          - type: entities
+            title: Home Assistant
+            entities:
+              - entity: sensor.template_hass_version
+              - entity: sensor.hacs
+              - entity: sensor.home_assistant_v2_db_size
+                name: Adatbázis mérete
+              - entity: sensor.home_assistant_log_size
+                name: Log méret
+              - entity: sensor.ha_uptime
+                icon: mdi:history
+                name: Uptime
+          - type: entities
+            title: Alldocube iPlay 10 Pro
+            show_header_toggle: false
+            entities:
+              - entity: light.u1006_screen
+              - entity: sensor.tablet_uptime
+                icon: mdi:history
+                name: Uptime
+              - entity: sensor.u1006_battery_temperature
+                name: Akkumlátor hőmérséklet
+              - type: custom:bar-card
+                width: 55%
+                height: 2em
+                decimal: 0
+                unit_of_measurement: '%'
+                positions:
+                  icon: outside
+                  indicator: 'off'
+                  name: outside
+                entity_row: true
+                entities:
+                  - entity: sensor.u1006_battery_level
+                    name: Akkumlátor
+                  - entity: sensor.tablet_ram_use
+                    name: Memória 3GB
+                    icon: mdi:memory
+                  - entity: sensor.tablet_storage_use
+                    name: Tárhely 25GB
+                    icon: mdi:sd
+          - type: entities
+            title: Debian Server
+            entities:
+              - entity: sensor.processor_temperature
+                name: Processzor hőmérséklet
+              - type: custom:bar-card
+                width: 55%
+                height: 2em
+                decimal: 0
+                unit_of_measurement: '%'
+                positions:
+                  icon: outside
+                  indicator: 'off'
+                  name: outside
+                entity_row: true
+                entities:
+                  - entity: sensor.processor_use
+                    name: Processzor
+                  - entity: sensor.memory_use_percent
+                    name: Memória 8GB
+                  - entity: sensor.disk_use_percent
+                    name: SSD 120GB
+                  - entity: sensor.disk_use_percent_mnt_hdd1
+                    name: HDD1 2TB
+                  - entity: sensor.disk_use_percent_mnt_hdd2
+                    name: HDD2 4TB
+          - type: entities
+            title: Mikrotik hAP ac^2
+            entities:
+              - entity: binary_sensor.mikrotik_router_firmware_update
+                name: Firmware update
+                icon: mdi:update
+              - entity: sensor.mikrotik_router_uptime
+                icon: mdi:history
+                name: Uptime
+              - type: custom:bar-card
+                width: 55%
+                height: 2em
+                decimal: 0
+                unit_of_measurement: '%'
+                positions:
+                  icon: outside
+                  indicator: 'off'
+                  name: outside
+                entity_row: true
+                entities:
+                  - entity: sensor.mikrotik_router_cpu_load
+                    icon: mdi:cpu-32-bit
+                    name: Processzor
+                  - entity: sensor.mikrotik_router_memory_usage
+                    name: Memória 256MB
+                  - entity: sensor.mikrotik_router_hdd_usage
+                    name: Tárhely 16MB

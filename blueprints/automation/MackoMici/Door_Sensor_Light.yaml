@@ -8,17 +8,20 @@ blueprint:
       selector:
         entity:
           domain: calendar
+          multiple: false
     doorsensor_entity:
       name: Door Sensor
       selector:
         entity:
           domain: binary_sensor
           device_class: door
+          multiple: false
     light_switch:
       name: Light
       selector:
         entity:
           domain: switch
+          multiple: false
     door_closed_wait:
       name: Wait time
       description: Mennyi ideig marad égve a lámpa
@@ -28,8 +31,8 @@ blueprint:
           min: 0.0
           max: 3600.0
           unit_of_measurement: seconds
-          mode: slider
           step: 1.0
+          mode: slider
   source_url: https://gist.github.com/MackoMici/c34cb44e00d6b7b139d6ecd3c8a16cc6
 mode: single
 max_exceeded: silent
@@ -58,19 +61,14 @@ action:
     - condition: state
       entity_id: sun.sun
       state: below_horizon
-    - condition: or
+    - condition: and
       conditions:
       - condition: state
         entity_id: binary_sensor.workday_sensor
         state: 'on'
-      - condition: and
-        conditions:
-        - condition: state
-          entity_id: !input 'calendar'
-          state: 'on'
-        - condition: template
-          value_template: '{{ is_state_attr(calendar, ''description'', ''Munkaszüneti
-            nap'') }}'
+      - condition: state
+        entity_id: !input 'calendar'
+        state: 'off'
     sequence:
     - service: switch.turn_on
       entity_id: !input 'light_switch'
