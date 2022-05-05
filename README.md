@@ -28,6 +28,10 @@ Ami az alaprajzon kezelhető az mind előugró ablakban fog megjelenni, melyhez 
 | [![vacuum](https://github.com/MackoMici/hass-core-config/blob/05a3491ac6e59330f02a7574c0858129abf68554/readme-img/vacuum.png)](https://github.com/MackoMici/hass-core-config/blob/05a3491ac6e59330f02a7574c0858129abf68554/readme-img/vacuum.png)<br>**Vacuum** | [![rendszer](https://github.com/MackoMici/hass-core-config/blob/05a3491ac6e59330f02a7574c0858129abf68554/readme-img/rendszer.png)](https://github.com/MackoMici/hass-core-config/blob/05a3491ac6e59330f02a7574c0858129abf68554/readme-img/rendszer.png)<br>**Rendszer** | [![tv](https://github.com/MackoMici/hass-core-config/blob/05a3491ac6e59330f02a7574c0858129abf68554/readme-img/tv.png)](https://github.com/MackoMici/hass-core-config/blob/05a3491ac6e59330f02a7574c0858129abf68554/readme-img/tv.png)<br>**TV** |
 | [![flora](https://github.com/MackoMici/hass-core-config/blob/05a3491ac6e59330f02a7574c0858129abf68554/readme-img/flora.png)](https://github.com/MackoMici/hass-core-config/blob/05a3491ac6e59330f02a7574c0858129abf68554/readme-img/flora.png)<br>**Növény** |
 
+#### Kinézet
+
+[Waves Theme](https://github.com/tgcowell/waves)
+
 ## Eszközök
 
 | Gyártó | Termék | Integráció |
