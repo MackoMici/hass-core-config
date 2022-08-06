@@ -1,3 +1,9 @@
+kiosk_mode:
+  user_settings:
+    - users:
+        - "tablet"
+      kiosk: true
+
 views:
   - type: custom:grid-layout
     path: 0
@@ -9,7 +15,7 @@ views:
         "sidebar  floorplan  floorplan  floorplan"
         "sidebar  floorplan  floorplan  floorplan"
         "sidebar  floorplan  floorplan  floorplan"
-    theme: waves-dark
+    theme: waves
     icon: mdi:floor-plan
     badges: []
     cards:
@@ -35,6 +41,8 @@ views:
                   element: area.haloszoba
                 - entity: switch.sonoff_eloszoba
                   element: area.eloszoba
+                - entity: switch.sonoff_furdoszoba
+                  element: area.furdoszoba
               tap_action: toggle
               state_action:
                 service: floorplan.class_set
@@ -99,11 +107,11 @@ views:
                     type: custom:layout-card
                     layout_type: custom:grid-layout
                     layout:
-                      grid-template-columns: repeat(2, 1fr)
-                      grid-template-rows: 1fr
+                      grid-template-columns: auto 52%
+                      grid-template-rows: 360px
                       grid-template-areas: |
-                        "hourly daily"
-                        "wind rain"
+                        "hourly rain"
+                        "daily rain"
                     cards:
                       - type: custom:weather-chart-card
                         entity: weather.pirate_weather
@@ -111,16 +119,14 @@ views:
                           grid-area: hourly
                       - type: custom:weather-chart-card
                         entity: weather.pirate_weather_daily
+                        show_main: false
+                        show_attributes: false
                         view_layout:
                           grid-area: daily
-                      - type: iframe
-                        url: https://embed.windy.com/embed2.html?lat=46.329&lon=18.700&zoom=11&overlay=wind&message=true&marker=true&calendar=now&type=map&location=coordinates&metricWind=km%2Fh&metricTemp=%C2%B0C
-                        aspect_ratio: 50%
-                        view_layout:
-                          grid-area: wind
-                      - type: iframe
-                        url: https://embed.windy.com/embed2.html?lat=46.329&lon=18.700&zoom=11&overlay=rain&message=true&marker=true&calendar=now&type=map&location=coordinates&metricWind=km%2Fh&metricTemp=%C2%B0C
-                        aspect_ratio: 50%
+                      - type: custom:weather-radar-card
+                        zoom_level: 8
+                        square_map: true
+                        static_map: true
                         view_layout:
                           grid-area: rain
             - name: Hőmérséklet
@@ -252,10 +258,12 @@ views:
                         entities:
                           - entity: sensor.belteri_homerseklet
                         hours_to_show: 24
+                        hour24: true
                         points_per_hour: 1
                         height: 150
                         font_size_header: 16
                         decimals: 1
+                        min_bound_range: 10
                         show:
                           extrema: true
                           name: false
@@ -374,9 +382,11 @@ views:
                         entities:
                           - entity: sensor.belteri_homerseklet
                         hours_to_show: 24
+                        hour24: true
                         points_per_hour: 1
                         font_size_header: 16
                         decimals: 1
+                        min_bound_range: 10
                         show:
                           extrema: true
                           name: false
@@ -417,10 +427,10 @@ views:
                 service: floorplan.style_set
                 service_data:
                   style: >
-                    opacity: ${ entity.attributes.problem === "none" ? "0" : "1" };
-                    fill: ${ entity.attributes.problem === "none" ? "" : "#C1424299" };
-                    transition: ${ entity.attributes.problem === "none" ? "fill 5s ease" : "" };
-            - name: tablet
+                    opacity: ${ entity.state === "ok" ? "0" : "1" };
+                    fill: ${ entity.state === "ok" ? "" : "#C1424299" };
+                    transition: ${ entity.state === "ok" ? "fill 5s ease" : "" };
+            - name: Tablet
               entity: light.u1006_screen
               element: tablet
               tap_action: toggle              
@@ -655,11 +665,11 @@ views:
                     type: custom:layout-card
                     layout_type: custom:grid-layout
                     layout:
-                      grid-template-columns: repeat(2, 1fr)
+                      grid-template-columns: repeat(3, 1fr)
                       grid-template-rows: 1fr
                       grid-template-areas: |
-                        "hass mikrotik"
-                        "tablet nas"
+                        "hass mikrotik nas"
+#                        "tablet nas"
                     cards:
                       - type: entities
                         style: |
@@ -676,44 +686,41 @@ views:
                             name: Adatbázis mérete
                           - entity: sensor.home_assistant_log_size
                             name: Log méret
-                          - entity: sensor.ha_uptime
-                            icon: mdi:history
+                          - entity: sensor.home_assistant_uptime
                             name: Uptime
-                      - type: entities
-                        style: |
-                          ha-card {
-                            font-variant: small-caps;
-                          }
-                        view_layout:
-                          grid-area: tablet
-                        title: Alldocube iPlay 10 Pro
-                        show_header_toggle: false
-                        entities:
-                          - entity: light.u1006_screen
-                          - entity: sensor.tablet_uptime
-                            icon: mdi:history
-                            name: Uptime
-                          - entity: sensor.u1006_battery_temperature
-                            name: Akkumlátor hőmérséklet
-                          - type: custom:bar-card
-                            width: 55%
-                            height: 2em
-                            decimal: 0
-                            unit_of_measurement: '%'
-                            positions:
-                              icon: outside
-                              indicator: 'off'
-                              name: outside
-                            entity_row: true
-                            entities:
-                              - entity: sensor.u1006_battery_level
-                                name: Akkrumlátor
-                              - entity: sensor.tablet_ram_use
-                                name: Memória 3GB
-                                icon: mdi:memory
-                              - entity: sensor.tablet_storage_use
-                                name: Tárhely 25GB
-                                icon: mdi:sd
+ #                     - type: entities
+ #                       style: |
+ #                         ha-card {
+ #                           font-variant: small-caps;
+ #                         }
+ #                       view_layout:
+ #                         grid-area: tablet
+ #                       title: Alldocube iPlay 10 Pro
+ #                       show_header_toggle: false
+ #                       entities:
+ #                         - entity: light.u1006_screen
+ #                         - entity: sensor.tablet_uptime
+ #                           icon: mdi:history
+ #                           name: Uptime
+ #                         - entity: sensor.u1006_battery_temperature
+ #                           name: Akkumlátor hőmérséklet
+ #                         - type: custom:bar-card
+ #                           width: 55%
+ #                           height: 2em
+ #                           decimal: 0
+ #                           unit_of_measurement: '%'
+ #                           positions:
+ #                             icon: outside
+ #                             indicator: 'off'
+ #                             name: outside
+ #                           entity_row: true
+ #                           entities:
+ #                             - entity: sensor.u1006_battery_level
+ #                               name: Akkrumlátor
+ #                             - entity: sensor.tablet_ram_use
+ #                               name: Memória 3GB
+ #                             - entity: sensor.tablet_storage_use
+ #                               name: Tárhely 25GB
                       - type: entities
                         style: |
                           ha-card {
@@ -756,11 +763,10 @@ views:
                           grid-area: mikrotik
                         title: Mikrotik hAP ac^2
                         entities:
-                          - entity: binary_sensor.mikrotik_router_firmware_update
+                          - entity: binary_sensor.mikrotik_firmware_update
                             name: Firmware update
                             icon: mdi:update
                           - entity: sensor.mikrotik_router_uptime
-                            icon: mdi:history
                             name: Uptime
                           - type: custom:bar-card
                             width: 55%
@@ -773,13 +779,13 @@ views:
                               name: outside
                             entity_row: true
                             entities:
-                              - entity: sensor.mikrotik_router_cpu_load
+                              - entity: sensor.mikrotik_cpu_load
                                 icon: mdi:cpu-32-bit
                                 name: Processzor
-                              - entity: sensor.mikrotik_router_memory_usage
+                              - entity: sensor.mikrotik_memory_usage
                                 name: Memória 256MB
                                 icon: mdi:memory
-                              - entity: sensor.mikrotik_router_hdd_usage
+                              - entity: sensor.mikrotik_hdd_usage
                                 icon: mdi:harddisk
                                 name: Tárhely 16MB
       - type: vertical-stack
@@ -1031,6 +1037,12 @@ views:
             maxEventCount: 5
             maxDaysToShow: 7
             showLoader: false
+            hideFinishedEvents: true
+            showWeekDay: true
+            disableLocationLink: true
+            disableEventLink: true
             refreshInterval: 3600
+            showMultiDay: true
+            showMultiDayEventParts: true
         view_layout:
           grid-area: sidebar

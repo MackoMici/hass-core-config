@@ -12,6 +12,9 @@ default_config:
     # log level for all python scripts
 #    homeassistant.components.python_script: warning
 
+recorder:
+  purge_keep_days: 30
+
 lovelace:
   mode: yaml
   resources:
@@ -41,7 +44,13 @@ lovelace:
       type: module
     - url: /hacsfiles/vacuum-card/vacuum-card.js
       type: module
+    - url: /hacsfiles/weather-radar-card/weather-radar-card.js
+      type: module
     - url: /hacsfiles/weather-chart-card/weather-chart-card.js
+      type: module
+    - url: /hacsfiles/kiosk-mode/kiosk-mode.js
+      type: module
+    - url: /hacsfiles/lovelace-card-tools/card-tools.js
       type: module
     - url: /local/card-tools.js
       type: module
@@ -64,8 +73,9 @@ lovelace:
       show_in_sidebar: true
 
 homeassistant:
+  packages: !include_dir_named include
   allowlist_external_dirs:
-    - /home/zoolesz/.homeassistant
+    - "/home/zoolesz/.homeassistant"
 
 browser_mod:
   prefix: "browser_"
@@ -81,15 +91,6 @@ samsungtv_smart:
       "Plex": "3201512006963/kIciSQlYEM.plex",
       "TARR MobilTv": "DC80zckKNb.Basicapplication"
     }
-
-lyric:
-  client_id: !secret lyric_id
-  client_secret: !secret lyric_secret
-
-google:
-  client_id: !secret google_id
-  client_secret: !secret google_secret
-  calendar_access: read_only
 
 weather:
   - platform: pirateweather
@@ -118,23 +119,6 @@ sonoff:
 #  mode: local
 #  reload: always
 
-binary_sensor:
-  - platform: workday
-    country: HU
-    workdays: [mon, tue, wed, thu, fri]
-    excludes: [sat, sun, holiday]
-
-template:
-  sensor:
-    - unique_id: hass_version
-      icon: mdi:home-assistant
-      state: >
-        {{ 'Naprakész' if states('sensor.current_version') == 
-        states('sensor.home_assistant_versions') else states('sensor.home_assistant_versions') }}
-      attributes:
-        friendly_name: >
-          Telepítve {{ states('sensor.current_version') }}
-
 # Text to speech
 tts:
   - platform: microsoft
@@ -147,13 +131,13 @@ tts:
 frontend:
   themes: !include_dir_merge_named themes
 
-sensor: !include sensor.yaml
-group: !include groups.yaml
-notify: !include notify.yaml
+#sensor: !include sensor.yaml
+#group: !include groups.yaml
+#notify: !include notify.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-input_boolean: !include input_boolean.yaml
-input_number: !include input_number.yaml
-input_datetime: !include input_datetime.yaml
-plant: !include plants.yaml
+#input_boolean: !include input_boolean.yaml
+#input_number: !include input_number.yaml
+#input_datetime: !include input_datetime.yaml
+#plant: !include plants.yaml

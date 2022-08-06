@@ -65,7 +65,9 @@ views:
           - sensor.furdoszoba_simmerindex
           - sensor.furdoszoba_simmerzone
           - sensor.furdoszoba_perception
-          - switch.sonoff_100124dc4b
+          - switch.sonoff_furdoszoba_futes
+          - switch.sonoff_furdoszoba
+          - switch.sonoff_furdo_szelloztetes
         title: Fürdőszoba
       - type: entities
         entities:
@@ -113,30 +115,31 @@ views:
         title: Family
       - type: entities
         entities:
-          - binary_sensor.home_assistant_versions_update_available
+          - binary_sensor.home_assistant_website_update_available
           - sensor.hacs
-          - sensor.ha_uptime
-          - sensor.home_assistant_versions
+          - sensor.home_assistant_uptime
+          - sensor.home_assistant_website
           - sensor.current_version
         title: System information
-      - type: entities
-        entities:
-          - sensor.tablet_ram_use
-          - sensor.tablet_storage_use
-          - sensor.tablet_uptime
-          - binary_sensor.u1006_device_admin
-          - binary_sensor.u1006_kiosk_mode
-          - binary_sensor.u1006_plugged_in
-          - button.u1006_bring_to_foreground
-          - button.u1006_load_start_url
-          - button.u1006_reboot_device
-          - button.u1006_restart_browser
-          - button.u1006_send_to_background
-          - switch.u1006_kiosk_lock
-          - switch.u1006_maintenance_mode
-          - switch.u1006_motion_detection
-          - switch.u1006_screensaver
-        title: Tablet
+#      - type: entities
+#        entities:
+#          - sensor.tablet_ram_use
+#          - sensor.tablet_storage_use
+#          - sensor.tablet_uptime
+#          - sensor.u1006_battery_level
+#          - binary_sensor.u1006_device_admin
+#          - binary_sensor.u1006_kiosk_mode
+#          - binary_sensor.u1006_plugged_in
+#          - button.u1006_bring_to_foreground
+#          - button.u1006_load_start_url
+#          - button.u1006_reboot_device
+#          - button.u1006_restart_browser
+#          - button.u1006_send_to_background
+#          - switch.u1006_kiosk_lock
+#          - switch.u1006_maintenance_mode
+#          - switch.u1006_motion_detection
+#          - switch.u1006_screensaver
+#        title: Tablet
       - type: entities
         entities:
           - entity: sensor.disk_use_percent
@@ -152,21 +155,21 @@ views:
         title: Debian Server
       - type: entities
         entities:
-          - binary_sensor.mikrotik_router_firmware_update
-          - sensor.mikrotik_router_uptime
-          - sensor.mikrotik_router_cpu_load
-          - sensor.mikrotik_router_memory_usage
-          - sensor.mikrotik_router_hdd_usage
-          - sensor.mikrotik_router_wired_clients
-          - sensor.mikrotik_router_wireless_clients
-          - switch.mikrotik_router_port_ether1
-          - switch.mikrotik_router_port_ether2
-          - switch.mikrotik_router_port_ether3
-          - switch.mikrotik_router_port_ether4
-          - switch.mikrotik_router_port_ether5
-          - switch.mikrotik_router_port_wlan1
-          - switch.mikrotik_router_port_wlan2
-          - switch.mikrotik_router_port_pppoe_out1
+          - binary_sensor.mikrotik_firmware_update
+          - sensor.mikrotik_uptime
+          - sensor.mikrotik_cpu_load
+          - sensor.mikrotik_memory_usage
+          - sensor.mikrotik_hdd_usage
+          - sensor.mikrotik_wired_clients
+          - sensor.mikrotik_wireless_clients
+          - switch.mikrotik_port_ether1
+          - switch.mikrotik_port_ether2
+          - switch.mikrotik_port_ether3
+          - switch.mikrotik_port_ether4
+          - switch.mikrotik_port_ether5
+          - switch.mikrotik_port_wlan1
+          - switch.mikrotik_port_wlan2
+          - switch.mikrotik_port_pppoe_out1
         title: Mikrotik
       - type: media-control
         entity: media_player.samsung_q80_series_65

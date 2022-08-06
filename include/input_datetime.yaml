@@ -1,0 +1,36 @@
+input_datetime:
+  ebedlo_takaritas:
+    name: Ebédlő utolsó takarítás
+    has_date: true
+    has_time: true
+    icon: mdi:silverware-variant
+  eloszoba_takaritas:
+    name: Előszoba utolsó takarítás
+    has_date: true
+    has_time: true
+    icon: mdi:door
+  folyoso_takaritas:
+    name: Folyosó utolsó takarítás
+    has_date: true
+    has_time: true
+    icon: mdi:door-sliding-open
+  gyerekszoba_takaritas:
+    name: Gyerekszoba utolsó takarítás
+    has_date: true
+    has_time: true
+    icon: mdi:teddy-bear
+  haloszoba_takaritas:
+    name: Hálószoba utolsó takarítás
+    has_date: true
+    has_time: true
+    icon: mdi:bed-empty
+  konyha_takaritas:
+    name: Konyha utolsó takarítás
+    has_date: true
+    has_time: true
+    icon: mdi:countertop
+  nappali_takaritas:
+    name: Nappali utolsó takarítás
+    has_date: true
+    has_time: true
+    icon: mdi:sofa

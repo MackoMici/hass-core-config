@@ -1,0 +1,68 @@
+blueprint:
+  name: Window open, climate off after a defined time
+  description: 'Climate device like heating and cooling devices (if active) are turned
+    off and go back to the previous set stage after the windows is closed again. Now
+    it supports several heating modes and different vendors like Tado. The supported
+    HAVC modes are: automatic, auto, heat, heat_cool and off. If you need more please
+    let me know. Happy automating!'
+  domain: automation
+  input:
+    window_entity:
+      name: Window Sensor
+      description: The window sensor that controls the climate entity. If you have
+        more window sensors please make a group sensor.
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: window
+          multiple: false
+    minimum_open_time:
+      name: Miniumum open time
+      description: Time in seconds to wait until the automation is triggered
+      default: 10
+      selector:
+        number:
+          min: 0.0
+          max: 120.0
+          unit_of_measurement: seconds
+          mode: slider
+          step: 1.0
+    climate_target:
+      name: Climate Device
+      description: The climate entity that is controlled by the window sensor.
+      selector:
+        entity:
+          domain: climate
+          multiple: false
+  source_url: https://gist.github.com/MackoMici/4d0670331030e61f8820fe2ebdde7e41
+trigger:
+- platform: state
+  entity_id: !input 'window_entity'
+  to: 'on'
+  for: !input 'minimum_open_time'
+condition:
+- condition: not
+  conditions:
+  - condition: state
+    entity_id: !input 'climate_target'
+    state: 'off'
+action:
+- choose:
+  - conditions:
+    - condition: state
+      entity_id: !input 'climate_target'
+      state: cool
+    sequence:
+    - service: climate.turn_off
+      target:
+        entity_id: !input 'climate_target'
+    - wait_for_trigger:
+      - platform: state
+        entity_id: !input 'window_entity'
+        to: 'off'
+      continue_on_timeout: false
+    - service: climate.set_hvac_mode
+      target:
+        entity_id: !input 'climate_target'
+      data:
+        hvac_mode: cool

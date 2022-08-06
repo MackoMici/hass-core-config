@@ -1,0 +1,14 @@
+plant:
+  openplantbook:
+    client_id: !secret plantbook_client_id
+    secret: !secret plantbook_secret
+
+  Ficus:
+    species: ficus benjamina cv. barok
+    warn_low_brightness: false
+    image: openplantbook
+    sensors:
+      moisture: sensor.ficus_benjamina_barok_moisture
+      temperature: sensor.ficus_benjamina_barok_temperature
+      conductivity: sensor.ficus_benjamina_barok_conductivity
+      brightness: sensor.ficus_benjamina_barok_illuminance

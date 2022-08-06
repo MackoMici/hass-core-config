@@ -1,0 +1,17 @@
+group:
+  family_all:
+    entities:
+      - person.hunyadvari_zoltan
+      - person.szakacs_katalin
+      - sensor.hunyadvari_zoltan_wifi
+      - sensor.szakacs_katalin_wifi
+
+  family_wifi:
+    entities:
+      - sensor.hunyadvari_zoltan_wifi
+      - sensor.szakacs_katalin_wifi
+
+  family_gps:
+    entities:
+      - person.hunyadvari_zoltan
+      - person.szakacs_katalin

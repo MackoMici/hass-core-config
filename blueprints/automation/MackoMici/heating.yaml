@@ -19,7 +19,7 @@ blueprint:
           multiple: false
     window_sensor:
       name: Ablak szenzor
-      description: Aklab nyitás érzékelő.
+      description: Ablak nyitás érzékelő.
       selector:
         entity:
           domain: binary_sensor
@@ -255,4 +255,4 @@ action:
       data:
         entity_id: !input 'thermostat'
         hvac_mode: 'off'
-mode: single
+mode: queued

@@ -5,7 +5,7 @@
 automations.yaml
 google_calendars.yaml
 scenes.yaml
-scripts.yaml
+!scripts.yaml
 secrets.yaml
 
 appdaemon/*

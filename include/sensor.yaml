@@ -1,0 +1,74 @@
+sensor:
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: /
+      - type: disk_use_percent
+        arg: /mnt/hdd1
+      - type: disk_use_percent
+        arg: /mnt/hdd2
+      - type: memory_use_percent
+      - type: processor_use
+      - type: processor_temperature
+      - type: last_boot
+
+  - platform: time_date
+    display_options:
+      - time
+      - date
+
+  - platform: pirateweather
+    api_key: !secret pirateweather_api_key
+    scan_interval: '00:20:00'
+    monitored_conditions:
+      - temperature
+      - precip_probability
+      - precip_type
+      - humidity
+      - cloud_cover
+      - nearest_storm_distance
+      - precip_intensity
+      - wind_speed
+
+  - platform: min_max
+    name: Beltéri hőmérséklet
+    type: mean
+    entity_ids:
+      - sensor.ebedlo_temperature
+      - sensor.nappali_temperature
+      - sensor.indoor_temperature
+
+  - platform: min_max
+    name: Beltéri páratartalom
+    type: mean
+    entity_ids:
+      - sensor.ebedlo_humidity
+      - sensor.nappali_humidity
+
+  - platform: min_max
+    name: Kültéri hőmérséklet
+    type: mean
+    entity_ids:
+      - sensor.pirateweather_temperature
+      - sensor.outdoor_temperature
+
+  - platform: min_max
+    name: Kültéri páratartalom
+    type: mean
+    entity_ids:
+      - sensor.pirateweather_humidity
+      - sensor.outdoor_humidity
+
+  - platform: min_max
+    name: Fürdőszoba hőmérséklet
+    type: mean
+    entity_ids:
+      - sensor.furdoszoba_temperature
+      - sensor.furdoszoba_2_temperature
+
+  - platform: min_max
+    name: Fürdőszoba páratartalom
+    type: mean
+    entity_ids:
+      - sensor.furdoszoba_humidity
+      - sensor.furdoszoba_2_humidity
