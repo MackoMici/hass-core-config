@@ -35,34 +35,35 @@ blueprint:
           domain: climate
           multiple: false
   source_url: https://gist.github.com/MackoMici/4d0670331030e61f8820fe2ebdde7e41
+mode: single
 trigger:
 - platform: state
-  entity_id: !input 'window_entity'
+  entity_id: !input window_entity
   to: 'on'
-  for: !input 'minimum_open_time'
+  for: !input minimum_open_time
 condition:
 - condition: not
   conditions:
   - condition: state
-    entity_id: !input 'climate_target'
+    entity_id: !input climate_target
     state: 'off'
 action:
 - choose:
   - conditions:
     - condition: state
-      entity_id: !input 'climate_target'
+      entity_id: !input climate_target
       state: cool
     sequence:
     - service: climate.turn_off
       target:
-        entity_id: !input 'climate_target'
+        entity_id: !input climate_target
     - wait_for_trigger:
       - platform: state
-        entity_id: !input 'window_entity'
+        entity_id: !input window_entity
         to: 'off'
       continue_on_timeout: false
     - service: climate.set_hvac_mode
       target:
-        entity_id: !input 'climate_target'
+        entity_id: !input climate_target
       data:
         hvac_mode: cool

@@ -8,6 +8,12 @@ input_boolean:
   elofutes:
     name: Előfűtés
     icon: mdi:radiator
+  futes:
+    name: Fűtés
+    icon: mdi:radiator
+  tavol:
+    name: Távollét
+    icon: mdi:radiator-off
   ebedlo_takaritas:
     name: Ebédlő
     icon: mdi:silverware-variant

@@ -16,9 +16,9 @@ template:
         {{ states('sensor.sonoff_bejarati_ajto_battery_voltage') not in ['unavailable', 'unknown'] }}      
       state: >
         {% if states('sensor.sonoff_bejarati_ajto_battery_voltage') != None %}
-          {% set max = 3 | int %}
-          {% set current = states('sensor.sonoff_bejarati_ajto_battery_voltage') | int %}
-          {{ (current/(max/100)) | int }}
+          {% set min = 1.87 | float(2) %}
+          {% set current = states('sensor.sonoff_bejarati_ajto_battery_voltage') | float(2) %}
+          {{ ((current - min) / 0.011) | int }}
         {% endif %}
 
     - name: "Home Assistant Uptime"
@@ -35,20 +35,6 @@ template:
           {{ mins }} perce
         {% endif %}
       
-    - name: "Mikrotik Router Uptime"
-      icon: mdi:history
-      state: >
-        {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.mikrotik_uptime'))) | int // 60 %}
-        {% set hours = mins // 60 %}
-        {% set days = mins // 1440 %}
-        {% if days > 1 %}
-          {{ days }} napja
-        {% elif hours > 1 %}
-          {{ hours }} órája
-        {% else %}
-          {{ mins }} perce
-        {% endif %}
-
 #    - name: "Tablet Uptime"
 #      icon: mdi:history
 #      state: >
@@ -102,3 +88,17 @@ template:
         {% else %}
           not_home
         {% endif %}
+
+    - name: "MetNo Temperature"
+      unit_of_measurement: '°C'
+      state_class: 'measurement'
+      state: "{{ state_attr('weather.forecast_home', 'temperature') }}"
+
+    - name: "MetNo Humidity"
+      unit_of_measurement: '%'
+      state_class: 'measurement'
+      state: "{{ state_attr('weather.forecast_home', 'humidity') }}"
+
+    - name: "MetNo Wind Speed"
+      unit_of_measurement: 'km/h'
+      state: "{{ state_attr('weather.forecast_home', 'wind_speed') }}"

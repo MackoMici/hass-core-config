@@ -45,7 +45,7 @@ views:
         entities:
           - switch.sonoff_eloszoba
           - binary_sensor.sonoff_bejarati_ajto
-          - sensor.bejarati_ajto_battery
+          - sensor.sonoff_bejarati_ajto_battery_voltage
         title: Előszoba
       - type: entities
         entities:
@@ -155,7 +155,8 @@ views:
         title: Debian Server
       - type: entities
         entities:
-          - binary_sensor.mikrotik_firmware_update
+          - update.mikrotik_routerboard_firmware_update
+          - update.mikrotik_routeros_update
           - sensor.mikrotik_uptime
           - sensor.mikrotik_cpu_load
           - sensor.mikrotik_memory_usage
@@ -198,11 +199,11 @@ views:
           - show_current: true
             show_forecast: true
             type: weather-forecast
-            entity: weather.pirate_weather
+            entity: weather.forecast_home
           - show_current: false
             show_forecast: true
             type: weather-forecast
-            entity: weather.pirate_weather_daily
+            entity: weather.forecast_home_hourly
       - type: entities
         entities:
           - entity: sensor.kulteri_paratartalom
@@ -229,3 +230,18 @@ views:
           - sensor.belteri_simmerzone
           - sensor.belteri_perception
         title: Beltéri
+      -  type: custom:scheduler-card
+         include:
+           - binary_sensor.haloszoba_ablak_contact
+           - binary_sensor.nappali_ablak_contact
+           - climate.honeywell_home_termosztat
+           - group.family_gps
+           - input_boolean.elofutes
+           - sensor.kulteri_homerseklet
+         exclude: []
+         display_options:
+           primary_info: default
+           secondary_info:
+             - relative-time
+             - action
+

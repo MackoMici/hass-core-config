@@ -52,9 +52,15 @@ lovelace:
       type: module
     - url: /hacsfiles/lovelace-card-tools/card-tools.js
       type: module
-    - url: /local/card-tools.js
-      type: module
     - url: /local/flower-card.js
+      type: module
+    - url: /hacsfiles/light-entity-card/light-entity-card.js
+      type: module
+    - url: /hacsfiles/scheduler-card/scheduler-card.js
+      type: module
+    - url: /hacsfiles/lovelace-mushroom/mushroom.js
+      type: module
+    - url: /hacsfiles/hass-swipe-navigation/swipe-navigation.js
       type: module
     - url: https://fonts.googleapis.com/css2?family=Oxygen&family=Ubuntu:wght@300&display=swap
       type: css
@@ -77,35 +83,7 @@ homeassistant:
   allowlist_external_dirs:
     - "/home/zoolesz/.homeassistant"
 
-browser_mod:
-  prefix: "browser_"
-
 #python_script:
-
-samsungtv_smart:
-  - host: !secret samsung_host
-    app_list: {
-      "Netflix": "3201907018807/org.tizen.netflixapp",
-      "Youtube": "111299001912/9Ur5IzDKqV.TizenYouTube",
-      "HBO Max": "cj37Ni3qXM.HBONow",
-      "Plex": "3201512006963/kIciSQlYEM.plex",
-      "TARR MobilTv": "DC80zckKNb.Basicapplication"
-    }
-
-weather:
-  - platform: pirateweather
-    api_key: !secret pirateweather_api_key
-    latitude: !secret location_latitude
-    longitude: !secret location_longitude
-    mode: hourly
-    name: Pirate Weather
-
-  - platform: pirateweather
-    api_key: !secret pirateweather_api_key
-    latitude: !secret location_latitude
-    longitude: !secret location_longitude
-    mode: daily
-    name: Pirate Weather Daily
 
 vacuum:
   - platform: viomise

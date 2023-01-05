@@ -17,19 +17,6 @@ sensor:
       - time
       - date
 
-  - platform: pirateweather
-    api_key: !secret pirateweather_api_key
-    scan_interval: '00:20:00'
-    monitored_conditions:
-      - temperature
-      - precip_probability
-      - precip_type
-      - humidity
-      - cloud_cover
-      - nearest_storm_distance
-      - precip_intensity
-      - wind_speed
-
   - platform: min_max
     name: Beltéri hőmérséklet
     type: mean
@@ -49,14 +36,14 @@ sensor:
     name: Kültéri hőmérséklet
     type: mean
     entity_ids:
-      - sensor.pirateweather_temperature
+      - sensor.metno_temperature
       - sensor.outdoor_temperature
 
   - platform: min_max
     name: Kültéri páratartalom
     type: mean
     entity_ids:
-      - sensor.pirateweather_humidity
+      - sensor.metno_humidity
       - sensor.outdoor_humidity
 
   - platform: min_max

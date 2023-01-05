@@ -1,69 +1,47 @@
+swipe_nav:
+  animate: swipe
 views:
-  - theme: waves
-    title: Kapcsoló
+  - title: Kapcsoló
     path: kapcsolo
     icon: mdi:gesture-tap-button
-#    type: custom:masonry-layout
     badges: []
     cards:
       - type: vertical-stack
         cards:
           - type: horizontal-stack
             cards:
-              - show_name: true
-                show_icon: true
-                type: button
-                tap_action:
-                  action: toggle
-                name: Előszoba világítás
+              - type: custom:mushroom-light-card
                 entity: switch.sonoff_eloszoba
-                icon: mdi:ceiling-light
-              - show_name: true
-                show_icon: true
-                type: button
-                tap_action:
-                  action: toggle
+                layout: vertical
+              - type: custom:mushroom-light-card
                 entity: switch.sonoff_haloszoba
-                name: Hálószoba világítás
-                icon: mdi:ceiling-light
+                layout: vertical
           - type: horizontal-stack
             cards:
-              - show_name: true
-                show_icon: true
-                type: button
-                tap_action:
-                  action: toggle
+              - type: custom:mushroom-light-card
                 entity: switch.sonoff_furdo_szelloztetes
-                name: Fürdőszoba szellőztetés
-              - show_name: true
-                show_icon: true
-                type: button
-                tap_action:
-                  action: toggle
-                entity: switch.sonoff_tablet_konnektor
-                icon: mdi:power-socket-de
+                layout: vertical
+              - type: custom:mushroom-light-card
+                entity: switch.sonoff_furdoszoba
+                layout: vertical
           - type: horizontal-stack
             cards:
-              - show_name: true
-                show_icon: true
-                type: button
-                tap_action:
-                  action: toggle
-                entity: switch.sonoff_furdoszoba
-                name: Fürdőszoba világítás
-                icon: mdi:ceiling-light
-              - show_name: true
-                show_icon: true
-                type: button
-                tap_action:
-                  action: toggle
+              - type: custom:mushroom-light-card
+                use_light_color: true
                 entity: switch.sonoff_furdoszoba_futes
-                icon: mdi:power-socket-de
-  - theme: waves
-    title: Fűtés
+                icon: mdi:radiator
+                layout: vertical
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-light-card
+                entity: light.yeelight_colorb_kamra
+                layout: vertical
+              - type: custom:mushroom-light-card
+                entity: light.yeelight_colorb_wc
+                layout: vertical
+  - title: Fűtés
     path: futes
     icon: mdi:radiator
-#    type: custom:masonry-layout
     badges: []
     cards:
       - type: vertical-stack
@@ -71,99 +49,115 @@ views:
         cards:
           - type: horizontal-stack
             cards:
-              - type: custom:button-card
+              - type: custom:mushroom-template-card
+                primary: >-
+                  A kazán jelenleg
+                  {% if is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'heating') %}
+                    fűt.
+                  {% elif is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'idle') %}
+                    tétlen.
+                  {% else %}
+                    ki van kapcsolva.
+                  {% endif %}
+                secondary: >-
+                  A kívánt hőmérséklet {{ states['climate.honeywell_home_termosztat'].attributes.temperature }} °C
+                icon: >-
+                  {% if is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'heating') %}
+                    mdi:radiator
+                  {% elif is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'idle') %}
+                    mdi:radiator-disabled
+                  {% else %}
+                    mdi:radiator-off
+                  {% endif %}
+                layout: vertical
+                icon_color: >-
+                  {% if is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'heating') %}
+                    orange
+                  {% elif is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'idle') %}
+                    blue
+                  {% else %}
+                  {% endif %}
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      style: |
+                        --popup-max-width: 380px;
+                        --popup-border-width: var(--ha-card-border-width, 0px);
+                        --popup-border-radius: var(--ha-card-border-radius, 12px);
+                        --popup-padding-x: 4px;
+                      content:
+                        type: custom:scheduler-card
+                        in_card: true
+                        include:
+                          - binary_sensor.haloszoba_ablak_contact
+                          - binary_sensor.nappali_ablak_contact
+                          - climate.honeywell_home_termosztat
+                          - group.family_gps
+                          - input_boolean.elofutes
+                          - input_boolean.futes
+                          - input_boolean.tavol
+                          - sensor.kulteri_homerseklet
+                        exclude: []
+                        display_options:
+                          primary_info: default
+                          secondary_info:
+                            - relative-time
+                            - action
+                        title: false
+                        show_add_button: false
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-entity-card
+                layout: vertical
+                entity: input_boolean.elofutes
+                icon_color: orange
                 tap_action:
                   action: toggle
-                entity: input_boolean.elofutes
-                aspect_ratio: 1/1
-                show_label: true
-                label: |
-                  [[[
-                    var mode = states['climate.honeywell_home_termosztat'].attributes.hvac_action;
-                    return (mode === "idle" ? "Tétlen" : (mode === "heating" ? "Fűtés" : "Kikapcsolva"));
-                  ]]]
-              - type: vertical-stack
-                cards:
-                  - type: entities
-                    title: Nappali hőmérséklet
-                    style: |
-                      #states {
-                        padding: 0px 0px !important
-                      }
-                      .card-header {
-                        padding: 0px 0px !important;
-                      }
-                    entities:
-                      - type: custom:numberbox-card
-                        entity: input_number.nappali_homerseklet
-                        name: false
-                        unit: °C
-                        icon: false
-                        speed: 250
-                        style: &input_number_style
-                          |
-                          .grid-left {
-                            font-size: 20px !important;
-                            font-weight: 300 !important;
-                          }
-                          .cur-num {
-                            font-size: 32px !important; 
-                            font-weight: 600 !important;
-                          }
-                        icon_plus: mdi:chevron-up
-                        icon_minus: mdi:chevron-down
-                  - type: entities
-                    title: Éjszakai hőmérséklet
-                    style: |
-                      #states {
-                        padding: 0px 0px !important
-                      }
-                      .card-header {
-                        padding: 0px 0px !important;
-                      }
-                    entities:
-                      - type: custom:numberbox-card
-                        entity: input_number.ejszakai_homerseklet
-                        name: false
-                        unit: °C
-                        icon: false
-                        speed: 250
-                        style: *input_number_style
-#                          .grid-left {
-#                            font-size: 20px !important;
-#                            font-weight: 300 !important;
-#                          }
-#                          .cur-num {
-#                            font-size: 32px !important; 
-#                            font-weight: 600 !important;
-#                          }
-                        icon_plus: mdi:chevron-up
-                        icon_minus: mdi:chevron-down
-          - type: glance
-            show_name: true
-            show_icon: true
-            show_state: true
-            entities:
-              - entity: sensor.ebedlo_temperature
-                name: Ebédlő hőmérséklet
-              - entity: sensor.nappali_temperature
-                name: Nappali hőmérséklet
-              - entity: sensor.haloszoba_temperature
-                name: Hálószoba hőmérséklet
-              - entity: sensor.konyha_temperature
-                name: Konyha hőmérséklet
-              - entity: sensor.gyerekszoba_temperature
-                name: Gyerekszoba hőmérséklet
-              - entity: sensor.furdoszoba_homerseklet
-                name: Fürdőszoba hőmérséklet
+              - type: custom:mushroom-entity-card
+                entity: input_boolean.tavol
+                icon_color: orange
+                layout: vertical
+                tap_action:
+                  action: toggle
+              - type: custom:mushroom-entity-card
+                entity: input_boolean.futes
+                icon_color: orange                
+                layout: vertical                
+                name: Fűtés mindenképp
+                tap_action:
+                  action: toggle
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.ebedlo_temperature
+                name: Ebédlő
+              - type: custom:mushroom-entity-card
+                entity: sensor.nappali_temperature
+                name: Nappali
+              - type: custom:mushroom-entity-card
+                entity: sensor.haloszoba_temperature
+                name: Háló
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.konyha_temperature
+                name: Konyha
+              - type: custom:mushroom-entity-card
+                entity: sensor.gyerekszoba_temperature
+                name: Gyerekszoba
+              - type: custom:mushroom-entity-card
+                entity: sensor.furdoszoba_homerseklet
+                name: Fürdő
                 icon: mdi:thermometer
-            columns: 3
           - type: custom:mini-graph-card
             entities:
               - entity: sensor.belteri_homerseklet
+              - entity: sensor.kulteri_homerseklet
             hours_to_show: 24
             hour24: true
-            points_per_hour: 1
+            height: 150
             font_size_header: 16
             decimals: 1
             min_bound_range: 10
@@ -172,6 +166,7 @@ views:
               name: false
               icon: false
               labels: true
+              points: false
             color_thresholds: &color_mini_graph
               - value: 18
                 color: '#6666ff'
@@ -185,11 +180,9 @@ views:
                 color: '#d35400'
               - value: 28
                 color: '#c0392b'
-  - theme: waves
-    title: Klíma
+  - title: Klíma
     path: klima
     icon: mdi:snowflake
-#    type: custom:masonry-layout
     badges: []
     cards:
       - type: vertical-stack
@@ -256,6 +249,7 @@ views:
           - type: custom:mini-graph-card
             entities:
               - entity: sensor.belteri_homerseklet
+              - entity: sensor.kulteri_homerseklet
             hours_to_show: 24
             hour24: true
             points_per_hour: 1
@@ -264,52 +258,191 @@ views:
             decimals: 1
             min_bound_range: 10
             show: *show_mini_graph
-#              extrema: true
-#              name: false
-#              icon: false
-#              labels: true
             color_thresholds: *color_mini_graph
-#              - value: 18
-#                color: '#6666ff'
-#              - value: 20
-#                color: '#ccccff'
-#              - value: 22
-#                color: '#f3f300'
-#              - value: 24
-#                color: '#f39c12'
-#              - value: 26
-#                color: '#d35400'
-#              - value: 28
-#                color: '#c0392b'
-  - theme: waves
-    title: Időjárás
+  - title: Időjárás
     path: idjaras
     icon: mdi:weather-partly-snowy-rainy
-#    type: custom:masonry-layout
     badges: []
     cards:
       - type: vertical-stack
+        in_card: true
         cards:
           - type: custom:weather-chart-card
-            entity: weather.pirate_weather
+            entity: weather.forecast_home_hourly
           - type: custom:weather-chart-card
-            entity: weather.pirate_weather_daily
+            entity: weather.forecast_home
             show_main: false
             show_attributes: false
+            style: &style_margin
+              |
+              ha-card {
+                margin-bottom: 24px;
+              }
           - type: custom:weather-radar-card
             zoom_level: 8
             static_map: true
-  - theme: waves
-    title: Porszívó
-    path: porszivo
-    icon: mdi:robot-vacuum
-#    type: custom:masonry-layout
+  - title: Párásítás
+    path: parasitas
+    icon: mdi:air-humidifier
     badges: []
     cards:
       - type: vertical-stack
+        in_card: true
+        cards:
+          - type: picture-entity
+            style: *style_margin
+            image: /local/images/diffuser/diffuser.png
+            show_name: false
+            show_state: false
+            tap_action:
+              action: call-service
+              service: script.diffuser
+              service_data: {}
+              target: {}
+            entity: humidifier.parasito
+          - type: horizontal-stack
+            cards:
+             - type: vertical-stack
+               cards:
+                 - type: custom:mushroom-light-card
+                   entity: light.parasito
+                   show_brightness_control: true
+                   name: Párásító világítás
+                   show_color_control: true
+                 - type: horizontal-stack
+                   cards:
+                     - type: custom:mushroom-template-card
+                       icon: |-
+                         {% if is_state_attr('humidifier.parasito', 'mode', 'small') %}
+                           mdi:speedometer-slow
+                         {% else %}
+                           mdi:speedometer
+                         {% endif %}
+                       primary: |-
+                         {% if is_state_attr('humidifier.parasito', 'mode', 'small') %}
+                           Normál
+                         {% else %}
+                           Erős
+                         {% endif %}
+                           párásítás
+                       entity: script.diffuser_mode
+                       layout: vertical
+                       icon_color: blue
+                       tap_action:
+                         action: call-service
+                         service: script.diffuser_mode
+                     - type: custom:mushroom-entity-card
+                       icon: mdi:palette
+                       name: Változó színek
+                       entity: scene.parasito_led_mode_random_color
+                       layout: vertical
+                       secondary_info: none
+                       tap_action:
+                         action: call-service
+                         service: scene.turn_on
+                         service_data:
+                           entity_id: scene.parasito_led_mode_random_color
+                 - type: horizontal-stack
+                   cards:
+                     - type: custom:mushroom-template-card
+                       entity: select.parasito_countdown
+                       icon: mdi:numeric-1
+                       icon_color: |-
+                         {% if is_state('humidifier.parasito', 'on') %}
+                           {% if is_state(entity, '1') %}
+                             orange
+                           {% else %}
+                             blue
+                           {% endif %}
+                         {% endif %}
+                       tap_action:
+                         action: call-service
+                         service: script.diffuser_time
+                         service_data:
+                           countdown: 1
+                       layout: vertical
+                       fill_container: true
+                     - type: custom:mushroom-template-card
+                       entity: select.parasito_countdown
+                       icon: mdi:numeric-3
+                       icon_color: |-
+                         {% if is_state('humidifier.parasito', 'on') %}
+                           {% if is_state(entity, '3') %}
+                             orange
+                           {% else %}
+                             blue
+                           {% endif %}
+                         {% endif %}
+                       tap_action:
+                         action: call-service
+                         service: script.diffuser_time
+                         service_data:
+                           countdown: 3
+                       layout: vertical
+                     - type: custom:mushroom-template-card
+                       entity: select.parasito_countdown
+                       icon: mdi:numeric-6
+                       icon_color: |-
+                         {% if is_state('humidifier.parasito', 'on') %}
+                           {% if is_state(entity, '6') %}
+                             orange
+                           {% else %}
+                             blue
+                           {% endif %}  
+                         {% endif %}
+                       tap_action:
+                         action: call-service
+                         service: script.diffuser_time
+                         service_data:
+                           countdown: 6
+                       layout: vertical
+                     - type: custom:mushroom-template-card
+                       entity: select.parasito_countdown
+                       icon: mdi:timer-off
+                       icon_color: |-
+                         {% if is_state('humidifier.parasito', 'on') %}
+                           {% if is_state(entity, 'cancel') %}
+                             orange
+                           {% else %}
+                             blue
+                           {% endif %}
+                         {% endif %}
+                       tap_action:
+                         action: call-service
+                         service: script.diffuser_time
+                         service_data:
+                           countdown: cancel
+                       layout: vertical
+                 - type: custom:mini-graph-card
+                   entities:
+                     - entity: sensor.belteri_paratartalom
+                     - entity: sensor.furdoszoba_paratartalom
+                   hours_to_show: 24
+                   hour24: true
+                   font_size_header: 16
+                   decimals: 1
+                   min_bound_range: 10
+                   show: *show_mini_graph
+                   color_thresholds:
+                     - value: 39
+                       color: '#e0da24'
+                     - value: 40
+                       color: '#32a852'
+                     - value: 60
+                       color: '#32a852'
+                     - value: 61
+                       color: '#3251a8'
+  - title: Porszívó
+    path: porszivo
+    icon: mdi:robot-vacuum
+    badges: []
+    cards:
+      - type: vertical-stack
+        in_card: true
         cards:
           - type: custom:vacuum-card
             entity: vacuum.viomi_se
+            style: *style_margin
             image: default
             compact_view: false
             stats:
@@ -335,89 +468,139 @@ views:
                   subtitle: Cleaning time
           - type: grid
             cards:
-              - type: custom:button-card
+              - type: custom:mushroom-template-card
                 entity: input_boolean.nappali_takaritas
-                show_label: true
-                label: >
-                  [[[ var clean_ago = Math.floor((Date.now() - Date.parse(states['input_datetime.nappali_takaritas'].state)) / 1000 / 60 / 60); 
-                  return (clean_ago > 0.024 ? Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája"); ]]]
-                hold_action:
-                  action: more-info
-              - type: custom:button-card
+                layout: vertical
+                tap_action:
+                  action: toggle
+                icon: mdi:sofa
+                icon_color: &template_icon_color
+                  |
+                  {% if is_state(entity, 'on') %}
+                    orange
+                  {% endif %}
+                primary: Nappali
+                secondary: |-
+                  {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.nappali_takaritas.state)) / 60 / 60 } %}
+                  {% if clean.ago > 24 %}
+                    {{ (clean.ago / 24) | int }} napja
+                  {% else %}
+                    {{ (clean.ago / 24) | int }} órája
+                  {% endif %}
+              - type: custom:mushroom-template-card
                 entity: input_boolean.ebedlo_takaritas
-                show_label: true
-                label: >
-                  [[[ var clean_ago = Math.floor((Date.now() - Date.parse(states['input_datetime.ebedlo_takaritas'].state)) / 1000 / 60 / 60);
-                  return (clean_ago > 0.024 ? Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája"); ]]]
-                hold_action:
-                  action: more-info
-              - type: custom:button-card
+                layout: vertical
+                tap_action:
+                  action: toggle
+                icon: mdi:silverware-variant
+                icon_color: *template_icon_color
+                primary: Ebédlő
+                secondary: |-
+                  {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.ebedlo_takaritas.state)) / 60 / 60 } %}
+                  {% if clean.ago > 24 %}
+                    {{ (clean.ago / 24) | int }} napja
+                  {% else %}
+                    {{ (clean.ago / 24) | int }} órája
+                  {% endif %}
+              - type: custom:mushroom-template-card
                 entity: input_boolean.konyha_takaritas
-                show_label: true
-                label: >
-                  [[[ var clean_ago = Math.floor((Date.now() - Date.parse(states['input_datetime.konyha_takaritas'].state)) / 1000 / 60 / 60);
-                  return (clean_ago > 0.024 ? Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája"); ]]]
-                hold_action:
-                  action: more-info
-              - type: custom:button-card
+                layout: vertical
+                tap_action:
+                  action: toggle
+                icon: mdi:countertop
+                icon_color: *template_icon_color
+                primary: Konyha
+                secondary: |-
+                  {% set clean = {"ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.konyha_takaritas.state)) / 60 / 60 } %}
+                  {% if clean.ago > 24 %}
+                    {{ (clean.ago / 24) | int }} napja
+                  {% else %}
+                    {{ (clean.ago / 24) | int }} órája
+                  {% endif %}
+              - type: custom:mushroom-template-card
                 entity: input_boolean.haloszoba_takaritas
-                show_label: true
-                label: >
-                  [[[ var clean_ago = Math.floor((Date.now() - Date.parse(states['input_datetime.haloszoba_takaritas'].state)) / 1000 / 60 / 60);
-                  return (clean_ago > 0.024 ? Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája"); ]]]
-                hold_action:
-                  action: more-info
-              - type: custom:button-card
+                layout: vertical
+                tap_action:
+                  action: toggle
+                icon: mdi:bed-empty
+                icon_color: *template_icon_color
+                primary: Halószoba
+                secondary: |-
+                  {% set clean = {
+                    "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.haloszoba_takaritas.state)) / 60 / 60
+                  } %}
+                  {% if clean.ago > 24 %}
+                    {{ (clean.ago / 24) | int }} napja
+                  {% else %}
+                    {{ (clean.ago / 24) | int }} órája
+                  {% endif %}
+              - type: custom:mushroom-template-card
                 entity: input_boolean.eloszoba_takaritas
-                show_label: true
-                label: >
-                  [[[ var clean_ago = Math.floor((Date.now() - Date.parse(states['input_datetime.eloszoba_takaritas'].state)) / 1000 / 60 / 60);
-                  return (clean_ago > 0.024 ? Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája"); ]]]
-                hold_action:
-                  action: more-info
-              - type: custom:button-card
+                layout: vertical
+                tap_action:
+                  action: toggle
+                icon: mdi:door
+                icon_color: *template_icon_color
+                primary: Előszoba
+                secondary: |-
+                  {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.eloszoba_takaritas.state)) / 60 / 60 } %}
+                  {% if clean.ago > 24 %}
+                    {{ (clean.ago / 24) | int }} napja
+                  {% else %}
+                    {{ (clean.ago / 24) | int }} órája
+                  {% endif %}
+              - type: custom:mushroom-template-card
                 entity: input_boolean.folyoso_takaritas
-                show_label: true
-                label: >
-                  [[[ var clean_ago = Math.floor((Date.now() - Date.parse(states['input_datetime.folyoso_takaritas'].state)) / 1000 / 60 / 60);
-                  return (clean_ago > 0.024 ? Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája"); ]]]
-                hold_action:
-                  action: more-info
-              - type: custom:button-card
+                layout: vertical
+                tap_action:
+                  action: toggle
+                icon: mdi:door-sliding-open
+                icon_color: *template_icon_color
+                primary: Folyosó
+                secondary: |-
+                  {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.folyoso_takaritas.state)) / 60 / 60 } %}
+                  {% if clean.ago > 24 %}
+                    {{ (clean.ago / 24) | int }} napja
+                  {% else %}
+                    {{ (clean.ago / 24) | int }} órája
+                  {% endif %}
+              - type: custom:mushroom-template-card
                 entity: input_boolean.gyerekszoba_takaritas
-                show_label: true
-                label: >
-                  [[[ var clean_ago = Math.floor((Date.now() - Date.parse(states['input_datetime.gyerekszoba_takaritas'].state)) / 1000 / 60 / 60);
-                  return (clean_ago > 0.024 ? Math.floor(clean_ago / 24) + " napja" : clean_ago + " órája"); ]]]
-                hold_action:
-                  action: more-info
-              - type: custom:button-card
+                layout: vertical
+                tap_action:
+                  action: toggle
+                icon: mdi:teddy-bear
+                icon_color: *template_icon_color
+                primary: Gyerekszoba
+                secondary: |-
+                  {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.gyerekszoba_takaritas.state)) / 60 / 60 } %}
+                  {% if clean.ago > 24 %}
+                    {{ (clean.ago / 24) | int }} napja
+                  {% else %}
+                    {{ (clean.ago / 24) | int }} órája
+                  {% endif %}
+              - type: custom:mushroom-template-card
                 entity: script.clean_house
-                icon: mdi:play
-                show_label: true
-                label: indítás
-                name: Takarítás
+                layout: vertical
                 tap_action:
                   action: call-service
-                  service_data:
-                    entity_id: script.clean_house
                   service: script.clean_house
+                icon: mdi:play
+                icon_color: *template_icon_color
+                primary: Takarítás
+                secondary: indítás
             columns: 4
             square: false
-  - theme: waves
-    title: Növények
+  - title: Növények
     path: novenyek
     icon: mdi:leaf
-#    type: custom:masonry-layout
     badges: []
     cards:
       - type: custom:flower-card
         entity: plant.ficus
-  - theme: waves
-    title: Tv
+  - title: Tv
     path: tv
     icon: mdi:television
-#    type: custom:masonry-layout
     badges: []
     cards:
       - type: custom:mini-media-player
@@ -462,11 +645,269 @@ views:
                 entity_id: media_player.samsung_q80_series_65
                 source: TARR MobilTv
         artwork: material
-  - theme: waves
-    title: Információ
+  - title: Karácsony
+    path: karacsony
+    icon: mdi:pine-tree
+    badges: []
+    cards:
+      - type: vertical-stack
+        in_card: true
+        cards:
+         - type: horizontal-stack
+           cards:
+             - type: custom:mushroom-light-card
+               entity: light.feny_fuzer
+               layout: vertical
+               secondary_info: none
+             - type: custom:mushroom-light-card
+               entity: switch.sonoff_tablet_konnektor
+               layout: vertical
+               secondary_info: none
+               icon: mdi:string-lights
+               name: Karácsonyfa izzó
+         - type: custom:mushroom-title-card
+           subtitle: Fényerősség vagy Érzékenység és Sebesség
+         - type: horizontal-stack
+           cards:
+             - type: horizontal-stack
+               cards:
+                 - type: custom:mushroom-template-card
+                   icon: mdi:minus
+                   layout: vertical
+                   icon_color: blue
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_brightness_reduction
+                 - type: custom:mushroom-template-card
+                   style: *style_margin
+                   icon: mdi:plus
+                   icon_color: blue
+                   layout: vertical
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_brightness_increase
+             - type: horizontal-stack
+               cards:
+                   - type: custom:mushroom-template-card
+                     icon: mdi:minus
+                     layout: vertical
+                     icon_color: blue
+                     tap_action:
+                       action: call-service
+                       service: script.feny_fuzer_speed_down
+                   - type: custom:mushroom-template-card
+                     icon: mdi:plus
+                     layout: vertical
+                     icon_color: blue
+                     tap_action:
+                       action: call-service
+                       service: script.feny_fuzer_speed_up
+         - type: grid
+           square: false
+           columns: 6
+           cards:
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: white
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_white
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: yellow
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_yellow
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: '#fc03f8'
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_lightpink
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: red
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_red
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: green
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_green
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: blue
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_blue
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: '#fffacd'
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_lightyellow
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: pink
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_pink
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: purple
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_purple
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: '#32cd32'
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_lightgreen
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: '#2e8b57'
+              layout: vertical
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_darkgreen
+            - type: custom:mushroom-template-card
+              icon: mdi:circle
+              icon_color: '#87cefa'
+              layout: vertical
+              style: *style_margin
+              tap_action:
+                action: call-service
+                service: script.feny_fuzer_color_lightblue
+         - type: vertical-stack
+           cards:
+             - type: horizontal-stack
+               cards:
+                 - type: custom:mushroom-template-card
+                   icon: mdi:weather-night
+                   layout: vertical
+                   icon_color: blue
+                   primary: Éjszakai
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_night
+                 - type: custom:mushroom-template-card
+                   icon: mdi:star-shooting
+                   layout: vertical
+                   primary: Csillagfényes
+                   icon_color: blue
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_starry
+                 - type: custom:mushroom-template-card
+                   icon: mdi:party-popper
+                   layout: vertical
+                   primary: Party
+                   icon_color: blue
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_party
+                 - type: custom:mushroom-template-card
+                   icon: mdi:movie-roll
+                   layout: vertical
+                   primary: Mozi
+                   icon_color: blue
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_movie
+                 - type: custom:mushroom-template-card
+                   icon: mdi:view-module
+                   layout: vertical
+                   primary: Egyéb
+                   icon_color: blue
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_mode
+             - type: horizontal-stack
+               cards:
+                 - type: custom:mushroom-template-card
+                   icon: mdi:music
+                   layout: vertical
+                   primary: Classic
+                   icon_color: blue
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_music_classic
+                 - type: custom:mushroom-template-card
+                   icon: mdi:music
+                   layout: vertical
+                   primary: Soft
+                   icon_color: blue
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_music_soft
+                 - type: custom:mushroom-template-card
+                   icon: mdi:music
+                   layout: vertical
+                   primary: Disco
+                   icon_color: blue
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_music_disco
+                 - type: custom:mushroom-template-card
+                   icon: mdi:music
+                   layout: vertical
+                   primary: Dynamic
+                   icon_color: blue
+                   tap_action:
+                     action: call-service
+                     service: script.feny_fuzer_music_dynamic
+         - type: custom:mushroom-title-card
+           subtitle: Időzítés
+         - type: horizontal-stack
+           cards:
+             - type: custom:mushroom-template-card
+               entity: select.parasito_countdown
+               icon: mdi:numeric-1
+               icon_color: blue
+               layout: vertical
+               tap_action:
+                 action: call-service
+                 service: script.feny_fuzer_1h
+             - type: custom:mushroom-template-card
+               entity: select.parasito_countdown
+               icon: mdi:numeric-2
+               icon_color: blue
+               layout: vertical
+               tap_action:
+                 action: call-service
+                 service: script.feny_fuzer_2h
+             - type: custom:mushroom-template-card
+               entity: select.parasito_countdown
+               icon: mdi:numeric-3
+               icon_color: blue
+               layout: vertical
+               tap_action:
+                 action: call-service
+                 service: script.feny_fuzer_3h
+             - type: custom:mushroom-template-card
+               entity: select.parasito_countdown
+               icon: mdi:numeric-4
+               icon_color: blue
+               layout: vertical
+               tap_action:
+                 action: call-service
+                 service: script.feny_fuzer_4h
+  - title: Információ
     path: informacio
     icon: mdi:information-outline
-#    type: custom:masonry-layout
     badges: []
     cards:
       - type: vertical-stack
@@ -520,10 +961,26 @@ views:
                 height: 2em
                 decimal: 0
                 unit_of_measurement: '%'
-                positions:
+                positions: &bar_card_pos
                   icon: outside
                   indicator: 'off'
                   name: outside
+                severity: &bar_card_severity
+                  - color: '#a8e6cf'
+                    from: 0
+                    to: 20
+                  - color: '#dcedc1'
+                    from: 21
+                    to: 40
+                  - color: '#ffd3b6'
+                    from: 41
+                    to: 60
+                  - color: '#ffaaa5'
+                    from: 61
+                    to: 80
+                  - color: '#ff8b94'
+                    from: 81
+                    to: 100
                 entity_row: true
                 entities:
                   - entity: sensor.processor_use
@@ -539,26 +996,23 @@ views:
           - type: entities
             title: Mikrotik hAP ac^2
             entities:
-              - entity: binary_sensor.mikrotik_firmware_update
-                name: Firmware update
-                icon: mdi:update
-              - entity: sensor.mikrotik_router_uptime
+              - entity: update.mikrotik_hap_ac_2_routerboard_firmware_update
+              - entity: update.mikrotik_hap_ac_2_routeros_update
+              - entity: sensor.mikrotik_hap_ac_2_uptime
                 name: Uptime
               - type: custom:bar-card
                 width: 55%
                 height: 2em
                 decimal: 0
                 unit_of_measurement: '%'
-                positions:
-                  icon: outside
-                  indicator: 'off'
-                  name: outside
+                positions: *bar_card_pos
+                severity: *bar_card_severity
                 entity_row: true
                 entities:
-                  - entity: sensor.mikrotik_cpu_load
+                  - entity: sensor.mikrotik_hap_ac_2_cpu_load
                     icon: mdi:cpu-32-bit
                     name: Processzor
-                  - entity: sensor.mikrotik_memory_usage
+                  - entity: sensor.mikrotik_hap_ac_2_memory_usage
                     name: Memória 256MB
-                  - entity: sensor.mikrotik_hdd_usage
+                  - entity: sensor.mikrotik_hap_ac_2_hdd_usage
                     name: Tárhely 16MB
