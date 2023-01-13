@@ -59,3 +59,9 @@ sensor:
     entity_ids:
       - sensor.furdoszoba_humidity
       - sensor.furdoszoba_2_humidity
+
+  - platform: command_line
+    name: SSL cert expiry
+    unit_of_measurement: days
+    scan_interval: 10800
+    command: "ssl-cert-check -b -c /etc/letsencrypt/live/8a2a08365c8a.sn.mynetname.net/cert.pem | awk '{ print $NF }'"

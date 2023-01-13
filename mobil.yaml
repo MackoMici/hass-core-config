@@ -660,7 +660,7 @@ views:
                layout: vertical
                secondary_info: none
              - type: custom:mushroom-light-card
-               entity: switch.sonoff_tablet_konnektor
+               entity: switch.karacsonyfa_socket_1
                layout: vertical
                secondary_info: none
                icon: mdi:string-lights
@@ -924,6 +924,10 @@ views:
                 name: Log méret
               - entity: sensor.home_assistant_uptime
                 name: Uptime
+              - entity: sensor.watchman_missing_entities
+                name: Missing Entities
+              - entity: sensor.watchman_missing_services
+                name: Missing Services
 #          - type: entities
 #            title: Alldocube iPlay 10 Pro
 #            show_header_toggle: false

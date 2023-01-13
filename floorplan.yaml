@@ -921,6 +921,10 @@ views:
                               name: Log méret
                             - entity: sensor.home_assistant_uptime
                               name: Uptime
+                            - entity: sensor.watchman_missing_entities
+                              name: Missing Entities
+                            - entity: sensor.watchman_missing_services
+                              name: Missing Services
  #                       - type: entities
  #                         style: |
  #                           ha-card {
@@ -1047,7 +1051,7 @@ views:
                              layout: vertical
                              secondary_info: none
                            - type: custom:mushroom-light-card
-                             entity: switch.sonoff_tablet_konnektor
+                             entity: switch.karacsonyfa_socket_1
                              layout: vertical
                              secondary_info: none
                              icon: mdi:string-lights
@@ -1364,7 +1368,7 @@ views:
                                 icon_color: &battery_icon
                                   |
                                   {{ is_state(config.entity, 'charging') | iif('blue', '') }}
-                                primary: Bluetooth
+                                primary: Battery
                                 badge_icon: mdi:battery
                                 badge_color: |
                                   {% set battery = { "level": states.sensor.oneplus_a5000_battery_level.state | int } %}

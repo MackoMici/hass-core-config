@@ -2,7 +2,7 @@
 .*
 !.HA_VERSION
 
-automations.yaml
+!automations.yaml
 google_calendars.yaml
 scenes.yaml
 !scripts.yaml

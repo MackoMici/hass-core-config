@@ -10,12 +10,14 @@ blueprint:
       selector:
         entity:
           domain: sensor
+          multiple: false
     absolutehumidity_sensor:
       name: AbsoluteHumidity Sensor
       description: A sensor that measures the absolute humidity of the area
       selector:
         entity:
           domain: sensor
+          multiple: false
     reference_humidity:
       name: Reference Humidity
       description: A percentage point value that indicates the baseline humidity if
@@ -27,6 +29,7 @@ blueprint:
       selector:
         entity:
           domain: sensor
+          multiple: false
       default: []
     outdoor_absolutehumidity_sensor:
       name: Outdoor Absolutehumidity Sensor
@@ -34,6 +37,7 @@ blueprint:
       selector:
         entity:
           domain: sensor
+          multiple: false
       default: []
     fan_switch:
       name: Fan Switch
@@ -41,6 +45,7 @@ blueprint:
       selector:
         entity:
           domain: switch
+          multiple: false
     rising_threshold:
       name: Rising Threshold
       description: How many percentage points above the reference humidity the sensor
@@ -49,8 +54,8 @@ blueprint:
         number:
           min: 0.0
           max: 100.0
-          step: 1.0
           mode: slider
+          step: 1.0
       default: 8
     falling_threshold:
       name: Falling Threshold
@@ -60,38 +65,67 @@ blueprint:
         number:
           min: 0.0
           max: 100.0
-          step: 1.0
           mode: slider
+          step: 1.0
       default: 5
+    time_start:
+      name: Fan switch time start
+      description: Reggel mikortól figyelje a szellőztető bekapcsolását.
+      default: 05:30:00
+      selector:
+        time: {}
+    time_stop:
+      name: Fan switch time start
+      description: Este mikortól ne kapcsolja be a szellőztetést.
+      default: '22:00:00'
+      selector:
+        time: {}
   source_url: https://gist.github.com/MackoMici/6fdf26c8790fd1d47574ad4b2ab0bac2
-trigger:
-- entity_id: !input 'humidity_sensor'
-  platform: state
-- entity_id: !input 'reference_humidity_sensor'
-  platform: state
-condition:
-- condition: template
-  value_template: '{{ mode != switch_state }}'
-action:
-- service: switch.turn_{{mode}}
-  entity_id: !input 'fan_switch'
 variables:
-  reference_humidity: !input 'reference_humidity'
-  humidity_sensor: !input 'humidity_sensor'
-  absolutehumidity_sensor: !input 'absolutehumidity_sensor'
+  reference_humidity: !input reference_humidity
+  humidity_sensor: !input humidity_sensor
+  absolutehumidity_sensor: !input absolutehumidity_sensor
   absolutehumidity: '{{ states(absolutehumidity_sensor) }}'
-  reference_humidity_sensor: !input 'reference_humidity_sensor'
-  outdoor_absolutehumidity_sensor: !input 'outdoor_absolutehumidity_sensor'
+  reference_humidity_sensor: !input reference_humidity_sensor
+  outdoor_absolutehumidity_sensor: !input outdoor_absolutehumidity_sensor
   outdoor_absolutehumidity: '{{ states(outdoor_absolutehumidity_sensor) }}'
-  fan_switch: !input 'fan_switch'
+  fan_switch: !input fan_switch
   switch_state: '{{ states(fan_switch) }}'
-  rising_threshold: !input 'rising_threshold'
-  falling_threshold: !input 'falling_threshold'
-  difference: '{{ states(humidity_sensor)|float(0) - (states(reference_humidity_sensor)|float(0)
-    or reference_humidity|float(0)) }}'
-  mode: '{% if switch_state == ''off'' and difference|float(0) > rising_threshold|float(0)
-    and outdoor_absolutehumidity|float(0) < absolutehumidity|float(0) %} on {% elif
-    switch_state == ''on'' and difference|float(0) > falling_threshold|float(0) and
-    outdoor_absolutehumidity|float(0) < absolutehumidity|float(0) %} on {% else %}
-    off {% endif %}'
+  rising_threshold: !input rising_threshold
+  falling_threshold: !input falling_threshold
+  difference: '{{ states(humidity_sensor) | float(0) - (states(reference_humidity_sensor)
+    | float(0) or reference_humidity | float(0)) }}'
+  mode: '{% if switch_state == ''off'' and difference | float(0) > rising_threshold
+    | float(0) and outdoor_absolutehumidity | float(0) < absolutehumidity | float(0)
+    %} on {% elif switch_state == ''on'' and difference | float(0) > falling_threshold|float(0)
+    and outdoor_absolutehumidity | float(0) < absolutehumidity | float(0) %} on {%
+    else %} off {% endif %}'
+trigger:
+- platform: time
+  at: !input time_stop
+- entity_id: !input humidity_sensor
+  platform: state
+- entity_id: !input reference_humidity_sensor
+  platform: state
+action:
+- choose:
+  - conditions:
+    - condition: time
+      after: !input time_stop
+      before: !input time_start
+    - condition: state
+      entity_id: !input fan_switch
+      state: 'on'
+    sequence:
+    - service: switch.turn_off
+      entity_id: !input fan_switch
+  - conditions:
+    - condition: time
+      after: !input time_start
+      before: !input time_stop
+    - condition: template
+      value_template: '{{ mode != switch_state }}'
+    sequence:
+    - service: switch.turn_{{mode}}
+      entity_id: !input fan_switch
 mode: single
