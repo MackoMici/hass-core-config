@@ -49,12 +49,16 @@ Ami az alaprajzon kezelhető az mind előugró ablakban fog megjelenni, melyhez 
 | Sonoff | [S26 R2](https://itead.cc/product/sonoff-s26-wifi-smart-plug/) | [sonoff lan](https://github.com/AlexxIT/SonoffLAN) |
 | Gree | [Comfort X](https://gree-magyarorszag.hu/klima/gree-comfort-x-inverter-27-kw-klima-szett/) | [gree climate](https://www.home-assistant.io/integrations/gree) |
 | Honeywell | [T6 Thermosztát](https://getconnected.honeywellhome.com/hu/t6.html) | [honeywell lyric](https://www.home-assistant.io/integrations/lyric) |
+| Broadlink | [RM4 mini](https://www.broadlink.ae/product-page/broadlink-rm4-mini) | [broadlink remote](https://www.home-assistant.io/integrations/broadlink) |
+| Blitzwolf | [BW-LT31](https://blitzwolf.hu/BlitzWolf-BW-LT31-smart-LED-fenycsik-5m-/10m-hossz) | [tuya](https://www.home-assistant.io/integrations/tuya) |
+| GX.Diffuser | [Diffuser](https://sea.banggood.com/GX_Diffuser-Intelligent-Air-Humidifier-Essential-Oil-Diffuser-Support-for-GeogleandAlexa-Voice-Control-Negative-Ion-Purification-p-1597711.html?rmmds=myorder&cur_warehouse=CN) | [tuya](https://www.home-assistant.io/integrations/tuya) |
+| Yeelight | [Xiaomi Yeelight Smart LED Bulb W3](https://www.pcx.hu/xiaomi-yeelight-smart-led-bulb-w3-multicolor-okos-izzo-yldp005-00432819) | [yeelight](https://www.home-assistant.io/integrations/yeelight) |
+
 
 ## Automatizációk
 
 * Fürdőszoba szellőztetés vezérlés külső belső páratartalom figyelenbevételével
 * Előszoba világítás ki/be kapcsolás, bejárati ajtó nyitás-ra
-* Fűtés automatikus vezérlés, jelenlét és külső hőmérséklet figyelembevételével
 * Alacsony elem riasztás küldés
 * Tablet töltés és képernyő kikapcsolás
 * Hazaérkezéskor köszöntés és informáűciók felolvasása
@@ -63,3 +67,5 @@ Ami az alaprajzon kezelhető az mind előugró ablakban fog megjelenni, melyhez 
 
 * Reggeli információk, időjárás jelentés naptár események
 * Robot porszívó adott helység takarítás
+* Fényfűzérhez színek és módok váltásához
+* Párásító színek és módok váltásához
