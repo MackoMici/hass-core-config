@@ -53,10 +53,6 @@ Ami az alaprajzon kezelhető az mind előugró ablakban fog megjelenni, melyhez 
 | Blitzwolf | [BW-LT31](https://blitzwolf.hu/BlitzWolf-BW-LT31-smart-LED-fenycsik-5m-/10m-hossz) | [tuya](https://www.home-assistant.io/integrations/tuya) |
 | GX.Diffuser | [Diffuser](https://sea.banggood.com/GX_Diffuser-Intelligent-Air-Humidifier-Essential-Oil-Diffuser-Support-for-GeogleandAlexa-Voice-Control-Negative-Ion-Purification-p-1597711.html?rmmds=myorder&cur_warehouse=CN) | [tuya](https://www.home-assistant.io/integrations/tuya) |
 | Yeelight | [Xiaomi Yeelight Smart LED Bulb W3](https://www.pcx.hu/xiaomi-yeelight-smart-led-bulb-w3-multicolor-okos-izzo-yldp005-00432819) | [yeelight](https://www.home-assistant.io/integrations/yeelight) |
-<<<<<<< HEAD
-
-=======
->>>>>>> 6777926c5c8da8577807a5206b7246554a95aedf
 
 ## Automatizációk
 
@@ -65,6 +61,7 @@ Ami az alaprajzon kezelhető az mind előugró ablakban fog megjelenni, melyhez 
 * Alacsony elem riasztás küldés
 * Tablet töltés és képernyő kikapcsolás
 * Hazaérkezéskor köszöntés és informáűciók felolvasása
+* Kamra világítás vezérlés
 
 ## Szkriptek
 
