@@ -1,0 +1,377 @@
+- id: '1640836502892'
+  alias: Low battery level detection & notification for all battery sensors
+  description: ''
+  use_blueprint:
+    path: MackoMici/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+    input:
+      threshold: 15
+      exclude:
+        entity_id:
+        - sensor.u1006_battery_level
+        - sensor.sm_a705fn_battery_level
+        - sensor.oneplus_a5000_battery_level
+      actions:
+      - service: notify.zoolesz
+        data:
+          message: Alacsony {{sensors}} elem.
+          title: Elem állapot
+- id: '1643205559403'
+  alias: Theme - Set Default Theme
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  - platform: state
+    entity_id: sun.sun
+  condition: []
+  action:
+  - if:
+    - condition: sun
+      before: sunset
+      after: sunrise
+    then:
+    - service: frontend.set_theme
+      data:
+        name: waves
+        mode: light
+    else:
+    - service: frontend.set_theme
+      data:
+        name: waves
+        mode: dark
+  mode: single
+- id: '1646997093928'
+  alias: Home Assistant Indítás
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: switch.sonoff_furdoszoba_futes
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.futes
+      state: 'on'
+  action:
+  - service: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.sonoff_furdoszoba_futes
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.futes
+  mode: single
+- id: '1648256024121'
+  alias: Reggeli információk
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.u1006_screen
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: group.family_all
+    state: home
+  - condition: state
+    entity_id: input_boolean.reggeli_info
+    state: 'on'
+  - condition: template
+    value_template: '{{ (now().weekday() in (0,1,2,3,4) and now().hour >= 6 and now().hour
+      <= 7) or (now().weekday() in (5,6) and now().hour >= 7 and now().hour <= 8)
+      }}'
+  action:
+  - service: script.reggeli_informacio
+    data: {}
+  - service: input_boolean.turn_off
+    data: {}
+    target:
+      entity_id: input_boolean.reggeli_info
+  mode: single
+- id: '1649997237707'
+  alias: Door Sensor Light
+  description: ''
+  use_blueprint:
+    path: MackoMici/Door_Sensor_Light.yaml
+    input:
+      calendar: calendar.unnepnapok_magyarorszag
+      doorsensor_entity: binary_sensor.sonoff_bejarati_ajto
+      light_switch: switch.sonoff_eloszoba
+      door_closed_wait: 90
+- id: '1650446781866'
+  alias: Tablet töltés
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.u1006_battery_level
+  action:
+  - choose:
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.u1006_battery_level
+        below: '10'
+      - condition: state
+        entity_id: switch.sonoff_tablet_konnektor
+        state: 'off'
+      sequence:
+      - service: notify.zoolesz
+        data:
+          message: A tablet nem tölt!
+          title: Tablet töltés.
+    - conditions:
+      - condition: numeric_state
+        entity_id: sensor.u1006_battery_level
+        below: '15'
+      - condition: state
+        entity_id: switch.sonoff_tablet_konnektor
+        state: 'off'
+      sequence:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.sonoff_tablet_konnektor
+        data: {}
+    - conditions:
+      - condition: state
+        entity_id: sensor.u1006_battery_level
+        state: '100'
+      sequence:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.sonoff_tablet_konnektor
+        data: {}
+  mode: single
+- id: '1651074945261'
+  alias: TTS on door opening with persons at home
+  description: ''
+  use_blueprint:
+    path: MackoMici/tts-door-opening.yaml
+    input:
+      door_sensor: binary_sensor.sonoff_bejarati_ajto
+      minutes: 10
+      persons: person.hunyadvari_zoltan, person.szakacs_katalin
+      message-single: 'Isten hozott <person>!
+
+        Szia <person>!
+
+        Üdvüzöllek <person>!
+
+        <person> hazajött!'
+      message-multiple: Üdvüzlet itthon <persons>!
+      persons-concat: ' és '
+      target: media_player.u1006_media_player
+      actions:
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 5
+          milliseconds: 0
+      - service: script.valaki_hazajott
+        data: {}
+- id: '1654295856896'
+  alias: Turn On/Off Night/Day
+  description: ''
+  trigger:
+  - platform: time
+    at: 06:30:00
+  - platform: time
+    at: '21:30:00'
+  condition: []
+  action:
+  - if:
+    - condition: time
+      after: '21:30:00'
+      before: 06:30:00
+    then:
+    - service: input_boolean.turn_off
+      data: {}
+      target:
+        entity_id:
+        - input_boolean.noveny
+    else:
+    - service: input_boolean.turn_on
+      data: {}
+      target:
+        entity_id:
+        - input_boolean.reggeli_info
+        - input_boolean.noveny
+  mode: single
+- id: '1654312693366'
+  alias: Nagging Alerting Notification Automation
+  description: ''
+  use_blueprint:
+    path: MackoMici/nagging_alert_notification.yaml
+    input:
+      sensor_entity: plant.ficus
+      alert_state: problem
+      initial_delay: 900
+      repeat_delay: 1800
+      notify_device: 823be0e7ca2f23eddf6402b3b655ee4e
+      resolved_message: A {{ entity_name }} problémája elhárult.
+      notify_message: 'Figyelem a {{ entity_name }}-nak problémája van: {{ entity_problem
+        }}.'
+      dismiss_entity: input_boolean.noveny
+      condition_entity: sensor.hunyadvari_zoltan_wifi
+      condition_entity_state: home
+- id: '1654372139547'
+  alias: Tablet képernyő kikapcsolás
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.family_wifi
+    from: home
+    to: not_home
+  - platform: state
+    entity_id: light.u1006_screen
+    from: 'off'
+    to: 'on'
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: light.u1006_screen
+        state: 'on'
+      sequence:
+      - wait_template: '{{ is_state(''light.u1006_screen'', ''off'') }}'
+        timeout:
+          seconds: 60
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.u1006_screen
+    default:
+    - service: light.turn_off
+      data: {}
+      target:
+        entity_id: light.u1006_screen
+  mode: queued
+- id: '1664845363399'
+  alias: Turn off Switch after Time has elapsed
+  description: ''
+  use_blueprint:
+    path: MackoMici/Turn Off Switch After Time.yaml
+    input:
+      switch: switch.sonoff_furdoszoba_futes
+      time: 00:45:00
+- id: '1664935432043'
+  alias: Window open, climate off after a defined time
+  description: ''
+  use_blueprint:
+    path: MackoMici/Climate_window.yaml
+    input:
+      window_entity: binary_sensor.nappali_ablak_contact
+      climate_target: climate.gree_klima
+- id: '1665923714852'
+  alias: Párásító világítás kikapcsolás
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - humidifier.parasito
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: group.family_wifi
+    state: away
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.parasito
+  mode: single
+- id: '1670088429978'
+  alias: Fűtés Mindenképp kikapcsolás
+  description: Fűtés Mindenképp kikapcsolás
+  trigger:
+  - platform: state
+    entity_id:
+    - input_boolean.futes
+    to: 'on'
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+  action:
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.futes
+    data: {}
+  - service: scheduler.run_action
+    data:
+      entity_id: switch.schedule_futes_munkanapokon
+  - service: scheduler.run_action
+    data:
+      entity_id: switch.schedule_futes_hetvegen
+  mode: single
+- id: '1673370581948'
+  alias: Bathroom Humidity Management
+  description: ''
+  use_blueprint:
+    path: MackoMici/Bathroom_Humidity_Management.yaml
+    input:
+      humidity_sensor: sensor.furdoszoba_paratartalom
+      fan_switch: switch.sonoff_furdo_szelloztetes
+      outdoor_absolutehumidity_sensor: sensor.kulteri_absolutehumidity
+      reference_humidity_sensor: sensor.belteri_paratartalom
+      absolutehumidity_sensor: sensor.furdoszoba_absolutehumidity
+      rising_threshold: 20
+      falling_threshold: 18
+- id: '1673530275257'
+  alias: SSL expiry notification
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.ssl_cert_expiry
+    below: 21
+  condition: []
+  action:
+  - service: notify.zoolesz
+    data:
+      message: Az SSL tanúsítvány 21 nap múlva lejár, és nem újult meg automatikusan
+      title: Figyelmeztetés!!!
+  mode: single
+- id: '1673609887095'
+  alias: Hibák Keresése
+  description: ''
+  trigger:
+  - platform: time
+    at: 00:00:00
+  condition: []
+  action:
+  - service: watchman.report
+    data: {}
+  mode: single
+- id: '1673616297102'
+  alias: Kamra világítás vezérlés
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.kamra_contact
+  condition:
+  - condition: state
+    entity_id: binary_sensor.kamra_light
+    state: 'off'
+  action:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.kamra_contact
+        state: 'on'
+      sequence:
+      - service: light.turn_on
+        target:
+          entity_id: light.yeelight_colorb_kamra
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.kamra_contact
+        state: 'off'
+      sequence:
+      - service: light.turn_off
+        target:
+          entity_id: light.yeelight_colorb_kamra
+  mode: single
