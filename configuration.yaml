@@ -12,6 +12,12 @@ default_config:
     # log level for all python scripts
 #    homeassistant.components.python_script: warning
 
+http:
+  ssl_certificate: !secret ssl_cert
+  ssl_key: !secret ssl_key
+  ip_ban_enabled: true
+  login_attempts_threshold: 5
+
 recorder:
   purge_keep_days: 30
 
@@ -36,8 +42,6 @@ lovelace:
       type: module
     - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
       type: module
-    - url: /hacsfiles/numberbox-card/numberbox-card.js
-      type: module
     - url: /hacsfiles/simple-thermostat/simple-thermostat.js
       type: module
     - url: /hacsfiles/thermal_comfort_icons/thermal_comfort_icons.js
@@ -53,8 +57,6 @@ lovelace:
     - url: /hacsfiles/lovelace-card-tools/card-tools.js
       type: module
     - url: /local/flower-card.js
-      type: module
-    - url: /hacsfiles/light-entity-card/light-entity-card.js
       type: module
     - url: /hacsfiles/scheduler-card/scheduler-card.js
       type: module
