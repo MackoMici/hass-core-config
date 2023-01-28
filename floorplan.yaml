@@ -1364,15 +1364,25 @@ views:
                                 style:  *small-caps_style
                                 entity: sensor.oneplus_a5000_battery_state
                                 layout: vertical
-                                icon: mdi:battery
-                                icon_color: &battery_icon
+                                icon: &battery_icon
                                   |
-                                  {{ is_state(config.entity, 'charging') | iif('blue', '') }}
-                                primary: Battery
-                                badge_icon: mdi:battery
-                                badge_color: |
                                   {% set battery = { "level": states.sensor.oneplus_a5000_battery_level.state | int } %}
-                                  {% if battery.level > 80 %}
+                                  {% if is_state('sensor.oneplus_a5000_battery_state', 'charging') %}
+                                    mdi:battery-charging
+                                  {% elif battery.level > 80 %}
+                                    mdi:battery-80
+                                  {% elif battery.level <= 80 and battery.level >= 25 %}
+                                    mdi:battery-50
+                                  {% else %}
+                                    mdi:battery-10
+                                  {% endif %}
+                                primary: Battery
+                                icon_color: &battery_icon_color
+                                  |
+                                  {% set battery = { "level": states.sensor.oneplus_a5000_battery_level.state | int } %}
+                                  {% if is_state(config.entity, 'charging') %}
+                                    blue
+                                  {% elif battery.level > 80 %}
                                     green
                                   {% elif battery.level <= 80 and battery.level >= 25 %}
                                     orange
@@ -1445,36 +1455,16 @@ views:
                                 style:  *small-caps_style
                                 entity: sensor.sm_a705fn_battery_state
                                 layout: vertical
-                                icon: mdi:battery
-                                icon_color: *battery_icon
+                                icon: *battery_icon
+                                icon_color: *battery_icon_color
                                 primary: Battery
-                                badge_icon: mdi:battery
-                                badge_color: |
-                                  {% set battery = { "level": states.sensor.sm_a705fn_battery_level.state | int } %}
-                                  {% if battery.level > 80 %}
-                                    green
-                                  {% elif battery.level <= 80 and battery.level >= 25 %}
-                                    orange
-                                  {% else %}
-                                    red
-                                  {% endif %}
                               - type: custom:mushroom-template-card
                                 style:  *small-caps_style
                                 entity: sensor.sm_a336b_battery_state
                                 layout: vertical
-                                icon: mdi:battery
-                                icon_color: *battery_icon
+                                icon: *battery_icon
+                                icon_color: *battery_icon_color
                                 primary: Battery
-                                badge_icon: mdi:battery
-                                badge_color: |
-                                  {% set battery = { "level": states.sensor.sm_a336b_battery_level.state | int } %}
-                                  {% if battery.level > 80 %}
-                                    green
-                                  {% elif battery.level <= 80 and battery.level >= 25 %}
-                                    orange
-                                  {% else %}
-                                    red
-                                  {% endif %}
                           - type: map
                             default_zoom: 16
                             entities:

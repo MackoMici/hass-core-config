@@ -27,7 +27,6 @@ views:
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-light-card
-                use_light_color: true
                 entity: switch.sonoff_furdoszoba_futes
                 icon: mdi:radiator
                 layout: vertical
@@ -35,9 +34,13 @@ views:
             cards:
               - type: custom:mushroom-light-card
                 entity: light.yeelight_colorb_kamra
+                show_brightness_control: true
+                show_color_control: true
                 layout: vertical
               - type: custom:mushroom-light-card
                 entity: light.yeelight_colorb_wc
+                show_brightness_control: true
+                show_color_control: true
                 layout: vertical
   - title: Fűtés
     path: futes

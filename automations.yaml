@@ -319,8 +319,8 @@
       outdoor_absolutehumidity_sensor: sensor.kulteri_absolutehumidity
       reference_humidity_sensor: sensor.belteri_paratartalom
       absolutehumidity_sensor: sensor.furdoszoba_absolutehumidity
-      rising_threshold: 20
-      falling_threshold: 18
+      rising_threshold: 17
+      falling_threshold: 15
 - id: '1673530275257'
   alias: SSL expiry notification
   description: ''
@@ -353,9 +353,14 @@
   - platform: state
     entity_id: binary_sensor.kamra_contact
   condition:
-  - condition: state
-    entity_id: binary_sensor.kamra_light
-    state: 'off'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: light.yeelight_colorb_kamra
+      state: 'on'
+    - condition: state
+      entity_id: light.yeelight_colorb_kamra
+      state: 'off'
   action:
   - choose:
     - conditions:
@@ -366,6 +371,7 @@
       - service: light.turn_on
         target:
           entity_id: light.yeelight_colorb_kamra
+        data: {}
     - conditions:
       - condition: state
         entity_id: binary_sensor.kamra_contact
@@ -374,4 +380,5 @@
       - service: light.turn_off
         target:
           entity_id: light.yeelight_colorb_kamra
+        data: {}
   mode: single
