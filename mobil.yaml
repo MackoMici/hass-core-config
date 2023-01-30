@@ -53,33 +53,36 @@ views:
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-template-card
-                primary: >-
+                entity: climate.honeywell_home_termosztat
+                primary: |
                   A kazán jelenleg
-                  {% if is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'heating') %}
+                  {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
+                  {% if hvac.info == "heating" %}
                     fűt.
-                  {% elif is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'idle') %}
+                  {% elif hvac.info == "idle" %}
                     tétlen.
                   {% else %}
                     ki van kapcsolva.
                   {% endif %}
-                secondary: >-
-                  A kívánt hőmérséklet {{ states['climate.honeywell_home_termosztat'].attributes.temperature }} °C
-                icon: >-
-                  {% if is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'heating') %}
+                secondary: A kívánt hőmérséklet {{ states[entity].attributes.temperature }} °C
+                icon: |
+                  {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
+                  {% if hvac.info == "heating" %}
                     mdi:radiator
-                  {% elif is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'idle') %}
+                  {% elif hvac.info == "idle" %}
                     mdi:radiator-disabled
                   {% else %}
                     mdi:radiator-off
-                  {% endif %}
+                  {% endif %} 
                 layout: vertical
-                icon_color: >-
-                  {% if is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'heating') %}
-                    orange
-                  {% elif is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'idle') %}
-                    blue
-                  {% else %}
-                  {% endif %}
+                icon_color: |
+                    {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
+                    {% if hvac.info == "heating" %}
+                      orange
+                    {% elif hvac.info == "idle" %}
+                      blue
+                    {% else %}
+                    {% endif %}
                 tap_action:
                   action: fire-dom-event
                   browser_mod:
@@ -315,13 +318,13 @@ views:
                  - type: horizontal-stack
                    cards:
                      - type: custom:mushroom-template-card
-                       icon: |-
+                       icon: |
                          {% if is_state_attr('humidifier.parasito', 'mode', 'small') %}
                            mdi:speedometer-slow
                          {% else %}
                            mdi:speedometer
                          {% endif %}
-                       primary: |-
+                       primary: |
                          {% if is_state_attr('humidifier.parasito', 'mode', 'small') %}
                            Normál
                          {% else %}

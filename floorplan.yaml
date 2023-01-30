@@ -319,31 +319,34 @@ views:
                         - type: horizontal-stack
                           cards:
                             - type: custom:mushroom-template-card
+                              entity: climate.honeywell_home_termosztat
                               style: *small-caps_style
-                              primary: >-
+                              primary: |
                                 A kazán jelenleg
-                                {% if is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'heating') %}
+                                {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
+                                {% if hvac.info == "heating" %}
                                   fűt.
-                                {% elif is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'idle') %}
+                                {% elif hvac.info == "idle" %}
                                   tétlen.
                                 {% else %}
                                   ki van kapcsolva.
                                 {% endif %}
-                              secondary: >-
-                                A kívánt hőmérséklet {{ states['climate.honeywell_home_termosztat'].attributes.temperature }} °C
-                              icon: >-
-                                {% if is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'heating') %}
+                              secondary: A kívánt hőmérséklet {{ states[entity].attributes.temperature }} °C
+                              icon: |
+                                {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
+                                {% if hvac.info == "heating" %}
                                   mdi:radiator
-                                {% elif is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'idle') %}
+                                {% elif hvac.info == "idle" %}
                                   mdi:radiator-disabled
                                 {% else %}
                                   mdi:radiator-off
                                 {% endif %}
                               layout: vertical
-                              icon_color: >-
-                                {% if is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'heating') %}
+                              icon_color: |
+                                {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
+                                {% if hvac.info == "heating" %}
                                   orange
-                                {% elif is_state_attr('climate.honeywell_home_termosztat', 'hvac_action', 'idle') %}
+                                {% elif hvac.info == "idle" %}
                                   blue
                                 {% else %}
                                 {% endif %}
@@ -471,7 +474,7 @@ views:
 #                service: floorplan.style_set
 #                service_data:
 #                  style: >
-#                    opacity: ${  entity.state === "on" ? "1" : "0" };
+#                    opacity: ${ entity.state === "on" ? "1" : "0" };
 #                    fill: ${ entity.state === "on" ? "#F9D27C99" : "" };
 #                    transition: ${ entity.state === "off" ? "fill 5s ease" : "" };
             - name: Párásítás
@@ -520,13 +523,13 @@ views:
                                   cards:
                                     - type: custom:mushroom-template-card
                                       style: *small-caps_style
-                                      icon: |-
+                                      icon: |
                                         {% if is_state_attr('humidifier.parasito', 'mode', 'small') %}
                                           mdi:speedometer-slow
                                         {% else %}
                                           mdi:speedometer
                                         {% endif %}
-                                      primary: |-
+                                      primary: |
                                         {% if is_state_attr('humidifier.parasito', 'mode', 'small') %}
                                           Normál
                                         {% else %}
@@ -556,7 +559,7 @@ views:
                                     - type: custom:mushroom-template-card
                                       entity: select.parasito_countdown
                                       icon: mdi:numeric-1
-                                      icon_color: |-
+                                      icon_color: |
                                         {% if is_state('humidifier.parasito', 'on') %}
                                           {% if is_state(entity, '1') %}
                                             orange
@@ -574,7 +577,7 @@ views:
                                     - type: custom:mushroom-template-card
                                       entity: select.parasito_countdown
                                       icon: mdi:numeric-3
-                                      icon_color: |-
+                                      icon_color: |
                                         {% if is_state('humidifier.parasito', 'on') %}
                                           {% if is_state(entity, '3') %}
                                             orange
@@ -591,7 +594,7 @@ views:
                                     - type: custom:mushroom-template-card
                                       entity: select.parasito_countdown
                                       icon: mdi:numeric-6
-                                      icon_color: |-
+                                      icon_color: |
                                         {% if is_state('humidifier.parasito', 'on') %}
                                           {% if is_state(entity, '6') %}
                                             orange
@@ -608,7 +611,7 @@ views:
                                     - type: custom:mushroom-template-card
                                       entity: select.parasito_countdown
                                       icon: mdi:timer-off
-                                      icon_color: |-
+                                      icon_color: |
                                         {% if is_state('humidifier.parasito', 'on') %}
                                           {% if is_state(entity, 'cancel') %}
                                             orange
@@ -769,7 +772,7 @@ views:
                                   orange
                                 {% endif %}
                               primary: Nappali
-                              secondary: |-
+                              secondary: |
                                 {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.nappali_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
@@ -785,7 +788,7 @@ views:
                               icon: mdi:silverware-variant
                               icon_color: *template_icon_color
                               primary: Ebédlő
-                              secondary: |-
+                              secondary: |
                                 {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.ebedlo_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
@@ -801,7 +804,7 @@ views:
                               icon: mdi:countertop
                               icon_color: *template_icon_color
                               primary: Konyha
-                              secondary: |-
+                              secondary: |
                                 {% set clean = {"ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.konyha_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
@@ -817,7 +820,7 @@ views:
                               icon: mdi:bed-empty
                               icon_color: *template_icon_color
                               primary: Halószoba
-                              secondary: |-
+                              secondary: |
                                 {% set clean = {
                                   "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.haloszoba_takaritas.state)) / 60 / 60
                                 } %}
@@ -835,7 +838,7 @@ views:
                               icon: mdi:door
                               icon_color: *template_icon_color
                               primary: Előszoba
-                              secondary: |-
+                              secondary: |
                                 {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.eloszoba_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
@@ -851,7 +854,7 @@ views:
                               icon: mdi:door-sliding-open
                               icon_color: *template_icon_color
                               primary: Folyosó
-                              secondary: |-
+                              secondary: |
                                 {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.folyoso_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
@@ -867,7 +870,7 @@ views:
                               icon: mdi:teddy-bear
                               icon_color: *template_icon_color
                               primary: Gyerekszoba
-                              secondary: |-
+                              secondary: |
                                 {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.gyerekszoba_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
@@ -1349,7 +1352,7 @@ views:
                                 icon: mdi:wifi
                                 icon_color: &wifi_icon
                                   |
-                                  {{ is_state(config.entity, 'MiciMacko 5GHz') | iif('blue', '') }}
+                                  {{ is_state(entity, 'MiciMacko 5GHz') | iif('blue', '') }}
                                 primary: Wifi
                               - type: custom:mushroom-template-card
                                 style:  *small-caps_style
@@ -1358,31 +1361,18 @@ views:
                                 icon: mdi:bluetooth
                                 icon_color: &bluetooth_icon
                                   |
-                                  {{ is_state(config.entity, 'on') | iif('blue', '') }}
+                                  {{ is_state(entity, 'on') | iif('blue', '') }}
                                 primary: Bluetooth
                               - type: custom:mushroom-template-card
                                 style:  *small-caps_style
-                                entity: sensor.oneplus_a5000_battery_state
+                                entity: sensor.oneplus_a5000_battery_level
                                 layout: vertical
-                                icon: &battery_icon
-                                  |
-                                  {% set battery = { "level": states.sensor.oneplus_a5000_battery_level.state | int } %}
-                                  {% if is_state('sensor.oneplus_a5000_battery_state', 'charging') %}
-                                    mdi:battery-charging
-                                  {% elif battery.level > 80 %}
-                                    mdi:battery-80
-                                  {% elif battery.level <= 80 and battery.level >= 25 %}
-                                    mdi:battery-50
-                                  {% else %}
-                                    mdi:battery-10
-                                  {% endif %}
+                                icon: "{{ state_attr(entity, 'icon') }}"
                                 primary: Battery
                                 icon_color: &battery_icon_color
                                   |
-                                  {% set battery = { "level": states.sensor.oneplus_a5000_battery_level.state | int } %}
-                                  {% if is_state(config.entity, 'charging') %}
-                                    blue
-                                  {% elif battery.level > 80 %}
+                                  {% set battery = { 'level': states[entity].state | int } %}
+                                  {% if battery.level > 80 %}
                                     green
                                   {% elif battery.level <= 80 and battery.level >= 25 %}
                                     orange
@@ -1453,16 +1443,16 @@ views:
                                 primary: Bluetooth
                               - type: custom:mushroom-template-card
                                 style:  *small-caps_style
-                                entity: sensor.sm_a705fn_battery_state
+                                entity: sensor.sm_a705fn_battery_level
                                 layout: vertical
-                                icon: *battery_icon
+                                icon: "{{ state_attr(entity, 'icon') }}"
                                 icon_color: *battery_icon_color
                                 primary: Battery
                               - type: custom:mushroom-template-card
                                 style:  *small-caps_style
-                                entity: sensor.sm_a336b_battery_state
+                                entity: sensor.sm_a336b_battery_level
                                 layout: vertical
-                                icon: *battery_icon
+                                icon: "{{ state_attr(entity, 'icon') }}"
                                 icon_color: *battery_icon_color
                                 primary: Battery
                           - type: map
