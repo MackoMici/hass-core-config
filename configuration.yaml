@@ -50,19 +50,27 @@ lovelace:
       type: module
     - url: /hacsfiles/weather-radar-card/weather-radar-card.js
       type: module
-    - url: /hacsfiles/weather-chart-card/weather-chart-card.js
-      type: module
     - url: /hacsfiles/kiosk-mode/kiosk-mode.js
       type: module
     - url: /hacsfiles/lovelace-card-tools/card-tools.js
-      type: module
-    - url: /local/flower-card.js
       type: module
     - url: /hacsfiles/scheduler-card/scheduler-card.js
       type: module
     - url: /hacsfiles/lovelace-mushroom/mushroom.js
       type: module
     - url: /hacsfiles/hass-swipe-navigation/swipe-navigation.js
+      type: module
+    - url: /hacsfiles/clock-weather-card/clock-weather-card.js
+      type: module
+    - url: /hacsfiles/lovelace-hourly-weather/hourly-weather.js
+      type: module
+    - url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
+      type: module
+    - url: /hacsfiles/config-template-card/config-template-card.js
+      type: module
+    - url: /hacsfiles/lovelace-flower-card/flower-card.js
+      type: module
+    - url: /hacsfiles/apexcharts-card/apexcharts-card.js
       type: module
     - url: https://fonts.googleapis.com/css2?family=Oxygen&family=Ubuntu:wght@300&display=swap
       type: css
@@ -111,13 +119,7 @@ tts:
 frontend:
   themes: !include_dir_merge_named themes
 
-#sensor: !include sensor.yaml
-#group: !include groups.yaml
-#notify: !include notify.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-#input_boolean: !include input_boolean.yaml
-#input_number: !include input_number.yaml
-#input_datetime: !include input_datetime.yaml
-#plant: !include plants.yaml
+

@@ -1,0 +1,75 @@
+blueprint:
+  name: Kapcsoló ki és bekapcsolás időzítő figyelés
+  description: Megadott kapcsoló be kapcsolás, illetve ha időzítő lejár akkor kikapcsolás,
+    valamint ha kézzel lett kikapcsolva a kapcsoló akkor időzítő alaphelyzetbe állítás.
+  domain: automation
+  input:
+    switch:
+      name: Switch
+      selector:
+        entity:
+          domain:
+          - switch
+          - input_boolean
+          multiple: false
+    timer:
+      name: Timer
+      selector:
+        entity:
+          domain: timer
+          multiple: false
+    inumber:
+      name: Number
+      selector:
+        entity:
+          domain: input_number
+          multiple: false
+  source_url: https://gist.github.com/MackoMici/21fba72a2ef0343f793535a01293727c
+variables:
+  inumber: !input inumber
+  inumber_min: '{{ states(inumber) | int * 60 }}'
+trigger:
+- platform: state
+  entity_id: !input switch
+  id: Switch
+- platform: event
+  event_type: timer.finished
+  event_data:
+    entity_id: !input timer
+  id: Timer
+action:
+- choose:
+  - conditions:
+    - condition: state
+      entity_id: !input switch
+      state: 'on'
+    - condition: trigger
+      id: Timer
+    sequence:
+    - service: switch.turn_off
+      entity_id: !input switch
+    - service: input_boolean.turn_off
+      entity_id: !input switch
+  - conditions:
+    - condition: state
+      entity_id: !input switch
+      state: 'on'
+    - condition: trigger
+      id: Switch
+    sequence:
+    - service: timer.start
+      data:
+        duration: '{{ inumber_min }}'
+      target:
+        entity_id: !input timer
+  - conditions:
+    - condition: state
+      entity_id: !input switch
+      state: 'off'
+    - condition: trigger
+      id: Switch
+    sequence:
+    - service: timer.cancel
+      target:
+        entity_id: !input timer
+mode: single

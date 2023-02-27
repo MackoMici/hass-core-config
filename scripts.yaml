@@ -97,6 +97,10 @@ diffuser:
     data: {}
     target:
       entity_id: humidifier.parasito
+  - service: light.toggle
+    data: {}
+    target:
+      entity_id: light.parasito
   mode: single
 diffuser_mode:
   alias: Diffuser Mode

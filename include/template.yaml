@@ -1,13 +1,5 @@
 template:
   sensor:
-    - unique_id: hass_version
-      icon: mdi:home-assistant
-      state: >
-        {{ 'Naprakész' if states('sensor.current_version') == states('sensor.home_assistant_website') else states('sensor.home_assistant_website') }}
-      attributes:
-        friendly_name: >
-          Telepítve {{ states('sensor.current_version') }}
-
     - name: "Bejárati Ajtó Battery"
       unit_of_measurement: "%"
       state_class: measurement
@@ -25,6 +17,20 @@ template:
       icon: mdi:history
       state: >
         {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.last_boot'))) | int // 60 %}
+        {% set hours = mins // 60 %}
+        {% set days = mins // 1440 %}
+        {% if days > 1 %}
+          {{ days }} napja
+        {% elif hours > 1 %}
+          {{ hours }} órája
+        {% else %}
+          {{ mins }} perce
+        {% endif %}
+
+    - name: "Mikrotik Router Uptime"
+      icon: mdi:history
+      state: >
+        {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.mikrotik_hap_ac_2_uptime'))) | int // 60 %}
         {% set hours = mins // 60 %}
         {% set days = mins // 1440 %}
         {% if days > 1 %}
@@ -92,13 +98,16 @@ template:
     - name: "MetNo Temperature"
       unit_of_measurement: '°C'
       state_class: 'measurement'
-      state: "{{ state_attr('weather.forecast_home', 'temperature') }}"
+      state: >
+        {{ state_attr('weather.forecast_home', 'temperature') }}
 
     - name: "MetNo Humidity"
       unit_of_measurement: '%'
       state_class: 'measurement'
-      state: "{{ state_attr('weather.forecast_home', 'humidity') }}"
+      state: >
+        {{ state_attr('weather.forecast_home', 'humidity') }}
 
     - name: "MetNo Wind Speed"
       unit_of_measurement: 'km/h'
-      state: "{{ state_attr('weather.forecast_home', 'wind_speed') }}"
+      state: >
+        {{ state_attr('weather.forecast_home', 'wind_speed') }}

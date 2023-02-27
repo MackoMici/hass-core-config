@@ -26,9 +26,9 @@
   condition: []
   action:
   - if:
-    - condition: sun
-      before: sunset
-      after: sunrise
+    - condition: state
+      entity_id: sun.sun
+      state: above_horizon
     then:
     - service: frontend.set_theme
       data:
@@ -39,31 +39,6 @@
       data:
         name: waves
         mode: dark
-  mode: single
-- id: '1646997093928'
-  alias: Home Assistant Indítás
-  description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-  condition:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: switch.sonoff_furdoszoba_futes
-      state: 'on'
-    - condition: state
-      entity_id: input_boolean.futes
-      state: 'on'
-  action:
-  - service: switch.turn_off
-    data: {}
-    target:
-      entity_id: switch.sonoff_furdoszoba_futes
-  - service: input_boolean.turn_off
-    data: {}
-    target:
-      entity_id: input_boolean.futes
   mode: single
 - id: '1648256024121'
   alias: Reggeli információk
@@ -249,22 +224,6 @@
       target:
         entity_id: light.u1006_screen
   mode: queued
-- id: '1664845363399'
-  alias: Turn off Switch after Time has elapsed
-  description: ''
-  use_blueprint:
-    path: MackoMici/Turn Off Switch After Time.yaml
-    input:
-      switch: switch.sonoff_furdoszoba_futes
-      time: 00:45:00
-- id: '1664935432043'
-  alias: Window open, climate off after a defined time
-  description: ''
-  use_blueprint:
-    path: MackoMici/Climate_window.yaml
-    input:
-      window_entity: binary_sensor.nappali_ablak_contact
-      climate_target: climate.gree_klima
 - id: '1665923714852'
   alias: Párásító világítás kikapcsolás
   description: ''
@@ -284,30 +243,6 @@
     target:
       entity_id: light.parasito
   mode: single
-- id: '1670088429978'
-  alias: Fűtés Mindenképp kikapcsolás
-  description: Fűtés Mindenképp kikapcsolás
-  trigger:
-  - platform: state
-    entity_id:
-    - input_boolean.futes
-    to: 'on'
-    for:
-      hours: 1
-      minutes: 0
-      seconds: 0
-  action:
-  - service: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.futes
-    data: {}
-  - service: scheduler.run_action
-    data:
-      entity_id: switch.schedule_futes_munkanapokon
-  - service: scheduler.run_action
-    data:
-      entity_id: switch.schedule_futes_hetvegen
-  mode: single
 - id: '1673370581948'
   alias: Bathroom Humidity Management
   description: ''
@@ -319,8 +254,8 @@
       outdoor_absolutehumidity_sensor: sensor.kulteri_absolutehumidity
       reference_humidity_sensor: sensor.belteri_paratartalom
       absolutehumidity_sensor: sensor.furdoszoba_absolutehumidity
-      rising_threshold: 17
-      falling_threshold: 15
+      rising_threshold: 15
+      falling_threshold: 13
 - id: '1673530275257'
   alias: SSL expiry notification
   description: ''
@@ -382,3 +317,21 @@
           entity_id: light.yeelight_colorb_kamra
         data: {}
   mode: single
+- id: '1676475309119'
+  alias: Fürdőszoba fűtés
+  description: ''
+  use_blueprint:
+    path: MackoMici/Switch_timer.yaml
+    input:
+      switch: switch.sonoff_furdoszoba_futes
+      timer: timer.furdoszoba_futes
+      inumber: input_number.furdoszoba_futes
+- id: '1676475337454'
+  alias: Fűtés mindenképp
+  description: ''
+  use_blueprint:
+    path: MackoMici/Switch_timer.yaml
+    input:
+      switch: input_boolean.futes
+      timer: timer.futes_mindenkepp
+      inumber: input_number.futes_mindenkepp

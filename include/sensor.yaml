@@ -17,51 +17,30 @@ sensor:
       - time
       - date
 
-  - platform: min_max
-    name: Beltéri hőmérséklet
-    type: mean
-    entity_ids:
-      - sensor.ebedlo_temperature
-      - sensor.nappali_temperature
-      - sensor.indoor_temperature
-
-  - platform: min_max
-    name: Beltéri páratartalom
-    type: mean
-    entity_ids:
-      - sensor.ebedlo_humidity
-      - sensor.nappali_humidity
-
-  - platform: min_max
-    name: Kültéri hőmérséklet
-    type: mean
-    entity_ids:
-      - sensor.metno_temperature
-      - sensor.outdoor_temperature
-
-  - platform: min_max
-    name: Kültéri páratartalom
-    type: mean
-    entity_ids:
-      - sensor.metno_humidity
-      - sensor.outdoor_humidity
-
-  - platform: min_max
-    name: Fürdőszoba hőmérséklet
-    type: mean
-    entity_ids:
-      - sensor.furdoszoba_temperature
-      - sensor.furdoszoba_2_temperature
-
-  - platform: min_max
-    name: Fürdőszoba páratartalom
-    type: mean
-    entity_ids:
-      - sensor.furdoszoba_humidity
-      - sensor.furdoszoba_2_humidity
-
   - platform: command_line
     name: SSL cert expiry
     unit_of_measurement: days
     scan_interval: 10800
     command: "ssl-cert-check -b -c /etc/letsencrypt/live/8a2a08365c8a.sn.mynetname.net/cert.pem | awk '{ print $NF }'"
+
+  - platform: template
+    sensors:
+      devices_with_low_battery:
+        friendly_name: 'Devices with Low Battery'
+        unit_of_measurement: devices
+        value_template: >-
+          {{ states.sensor
+            | selectattr('attributes.device_class', 'eq', 'battery')
+            | rejectattr('entity_id', 'search', 'battery_level')
+            | map(attribute='state')
+            | reject('in', ['unknown', 'unavailable'])
+            | map('int', -1) | select('le', 30)
+            | select('ge', 0)
+            | list | count
+          }}
+        icon_template: >-
+          {% if is_state('sensor.devices_with_low_battery', '0') %}
+            mdi:battery-check
+          {% else %}
+            mdi:battery-alert
+          {% endif %}

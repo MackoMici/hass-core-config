@@ -32,7 +32,7 @@ views:
           stylesheet: /local/floorplan/House.css
           defaults:
             hover_action: hover-info
-            tap_action: more-info
+            tap_action: none
           rules:
             - name: Világítás
               entities:
@@ -264,6 +264,7 @@ views:
                               horizontal: false
                               both: false
                         - type: custom:mini-graph-card
+                          tap_action: none
                           style: *small-caps_style
                           entities:
                             - entity: sensor.belteri_homerseklet
@@ -280,6 +281,7 @@ views:
                             name: false
                             icon: false
                             labels: true
+                            points: false
                           color_thresholds: &mini-graph_color_style
                             - value: 18
                               color: '#6666ff'
@@ -404,33 +406,40 @@ views:
                         - type: horizontal-stack
                           cards:
                             - type: custom:mushroom-entity-card
+                              tap_action: none
                               style: *small-caps_style
                               entity: sensor.ebedlo_temperature
                               name: Ebédlő
                             - type: custom:mushroom-entity-card
+                              tap_action: none
                               style: *small-caps_style
                               entity: sensor.nappali_temperature
                               name: Nappali
                             - type: custom:mushroom-entity-card
+                              tap_action: none
                               style: *small-caps_style
                               entity: sensor.haloszoba_temperature
                               name: Háló
                         - type: horizontal-stack
                           cards:
                             - type: custom:mushroom-entity-card
+                              tap_action: none
                               style: *small-caps_style
                               entity: sensor.konyha_temperature
                               name: Konyha
                             - type: custom:mushroom-entity-card
+                              tap_action: none
                               style: *small-caps_style
                               entity: sensor.gyerekszoba_temperature
                               name: Gyerekszoba
                             - type: custom:mushroom-entity-card
+                              tap_action: none
                               style: *small-caps_style
                               entity: sensor.furdoszoba_homerseklet
                               name: Fürdő
                               icon: mdi:thermometer
                         - type: custom:mini-graph-card
+                          tap_action: none
                           style: *small-caps_style
                           entities:
                             - entity: sensor.belteri_homerseklet
@@ -626,6 +635,7 @@ views:
                                           countdown: cancel
                                       layout: vertical
                                 - type: custom:mini-graph-card
+                                  tap_action: none
                                   style: *small-caps_style
                                   entities:
                                     - entity: sensor.belteri_paratartalom
@@ -732,10 +742,10 @@ views:
                       in_card: true
                       cards:
                         - type: custom:vacuum-card
+                          tap_action: none
                           entity: vacuum.viomi_se
                           style: *style_margin
                           image: default
-                          compact_view: false
                           stats:
                             default:
                               - attribute: filter_left
@@ -773,7 +783,7 @@ views:
                                 {% endif %}
                               primary: Nappali
                               secondary: |
-                                {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.nappali_takaritas.state)) / 60 / 60 } %}
+                                {% set clean = { 'ago': (as_timestamp(now()) - as_timestamp(states.input_datetime.nappali_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
                                 {% else %}
@@ -789,7 +799,7 @@ views:
                               icon_color: *template_icon_color
                               primary: Ebédlő
                               secondary: |
-                                {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.ebedlo_takaritas.state)) / 60 / 60 } %}
+                                {% set clean = { 'ago': (as_timestamp(now()) - as_timestamp(states.input_datetime.ebedlo_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
                                 {% else %}
@@ -805,7 +815,7 @@ views:
                               icon_color: *template_icon_color
                               primary: Konyha
                               secondary: |
-                                {% set clean = {"ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.konyha_takaritas.state)) / 60 / 60 } %}
+                                {% set clean = {'ago': (as_timestamp(now()) - as_timestamp(states.input_datetime.konyha_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
                                 {% else %}
@@ -821,8 +831,7 @@ views:
                               icon_color: *template_icon_color
                               primary: Halószoba
                               secondary: |
-                                {% set clean = {
-                                  "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.haloszoba_takaritas.state)) / 60 / 60
+                                {% set clean = { 'ago': (as_timestamp(now()) - as_timestamp(states.input_datetime.haloszoba_takaritas.state)) / 60 / 60
                                 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
@@ -839,7 +848,7 @@ views:
                               icon_color: *template_icon_color
                               primary: Előszoba
                               secondary: |
-                                {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.eloszoba_takaritas.state)) / 60 / 60 } %}
+                                {% set clean = { 'ago': (as_timestamp(now()) - as_timestamp(states.input_datetime.eloszoba_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
                                 {% else %}
@@ -855,7 +864,7 @@ views:
                               icon_color: *template_icon_color
                               primary: Folyosó
                               secondary: |
-                                {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.folyoso_takaritas.state)) / 60 / 60 } %}
+                                {% set clean = { 'ago': (as_timestamp(now()) - as_timestamp(states.input_datetime.folyoso_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
                                 {% else %}
@@ -871,7 +880,7 @@ views:
                               icon_color: *template_icon_color
                               primary: Gyerekszoba
                               secondary: |
-                                {% set clean = { "ago": (as_timestamp(now()) - as_timestamp(states.input_datetime.gyerekszoba_takaritas.state)) / 60 / 60 } %}
+                                {% set clean = { 'ago': (as_timestamp(now()) - as_timestamp(states.input_datetime.gyerekszoba_takaritas.state)) / 60 / 60 } %}
                                 {% if clean.ago > 24 %}
                                   {{ (clean.ago / 24) | int }} napja
                                 {% else %}
@@ -917,16 +926,23 @@ views:
                           title: Home Assistant
                           entities:
                             - entity: sensor.template_hass_version
+                              tap_action: none
                             - entity: sensor.hacs
+                              tap_action: none
                             - entity: sensor.home_assistant_v2_db_size
+                              tap_action: none
                               name: Adatbázis mérete
                             - entity: sensor.home_assistant_log_size
+                              tap_action: none
                               name: Log méret
                             - entity: sensor.home_assistant_uptime
+                              tap_action: none
                               name: Uptime
                             - entity: sensor.watchman_missing_entities
+                              tap_action: none
                               name: Missing Entities
                             - entity: sensor.watchman_missing_services
+                              tap_action: none
                               name: Missing Services
  #                       - type: entities
  #                         style: |
@@ -968,8 +984,10 @@ views:
                           title: Debian Server
                           entities:
                             - entity: sensor.processor_temperature
+                              tap_action: none
                               name: Processzor hőmérséklet
                             - type: custom:bar-card
+                              tap_action: none
                               width: 55%
                               height: 2em
                               decimal: 0
@@ -997,14 +1015,19 @@ views:
                               entity_row: true
                               entities:
                                 - entity: sensor.processor_use
+                                  tap_action: none
                                   name: Processzor
                                 - entity: sensor.memory_use_percent
+                                  tap_action: none
                                   name: Memória 8GB
                                 - entity: sensor.disk_use_percent
+                                  tap_action: none
                                   name: SSD 120GB
                                 - entity: sensor.disk_use_percent_mnt_hdd1
+                                  tap_action: none
                                   name: HDD1 2TB
                                 - entity: sensor.disk_use_percent_mnt_hdd2
+                                  tap_action: none
                                   name: HDD2 4TB
                         - type: entities
                           style: *small-caps_style
@@ -1013,8 +1036,11 @@ views:
                           title: Mikrotik hAP ac^2
                           entities:
                             - entity: update.mikrotik_hap_ac_2_routerboard_firmware_update
+                              tap_action: none
                             - entity: update.mikrotik_hap_ac_2_routeros_update
+                              tap_action: none
                             - entity: sensor.mikrotik_hap_ac_2_uptime
+                              tap_action: none
                               name: Uptime
                             - type: custom:bar-card
                               width: 55%
@@ -1026,12 +1052,15 @@ views:
                               entity_row: true
                               entities:
                                 - entity: sensor.mikrotik_hap_ac_2_cpu_load
+                                  tap_action: none
                                   icon: mdi:cpu-32-bit
                                   name: Processzor
                                 - entity: sensor.mikrotik_hap_ac_2_memory_usage
+                                  tap_action: none
                                   name: Memória 256MB
                                   icon: mdi:memory
                                 - entity: sensor.mikrotik_hap_ac_2_hdd_usage
+                                  tap_action: none
                                   icon: mdi:harddisk
                                   name: Tárhely 16MB
             - name: Karácsony
@@ -1369,10 +1398,37 @@ views:
                                 layout: vertical
                                 icon: "{{ state_attr(entity, 'icon') }}"
                                 primary: Battery
+                                card_mod: &battery_animation
+                                  style:
+                                    mushroom-shape-icon$: |
+                                      ha-icon {
+                                        {% set battery = {
+                                          'state': states[entity | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state
+                                        } %}
+                                        {% if battery.state  == "charging" %}
+                                          --icon-animation: charge 3s linear infinite;
+                                          --card-mod-icon: mdi:battery;
+                                        {% endif %}
+                                      }
+                                      @keyframes charge {
+                                        0%, 80% { clip-path: inset(0 0 0 0); }
+                                        10% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 84%, 34% 84%, 34% 100%, 100% 100%, 100% 0%); }
+                                        20% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 74%, 34% 74%, 34% 100%, 100% 100%, 100% 0%); }
+                                        30% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 64%, 34% 64%, 34% 100%, 100% 100%, 100% 0%); }
+                                        40% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 54%, 34% 54%, 34% 100%, 100% 100%, 100% 0%); }
+                                        50% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 44%, 34% 44%, 34% 100%, 100% 100%, 100% 0%); }
+                                        60% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 34%, 34% 34%, 34% 100%, 100% 100%, 100% 0%); }
+                                        70% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 24%, 34% 24%, 34% 100%, 100% 100%, 100% 0%); }
+                                      }
                                 icon_color: &battery_icon_color
                                   |
-                                  {% set battery = { 'level': states[entity].state | int } %}
-                                  {% if battery.level > 80 %}
+                                  {% set battery = { 
+                                    'level': states[entity].state | int,
+                                    'state': states[entity | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state 
+                                  } %}
+                                  {% if battery.state  == "charging" %}
+                                    blue
+                                  {% elif battery.level > 80 %}
                                     green
                                   {% elif battery.level <= 80 and battery.level >= 25 %}
                                     orange
@@ -1448,6 +1504,7 @@ views:
                                 icon: "{{ state_attr(entity, 'icon') }}"
                                 icon_color: *battery_icon_color
                                 primary: Battery
+                                card_mod: *battery_animation
                               - type: custom:mushroom-template-card
                                 style:  *small-caps_style
                                 entity: sensor.sm_a336b_battery_level
@@ -1455,6 +1512,7 @@ views:
                                 icon: "{{ state_attr(entity, 'icon') }}"
                                 icon_color: *battery_icon_color
                                 primary: Battery
+                                card_mod: *battery_animation
                           - type: map
                             default_zoom: 16
                             entities:
@@ -1470,6 +1528,8 @@ views:
             image: /local/background/time.png
             elements:
               - entity: sensor.time
+                tab_action: 
+                  action: none
                 style:
                   color: '#EAC117'
                   filter: opacity(60%)
@@ -1481,6 +1541,8 @@ views:
                   z-index: 0
                 type: state-label
               - entity: sensor.week_day
+                tab_action:
+                  action: none
                 style:
                   filter: opacity(50%)
                   font-size: 5vw
@@ -1491,6 +1553,8 @@ views:
                   z-index: 1
                 type: state-label
               - entity: sensor.current_date
+                tab_action:
+                  action: none
                 style:
                   filter: opacity(100%)
                   font-size: 2vw
