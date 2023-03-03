@@ -9,8 +9,7 @@ views:
       - type: custom:vertical-stack-in-card
         cards:
           - type: custom:mushroom-chips-card
-            style:
-              |
+            style: |
               ha-card {
                 --chip-box-shadow: none;
                 --chip-background: none;
@@ -41,42 +40,42 @@ views:
                 chip:
                   type: template
                   icon: mdi:flower
-                  content: >
+                  content: |
                     {% if is_state_attr(entity, 'dli_status', 'Low') %}
                       DLI alacsony
                     {% endif %}
                     {% if is_state_attr(entity, 'dli_status', 'High') %}
-                      DLI magas
+                      DLI nagy
                     {% endif %}
                     {% if is_state_attr(entity, 'moisture_status', 'Low') %}
                       Talajnedvesség alacsony
                     {% endif %}
                     {% if is_state_attr(entity, 'moisture_status', 'High') %}
-                      Talajnedvesség magas
+                      Talajnedvesség nagy
                     {% endif %}
                     {% if is_state_attr(entity, 'temperature_status', 'Low') %}
                       Hőmérséklet alacsony
                     {% endif %}
                     {% if is_state_attr(entity, 'temperature_status', 'High') %}
-                      Hőmérséklet magas
+                      Hőmérséklet nagy
                     {% endif %}
                     {% if is_state_attr(entity, 'conductivity_status', 'Low') %}
                       Talajvezetőképesség alacsony
                     {% endif %}
                     {% if is_state_attr(entity, 'conductivity_status', 'High') %}
-                      Talajvezetőképesség magas
+                      Talajvezetőképesség nagy
                     {% endif %}
                     {% if is_state_attr(entity, 'illuminance_status', 'Low') %}
                       Fényerősség alacsony
                     {% endif %}
                     {% if is_state_attr(entity, 'illuminance_status', 'High') %}
-                      Fényerősség magas
+                      Fényerősség nagy
                     {% endif %}
                     {% if is_state_attr(entity, 'humidity_status', 'Low') %}
                       Levegő Páratartalom alacsony
                     {% endif %}
                     {% if is_state_attr(entity, 'humidity_status', 'High') %}
-                      Levegő Páratartalom magas
+                      Levegő Páratartalom nagy
                     {% endif %}
                   tap_action:
                     action: navigate
@@ -95,7 +94,9 @@ views:
                     {{ expand(states.light.vilagitas) | selectattr( 'state', 'eq', 'on') | list | count }} Lámpa ég
                   entity: light.vilagitas
                   icon_color: grey
-                  tap_action: none
+                  tap_action:
+                    action: navigate
+                    navigation_path: kapcsolo
                   hold_action: none
               - type: conditional
                 conditions:
@@ -108,7 +109,30 @@ views:
                   content: &window_content
                     |
                     {{ expand(states.binary_sensor.ablakok) | selectattr( 'state', 'eq', 'on') | list | count }} Ablak nyitva
-                  tap_action: none
+                  tap_action:
+                    action: fire-dom-event
+                    browser_mod:
+                      service: browser_mod.popup
+                      data:
+                        content:
+                          type: custom:auto-entities
+                          filter:
+                            include:
+                              - attributes:
+                                  device_class: window
+                                state: 'on'
+                                options:
+                                  type: custom:mushroom-entity-card
+                                  secondary_info: last-changed
+                                  tap_action: none
+                                  hold_action: none
+                          show_empty: false
+                          card:
+                            type: custom:layout-card
+                            cards: []
+                            layout_type: masonry
+                          sort:
+                            method: friendly_name
                   hold_action: none
                   entity: binary_sensor.ablakok
               - type: conditional
@@ -120,16 +144,76 @@ views:
                   icon_color: red
                   icon: mdi:battery-alert
                   content: '{{ states(entity) }}'
-                  tap_action: none
+                  tap_action:
+                    action: fire-dom-event
+                    browser_mod:
+                      service: browser_mod.popup
+                      data:
+                        content:
+                          type: custom:auto-entities
+                          filter:
+                            include:
+                              - attributes:
+                                  device_class: battery
+                                state: < 30
+                                options:
+                                  type: custom:mushroom-template-card
+                                  primary: '{{ states(entity) }}%'
+                                  secondary: '{{ state_attr(entity, ''friendly_name'') | title }}'
+                                  icon: |
+                                    {% set battery_level = (states(entity) | int / 10) |
+                                    round(0) | int * 10 %} {% if battery_level == 100 %}
+                                      mdi:battery
+                                    {% elif battery_level > 0 %}
+                                      mdi:battery-{{ battery_level }}
+                                    {% else %}
+                                      mdi:battery-outline
+                                    {% endif %}
+                                  icon_color: |
+                                    {% set battery_level = states(entity) | int %}
+                                    {% if battery_level > 90 %} 
+                                      green
+                                    {% elif battery_level > 60 %}
+                                      light-green
+                                    {% elif battery_level > 50 %}
+                                      lime
+                                    {% elif battery_level > 40 %}
+                                      yellow
+                                    {% elif battery_level > 30 %}
+                                      amber
+                                    {% elif battery_level > 20 %}
+                                      orange
+                                    {% elif battery_level > 10 %}
+                                      deep-orange
+                                    {% else %}
+                                      red
+                                    {% endif %} 
+                                  layout: horizontal
+                                  tap_action:
+                                    action: none
+                                  badge_icon: |
+                                    {% set battery_level = states(entity) | int %}
+                                    {% if battery_level < 10 %} 
+                                      mdi:exclamation-thick
+                                    {% endif %}
+                                  badge_color: red
+                            exclude: null
+                          show_empty: false
+                          card:
+                            type: custom:layout-card
+                            cards: []
+                            layout_type: masonry
+                          sort:
+                            method: friendly_name                  
                   hold_action: none
                   entity: sensor.devices_with_low_battery
           - type: custom:mushroom-title-card
-            title: |-
+            title: |
               {% set time = now().hour %}
               {% if (time >= 18) %} 
                Jó estét, {{user}}!
               {% elif (time >= 10) %}
-               Jó napot, {{user}}!
+               Szép napot, {{user}}!
               {% elif (time >= 5) %}
                Jó reggelt, {{user}}!
               {% else %}
@@ -143,8 +227,7 @@ views:
               {% endif %}
           - type: custom:hourly-weather
             card_mod: &background_none
-              style: 
-                |
+              style: |
                 ha-card {
                   background: none;
                   box-shadow: none;
@@ -163,17 +246,62 @@ views:
             label_spacing: |
               {% set segments = 24 - now().hour %}
               {{ 4 if segments < 13 else 2 }}
-#          - type: custom:atomic-calendar-revive
-#            entities:
-#              - entity: calendar.zoltan_hunyadvari_gmail_com
-#            enableModeChange: true
-#            firstDayOfWeek: 1
-#            maxDaysToShow: 1
-#            refreshInterval: 240
-#            showLoader: false
-#            hideFinishedEvents: true
-#            showLocation: false
-#            hideDuplicates: true
+          - type: custom:state-switch
+            entity: user
+            default: default
+            states:
+              "Hunyadvári Zoltán":
+                type: custom:atomic-calendar-revive
+                entities:
+                  - entity: calendar.zoltan_hunyadvari_gmail_com
+                  - entity: calendar.macko_mici_gmail_com
+                enableModeChange: true
+                firstDayOfWeek: 1
+                maxDaysToShow: 1
+                refreshInterval: 240
+                showLoader: false
+                hideFinishedEvents: true
+                showLocation: false
+                hideDuplicates: true
+                style: &style_background_none
+                  | 
+                  ha-card {
+                    box-shadow: none;
+                    background: none;
+                  }
+                disableEventLink: true
+                linkTarget: naptar
+              "Szakács Kata":
+                type: custom:atomic-calendar-revive
+                entities:
+                  - entity: calendar.szakacskata_gmail_com
+                  - entity: calendar.zoltan_hunyadvari_gmail_com
+                enableModeChange: true
+                firstDayOfWeek: 1
+                maxDaysToShow: 1
+                refreshInterval: 240
+                showLoader: false
+                hideFinishedEvents: true
+                showLocation: false
+                hideDuplicates: true
+                style: *style_background_none
+                disableEventLink: true
+#              default:
+#                type: custom:atomic-calendar-revive
+#                entities:
+#                  - entity: calendar.zoltan_hunyadvari_gmail_com
+#                  - entity: calendar.macko_mici_gmail_com
+#                  - entity: calendar.szakacskata_gmail_com
+#                enableModeChange: true
+#                firstDayOfWeek: 1
+#                maxDaysToShow: 1
+#                refreshInterval: 240
+#                showLoader: false
+#                hideFinishedEvents: true
+#                showLocation: false
+#                hideDuplicates: true
+#                style: *style_background_none
+#                disableEventLink: true
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-template-card
@@ -312,9 +440,8 @@ views:
                     service: browser_mod.popup
                     data:
                       content:
-                        type: entities
-                        entities:
-                          - entity: input_number.furdoszoba_futes
+                        type: custom:mushroom-number-card
+                        entity: input_number.furdoszoba_futes
                 secondary: |
                   {% if is_state('timer.furdoszoba_futes', 'active') %}
                     Hátralévő idő {{ ((as_timestamp(state_attr('timer.furdoszoba_futes', 'finishes_at')) - as_timestamp(now())) / 60) | round(0) }} perc
@@ -475,9 +602,8 @@ views:
                     service: browser_mod.popup
                     data:
                       content:
-                        type: entities
-                        entities:
-                          - entity: input_number.futes_mindenkepp
+                        type: custom:mushroom-number-card
+                        entity: input_number.futes_mindenkepp
                 secondary: |
                   {% if is_state('timer.futes_mindenkepp', 'active') %}
                     Hátralévő idő {{ ((as_timestamp(state_attr('timer.futes_mindenkepp', 'finishes_at')) - as_timestamp(now())) / 60) | round(0) }} perc
@@ -1254,7 +1380,11 @@ views:
                   - type: custom:mushroom-template-card
                     icon: mdi:minus
                     layout: vertical
-                    icon_color: blue
+                    icon_color: &fenyfuzer_color
+                      |
+                      {% if is_state('light.feny_fuzer', 'on') %}
+                        blue
+                      {% endif %}
                     tap_action:
                       action: call-service
                       service: script.feny_fuzer_brightness_reduction
@@ -1262,7 +1392,7 @@ views:
                     card_mod: *background_none
                   - type: custom:mushroom-template-card
                     icon: mdi:plus
-                    icon_color: blue
+                    icon_color: *fenyfuzer_color
                     layout: vertical
                     tap_action:
                       action: call-service
@@ -1276,7 +1406,7 @@ views:
                   - type: custom:mushroom-template-card
                     icon: mdi:minus
                     layout: vertical
-                    icon_color: blue
+                    icon_color: *fenyfuzer_color
                     tap_action:
                       action: call-service
                       service: script.feny_fuzer_speed_down
@@ -1285,7 +1415,7 @@ views:
                   - type: custom:mushroom-template-card
                     icon: mdi:plus
                     layout: vertical
-                    icon_color: blue
+                    icon_color: *fenyfuzer_color
                     tap_action:
                       action: call-service
                       service: script.feny_fuzer_speed_up
@@ -1411,7 +1541,7 @@ views:
                 card_mod: *background_none
                 icon: mdi:weather-night
                 layout: vertical
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 primary: Éjszakai
                 tap_action:
                   action: call-service
@@ -1422,7 +1552,7 @@ views:
                 icon: mdi:star-shooting
                 layout: vertical
                 primary: Csillagfényes
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 tap_action:
                   action: call-service
                   service: script.feny_fuzer_starry
@@ -1432,7 +1562,7 @@ views:
                 icon: mdi:party-popper
                 layout: vertical
                 primary: Party
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 tap_action:
                   action: call-service
                   service: script.feny_fuzer_party
@@ -1442,7 +1572,7 @@ views:
                 icon: mdi:movie-roll
                 layout: vertical
                 primary: Mozi
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 tap_action:
                   action: call-service
                   service: script.feny_fuzer_movie
@@ -1452,7 +1582,7 @@ views:
                 icon: mdi:view-module
                 layout: vertical
                 primary: Egyéb
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 tap_action:
                   action: call-service
                   service: script.feny_fuzer_mode
@@ -1466,7 +1596,7 @@ views:
                 icon: mdi:music
                 layout: vertical
                 primary: Classic
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 tap_action:
                   action: call-service
                   service: script.feny_fuzer_music_classic
@@ -1476,7 +1606,7 @@ views:
                 icon: mdi:music
                 layout: vertical
                 primary: Soft
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 tap_action:
                   action: call-service
                   service: script.feny_fuzer_music_soft
@@ -1486,7 +1616,7 @@ views:
                 icon: mdi:music
                 layout: vertical
                 primary: Disco
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 tap_action:
                   action: call-service
                   service: script.feny_fuzer_music_disco
@@ -1496,7 +1626,7 @@ views:
                 icon: mdi:music
                 layout: vertical
                 primary: Dynamic
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 tap_action:
                   action: call-service
                   service: script.feny_fuzer_music_dynamic
@@ -1511,7 +1641,7 @@ views:
               - type: custom:mushroom-template-card
                 card_mod: *background_none
                 icon: mdi:numeric-1
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 layout: vertical
                 tap_action:
                   action: call-service
@@ -1520,7 +1650,7 @@ views:
               - type: custom:mushroom-template-card
                 card_mod: *background_none
                 icon: mdi:numeric-2
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 layout: vertical
                 tap_action:
                   action: call-service
@@ -1529,7 +1659,7 @@ views:
               - type: custom:mushroom-template-card
                 card_mod: *background_none
                 icon: mdi:numeric-3
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 layout: vertical
                 tap_action:
                   action: call-service
@@ -1538,7 +1668,7 @@ views:
               - type: custom:mushroom-template-card
                 card_mod: *background_none
                 icon: mdi:numeric-4
-                icon_color: blue
+                icon_color: *fenyfuzer_color
                 layout: vertical
                 tap_action:
                   action: call-service
@@ -1794,7 +1924,8 @@ views:
                     primary: Mikrotik Firmware
                     icon: mdi:router-network
                     icon_color: '#2196f3'
-                    secondary: >
+                    secondary:  &mikrotik_update
+                      |
                       {% if state_attr(entity, 'installed_version') ==
                       state_attr(entity, 'latest_version') %}
                         Naprakész
@@ -1809,13 +1940,7 @@ views:
                     card_mod: *background_none
                     icon: mdi:router-network
                     icon_color: '#2196f3'
-                    secondary: >
-                      {% if state_attr(entity, 'installed_version') ==
-                      state_attr(entity, 'latest_version') %}
-                        Naprakész
-                      {% else %}
-                        Legújabb verzió - {{ state_attr(entity, 'latest_version') }}
-                      {% endif %}
+                    secondary: *mikrotik_update
                   - type: custom:mushroom-entity-card
                     entity: sensor.mikrotik_hap_ac_2_wired_clients
                     tap_action: none

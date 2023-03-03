@@ -72,6 +72,10 @@ lovelace:
       type: module
     - url: /hacsfiles/apexcharts-card/apexcharts-card.js
       type: module
+    - url: /hacsfiles/lovelace-auto-entities/auto-entities.js
+      type: module      
+    - url: /hacsfiles/lovelace-state-switch/state-switch.js
+      type: module
     - url: https://fonts.googleapis.com/css2?family=Oxygen&family=Ubuntu:wght@300&display=swap
       type: css
   dashboards:
