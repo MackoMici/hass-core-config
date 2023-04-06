@@ -90,48 +90,6 @@ clean_house:
         ''on'') -%} [-2.1, 0.2, 0.4, 4.25], {%- endif -%} ]'
   mode: single
   icon: mdi:robot-vacuum
-diffuser:
-  alias: Diffuser On/Off
-  sequence:
-  - service: humidifier.toggle
-    data: {}
-    target:
-      entity_id: humidifier.parasito
-  - service: light.toggle
-    data: {}
-    target:
-      entity_id: light.parasito
-  mode: single
-diffuser_mode:
-  alias: Diffuser Mode
-  sequence:
-  - if:
-    - condition: state
-      entity_id: humidifier.parasito
-      attribute: mode
-      state: small
-    then:
-    - service: humidifier.set_mode
-      data:
-        mode: large
-      target:
-        entity_id: humidifier.parasito
-    else:
-    - service: humidifier.set_mode
-      data:
-        mode: small
-      target:
-        entity_id: humidifier.parasito
-  mode: single
-diffuser_time:
-  alias: Diffuser Time
-  sequence:
-  - service: select.select_option
-    data_template:
-      option: '{{ countdown }}'
-    target:
-      entity_id: select.parasito_countdown
-  mode: single
 feny_fuzer_brightness_increase:
   alias: Fény fűzer brightness increase
   sequence:
@@ -287,27 +245,35 @@ feny_fuzer_color_pink:
   mode: single
   icon: mdi:circle
 feny_fuzer_speed_up:
-  alias: Fény fűzer speed_up
+  alias: Fény fűzer speed up
   sequence:
   - service: remote.send_command
     data:
       device: feny_fuzer
       command: speed_up
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
     target:
       entity_id: remote.broadlink_remote
   mode: queued
   icon: mdi:speedometer
+  max: 10
 feny_fuzer_speed_down:
-  alias: Fény fűzer speed_down
+  alias: Fény fűzer speed down
   sequence:
   - service: remote.send_command
     data:
       device: feny_fuzer
       command: speed_down
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
     target:
       entity_id: remote.broadlink_remote
   mode: queued
   icon: mdi:speedometer-slow
+  max: 10
 feny_fuzer_mode:
   alias: Fény fűzer mode
   sequence:
@@ -397,12 +363,15 @@ feny_fuzer_music_disco:
   mode: single
   icon: mdi:music
 feny_fuzer_music_dynamic:
-  alias: Fény fűzer music_dynamic
+  alias: Fény fűzer music dynamic
   sequence:
   - service: remote.send_command
     data:
       device: feny_fuzer
       command: music_dynamic
+      num_repeats: 1
+      delay_secs: 0.4
+      hold_secs: 0
     target:
       entity_id: remote.broadlink_remote
   mode: single

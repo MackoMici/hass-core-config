@@ -4,9 +4,10 @@
 
 !automations.yaml
 google_calendars.yaml
-scenes.yaml
+!scenes.yaml
 !scripts.yaml
 secrets.yaml
+service_account.json
 
 appdaemon/*
 backups/*

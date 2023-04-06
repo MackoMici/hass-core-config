@@ -1,0 +1,97 @@
+- type: custom:mushroom-vacuum-card
+  entity: vacuum.viomi_se
+  card_mod: &background_none
+    style: |
+      ha-card {
+        background: none;
+        box-shadow: none;
+      }
+  icon_animation: true
+  commands:
+    - start_pause
+    - stop
+    - locate
+    - return_home
+  <<: &none
+    tap_action: none
+    hold_action: none
+    double_tap_action: none
+- type: custom:mushroom-chips-card
+  style: |
+    ha-card {
+      --chip-box-shadow: none;
+      --chip-background: none;
+      --chip-padding: 0px;
+    }
+  alignment: justify
+  chips:
+    - type: template
+      entity: vacuum.viomi_se
+      <<: *none
+      content: "Szűrő: {{ state_attr(entity, 'filter_left') }} óra"
+    - type: template
+      entity: vacuum.viomi_se
+      <<: *none
+      content: "Oldalsó kefe: {{ state_attr(entity, 'side_brush_left') }} óra"
+    - type: template
+      entity: vacuum.viomi_se
+      <<: *none
+      content: "Fő kefe: {{ state_attr(entity, 'main_brush_left') }} óra"
+    - type: template
+      entity: vacuum.viomi_se
+      <<: *none
+      content: "Felmosó: {{ state_attr(entity, 'mop_left') }} óra"
+- type: grid
+  columns: 4
+  square: false
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_vacuum_template
+      variables:
+        - entity: input_boolean.nappali_takaritas
+        - icon: mdi:sofa
+        - primary: Nappali
+    - type: custom:decluttering-card
+      template: mushroom_vacuum_template
+      variables:
+        - entity: input_boolean.ebedlo_takaritas
+        - icon: mdi:silverware-variant
+        - primary: Ebédlő
+    - type: custom:decluttering-card
+      template: mushroom_vacuum_template
+      variables:
+        - entity: input_boolean.konyha_takaritas
+        - icon: mdi:countertop
+        - primary: Konyha
+    - type: custom:decluttering-card
+      template: mushroom_vacuum_template
+      variables:
+        - entity: input_boolean.haloszoba_takaritas
+        - icon: mdi:bed-empty
+        - primary: Halószoba
+    - type: custom:decluttering-card
+      template: mushroom_vacuum_template
+      variables:
+        - entity: input_boolean.eloszoba_takaritas
+        - icon: mdi:door
+        - primary: Előszoba
+    - type: custom:decluttering-card
+      template: mushroom_vacuum_template
+      variables:
+        - entity: input_boolean.folyoso_takaritas
+        - icon: mdi:door-sliding-open
+        - primary: Folyosó
+    - type: custom:decluttering-card
+      template: mushroom_vacuum_template
+      variables:
+        - entity: input_boolean.gyerekszoba_takaritas
+        - icon: mdi:teddy-bear
+        - primary: Gyerekszoba
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - entity: script.clean_house
+        - service: script.clean_house
+        - icon: mdi:play
+        - icon_color: orange
+        - primary: Takarítás

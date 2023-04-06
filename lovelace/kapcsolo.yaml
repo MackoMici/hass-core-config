@@ -1,0 +1,77 @@
+- type: horizontal-stack
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_eloszoba
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_haloszoba
+- type: horizontal-stack
+  cards:
+    - type: custom:mushroom-light-card
+      entity: switch.sonoff_furdo_szelloztetes
+      layout: vertical
+      card_mod:
+        style: 
+          mushroom-shape-icon$: |
+              ha-icon {
+                {% if is_state(config.entity, 'on') %}
+                  --icon-animation: spin 1s linear infinite;
+                {% endif %}
+              }
+          .: &background_none
+            | 
+            ha-card {
+              background: none;
+              box-shadow: none;
+            }
+      hold_action: none
+      double_tap_action: none
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_furdoszoba
+- type: horizontal-stack
+  cards:
+    - type: custom:mushroom-template-card
+      entity: switch.sonoff_furdoszoba_futes
+      card_mod:
+        style: *background_none
+      primary: Fürdőszoba fűtés
+      icon: mdi:heating-coil
+      icon_color: '{{ is_state(entity, "on") | iif("orange", "") }}'
+      layout: vertical
+      hold_action:
+        action: fire-dom-event
+        browser_mod:
+          service: browser_mod.popup
+          data:
+            style: |
+              --popup-border-width: var(--ha-card-border-width);
+              --popup-border-radius: var(--ha-card-border-radius);
+            content:
+              type: custom:mushroom-number-card
+              tap_action: none
+              hold_action: none
+              double_tap_action: none
+              card_mod:
+                style: *background_none
+              entity: input_number.furdoszoba_futes
+      secondary: |
+        {% if is_state('timer.furdoszoba_futes', 'active') %}
+          Hátralévő idő {{ ((as_timestamp(state_attr('timer.furdoszoba_futes', 'finishes_at')) - as_timestamp(now())) / 60) | round(0) }} perc
+        {% else %}
+          Ki
+        {% endif %}
+- type: horizontal-stack
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_light_template
+      variables:
+        - entity: light.yeelight_colorb_kamra
+    - type: custom:decluttering-card
+      template: mushroom_light_template
+      variables:              
+        - entity: light.yeelight_colorb_wc

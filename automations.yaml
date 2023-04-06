@@ -15,31 +15,6 @@
         data:
           message: Alacsony {{sensors}} elem.
           title: Elem állapot
-- id: '1643205559403'
-  alias: Theme - Set Default Theme
-  description: ''
-  trigger:
-  - platform: homeassistant
-    event: start
-  - platform: state
-    entity_id: sun.sun
-  condition: []
-  action:
-  - if:
-    - condition: state
-      entity_id: sun.sun
-      state: above_horizon
-    then:
-    - service: frontend.set_theme
-      data:
-        name: waves
-        mode: light
-    else:
-    - service: frontend.set_theme
-      data:
-        name: waves
-        mode: dark
-  mode: single
 - id: '1648256024121'
   alias: Reggeli információk
   description: ''
@@ -78,48 +53,6 @@
       doorsensor_entity: binary_sensor.sonoff_bejarati_ajto
       light_switch: switch.sonoff_eloszoba
       door_closed_wait: 90
-- id: '1650446781866'
-  alias: Tablet töltés
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.u1006_battery_level
-  action:
-  - choose:
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.u1006_battery_level
-        below: '10'
-      - condition: state
-        entity_id: switch.sonoff_tablet_konnektor
-        state: 'off'
-      sequence:
-      - service: notify.zoolesz
-        data:
-          message: A tablet nem tölt!
-          title: Tablet töltés.
-    - conditions:
-      - condition: numeric_state
-        entity_id: sensor.u1006_battery_level
-        below: '15'
-      - condition: state
-        entity_id: switch.sonoff_tablet_konnektor
-        state: 'off'
-      sequence:
-      - service: switch.turn_on
-        target:
-          entity_id: switch.sonoff_tablet_konnektor
-        data: {}
-    - conditions:
-      - condition: state
-        entity_id: sensor.u1006_battery_level
-        state: '100'
-      sequence:
-      - service: switch.turn_off
-        target:
-          entity_id: switch.sonoff_tablet_konnektor
-        data: {}
-  mode: single
 - id: '1651074945261'
   alias: TTS on door opening with persons at home
   description: ''
@@ -147,34 +80,6 @@
           milliseconds: 0
       - service: script.valaki_hazajott
         data: {}
-- id: '1654295856896'
-  alias: Turn On/Off Night/Day
-  description: ''
-  trigger:
-  - platform: time
-    at: 06:30:00
-  - platform: time
-    at: '21:30:00'
-  condition: []
-  action:
-  - if:
-    - condition: time
-      after: '21:30:00'
-      before: 06:30:00
-    then:
-    - service: input_boolean.turn_off
-      data: {}
-      target:
-        entity_id:
-        - input_boolean.noveny
-    else:
-    - service: input_boolean.turn_on
-      data: {}
-      target:
-        entity_id:
-        - input_boolean.reggeli_info
-        - input_boolean.noveny
-  mode: single
 - id: '1654312693366'
   alias: Nagging Alerting Notification Automation
   description: ''
@@ -192,38 +97,6 @@
       dismiss_entity: input_boolean.noveny
       condition_entity: sensor.hunyadvari_zoltan_wifi
       condition_entity_state: home
-- id: '1654372139547'
-  alias: Tablet képernyő kikapcsolás
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: group.family_wifi
-    from: home
-    to: not_home
-  - platform: state
-    entity_id: light.u1006_screen
-    from: 'off'
-    to: 'on'
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: light.u1006_screen
-        state: 'on'
-      sequence:
-      - wait_template: '{{ is_state(''light.u1006_screen'', ''off'') }}'
-        timeout:
-          seconds: 60
-      - service: light.turn_off
-        data: {}
-        target:
-          entity_id: light.u1006_screen
-    default:
-    - service: light.turn_off
-      data: {}
-      target:
-        entity_id: light.u1006_screen
-  mode: queued
 - id: '1665923714852'
   alias: Párásító világítás kikapcsolás
   description: ''
@@ -281,42 +154,6 @@
   - service: watchman.report
     data: {}
   mode: single
-- id: '1673616297102'
-  alias: Kamra világítás vezérlés
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.kamra_contact
-  condition:
-  - condition: or
-    conditions:
-    - condition: state
-      entity_id: light.yeelight_colorb_kamra
-      state: 'on'
-    - condition: state
-      entity_id: light.yeelight_colorb_kamra
-      state: 'off'
-  action:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.kamra_contact
-        state: 'on'
-      sequence:
-      - service: light.turn_on
-        target:
-          entity_id: light.yeelight_colorb_kamra
-        data: {}
-    - conditions:
-      - condition: state
-        entity_id: binary_sensor.kamra_contact
-        state: 'off'
-      sequence:
-      - service: light.turn_off
-        target:
-          entity_id: light.yeelight_colorb_kamra
-        data: {}
-  mode: single
 - id: '1676475309119'
   alias: Fürdőszoba fűtés
   description: ''
@@ -335,3 +172,12 @@
       switch: input_boolean.futes
       timer: timer.futes_mindenkepp
       inumber: input_number.futes_mindenkepp
+- id: '1680262175844'
+  alias: Kamra világítás vezérlés
+  description: ''
+  use_blueprint:
+    path: MackoMici/chamber_light.yaml
+    input:
+      season: sensor.season
+      doorsensor_entity: binary_sensor.kamra_contact
+      light_switch: light.yeelight_colorb_kamra

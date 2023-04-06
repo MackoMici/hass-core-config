@@ -1,0 +1,9 @@
+type: custom:flower-card
+entity: plant.new_zealand_spinach
+show_bars:
+  - illuminance
+  - humidity
+  - moisture
+  - conductivity
+  - temperature
+  - dli

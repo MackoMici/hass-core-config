@@ -1,0 +1,42 @@
+type: custom:mini-media-player
+in_card: true
+entity: media_player.samsung_q80_series_65
+name: Living Room Samsung Q80 Tv
+icon: mdi:television
+tap_action: none
+hide:
+  source: true
+shortcuts:
+  columns: 3
+  buttons:
+    - type: service
+      name: Plex
+      id: media_player.select_source
+      data:
+        entity_id: media_player.samsung_q80_series_65
+        source: Plex
+    - type: service
+      name: Netflix
+      id: media_player.select_source
+      data:
+        entity_id: media_player.samsung_q80_series_65
+        source: Netflix
+    - type: service
+      name: YouTube
+      id: media_player.select_source
+      data:
+        entity_id: media_player.samsung_q80_series_65
+        source: Youtube
+    - type: service
+      name: HBO Max
+      id: media_player.select_source
+      data:
+        entity_id: media_player.samsung_q80_series_65
+        source: HBO Max
+    - type: service
+      name: TARR MobilTv
+      id: media_player.select_source
+      data:
+        entity_id: media_player.samsung_q80_series_65
+        source: TARR MobilTv
+artwork: material

@@ -1,0 +1,60 @@
+- type: custom:clock-weather-card
+  view_layout:
+    grid-area: clock
+  entity: weather.forecast_home_hourly
+  sun_entity: sun.sun
+  weather_icon_type: fill
+  locale: hu
+  date_pattern: y. MMMM d.
+  hide_forecast_section: true
+  card_mod: &background_none
+    style: |
+      ha-card {
+        background: none;
+        box-shadow: none;
+      }  
+  <<: &none
+    tap_action: none
+    hold_action: none
+    double_tap_action: none 
+- type: custom:mushroom-title-card
+  view_layout:
+    grid-area: title
+  title: '{{ states["sensor.idokep_elorejelzes"].state }}'
+  subtitle: |
+    {% if now().hour > 12 and now().hour < 18 %}
+      {{ states['sensor.idokep_elorejelzes'].attributes.forecast_details }}
+    {% else %}
+      {{ states['sensor.idokep_elorejelzes'].attributes.details }}
+    {% endif %}
+  alignment: justify
+- type: custom:hourly-weather
+  view_layout:
+    grid-area: hourly
+  entity: weather.forecast_home_hourly
+  name:
+  card_mod: *background_none
+  icons: true
+  language: hu
+  num_segments: |
+    {% set segments = 24 - now().hour %}
+    {{ segments if segments > 12 else 24}}
+  label_spacing: |
+    {% set segments = 24 - now().hour %}
+    {{ 4 if segments < 13 else 2 }}
+  show_wind: 'true'
+  show_precipitation_amounts: true
+  <<: *none
+- type: custom:clock-weather-card
+  view_layout:
+    grid-area: daily
+  entity: weather.forecast_home
+  locale: hu
+  card_mod: *background_none
+  hide_today_section: true
+  <<: *none
+- type: custom:weather-radar-card
+  zoom_level: 8
+  static_map: true
+  view_layout:
+    grid-area: radar

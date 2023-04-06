@@ -1,0 +1,215 @@
+- type: grid
+  square: false
+  columns: 2
+  cards:
+    - type: custom:mushroom-light-card
+      entity: light.feny_fuzer
+      layout: vertical
+      card_mod: &background_none
+        style: |
+          ha-card {
+            background: none;
+            box-shadow: none;
+          }
+      <<: &none2
+        hold_action: none
+        double_tap_action: none
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.karacsonyfa_izzo
+    - type: custom:mushroom-template-card
+      layout: vertical
+      secondary: Fényerősség vagy Érzékenység
+      card_mod: *background_none
+      <<: &none
+        tap_action: none
+        hold_action: none
+        double_tap_action: none
+    - type: custom:mushroom-template-card
+      layout: vertical
+      secondary: Sebesség
+      card_mod: *background_none
+      <<: *none
+    - type: grid
+      square: false
+      columns: 2
+      cards:
+        - type: custom:decluttering-card
+          template: mushroom_karacsony_template
+          variables:
+            - icon: mdi:minus
+            - service: script.feny_fuzer_brightness_reduction
+        - type: custom:decluttering-card
+          template: mushroom_karacsony_template
+          variables:
+            - icon: mdi:plus
+            - service: script.feny_fuzer_brightness_increase
+    - type: grid
+      square: false
+      columns: 2
+      cards:
+        - type: custom:decluttering-card
+          template: mushroom_karacsony_template
+          variables:
+            - icon: mdi:minus
+            - service: script.feny_fuzer_speed_down
+        - type: custom:decluttering-card
+          template: mushroom_karacsony_template
+          variables:
+            - icon: mdi:plus
+            - service: script.feny_fuzer_speed_up
+- type: grid
+  square: false
+  columns: 6
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: white
+        - service: script.feny_fuzer_color_white
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: yellow
+        - service: script.feny_fuzer_color_yellow
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: '#fc03f8'
+        - service: script.feny_fuzer_color_lightpink
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: red
+        - service: script.feny_fuzer_color_red
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: green
+        - service: script.feny_fuzer_color_green
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: blue
+        - service: script.feny_fuzer_color_blue
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: '#fffacd'
+        - service: script.feny_fuzer_color_lightyellow
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: pink
+        - service: script.feny_fuzer_color_pink
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: purple
+        - service: script.feny_fuzer_color_purple
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: '#32cd32'
+        - service: script.feny_fuzer_color_lightgreen
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: '#2e8b57'
+        - service: script.feny_fuzer_color_darkgreen
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon_color: '#87cefa'
+        - service: script.feny_fuzer_color_lightblue
+- type: grid
+  square: false
+  columns: 5
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:weather-night
+        - primary: Éjszakai
+        - service: script.feny_fuzer_night
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:star-shooting
+        - primary: Csillagfényes
+        - service: script.feny_fuzer_starry
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:party-popper
+        - primary: Party
+        - service: script.feny_fuzer_party
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:movie-roll
+        - primary: Mozi
+        - service: script.feny_fuzer_movie
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:view-module
+        - primary: Egyéb
+        - service: script.feny_fuzer_mode
+- type: grid
+  square: false
+  columns: 4
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:music
+        - primary: Classic
+        - service: script.feny_fuzer_music_classic
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:music
+        - primary: Soft
+        - service: script.feny_fuzer_music_soft
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:music
+        - primary: Disco
+        - service: script.feny_fuzer_music_disco
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:music
+        - primary: Dynamic
+        - service: script.feny_fuzer_music_dynamic
+- type: custom:mushroom-template-card
+  secondary: Időzítés
+  card_mod: *background_none
+  <<: *none
+- type: grid
+  square: false
+  columns: 4
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:numeric-1
+        - service: script.feny_fuzer_1h
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:numeric-2
+        - service: script.feny_fuzer_2h
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:numeric-3
+        - service: script.feny_fuzer_3h
+    - type: custom:decluttering-card
+      template: mushroom_karacsony_template
+      variables:
+        - icon: mdi:numeric-4
+        - service: script.feny_fuzer_4h

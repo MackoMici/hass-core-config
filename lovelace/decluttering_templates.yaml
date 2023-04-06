@@ -1,0 +1,504 @@
+mini_graph_template:
+  default:
+    - color_piros: '#e91e63'
+    - color_kek: '#2196f3'
+    - points_per_hour: 6
+  card:
+    type: custom:mini-graph-card
+    entities:
+      - entity: '[[entity_x]]'
+        color: '[[color_kek]]'
+      - entity: '[[entity_y]]'
+        color: '[[color_piros]]'
+        y_axis: secondary
+    hours_to_show: 24
+    points_per_hour: '[[points_per_hour]]'
+    line_width: 4
+    font_size: 50
+    animate: true
+    show:
+      name: false
+      icon: false
+      state: false
+      legend: false
+      points: false
+      fill: fade
+    card_mod: &background_none
+      style: |
+        ha-card {
+          background: none;
+          box-shadow: none;
+        }
+
+apexcharts_card_template:
+  default:
+    - size: 65
+    - strokeWidth: 80%
+    - max: 100
+    - charth: 170px
+  card:
+    type: custom:apexcharts-card
+    card_mod: *background_none
+    chart_type: radialBar
+    series:
+      - entity: '[[entity]]'
+        color: '[[color]]'
+        max: '[[max]]'
+        show:
+          legend_value: false
+    apex_config:
+      plotOptions:
+        radialBar:
+          offsetY: 0
+          startAngle: -108
+          endAngle: 108
+          hollow:
+            size: '[[size]]'
+          dataLabels:
+            name:
+              show: false
+            value:
+              show: false
+          track:
+            strokeWidth: '[[strokeWidth]]'
+            margin: 0
+      legend:
+        show: false
+      chart:
+        height: '[[charth]]'
+
+mushroom_entity_apex_template:
+  default:
+    - top: -63px;
+    - right: -1px;
+  card:
+    type: custom:mushroom-entity-card
+    entity: '[[entity]]'
+    primary_info: state
+    secondary_info: name
+    name: '[[name]]'
+    icon_color: '[[color]]'
+    layout: vertical
+    <<: &none
+      tap_action: none
+      hold_action: none
+      double_tap_action: none      
+    card_mod:
+      style: |
+        ha-card {
+          background: none;
+          box-shadow: none;
+          top: [[top]]
+          right: [[right]]
+        }
+
+mushroom_update_template:
+  card:
+    type: custom:mushroom-template-card
+    entity: '[[entity]]'
+    card_mod: *background_none
+    <<: *none
+    primary: '[[primary]]'
+    icon: '[[icon]]'
+    icon_color: '#2196f3'
+    secondary: "{% if state_attr(entity, 'installed_version') == state_attr(entity, 'latest_version') %}
+                  Naprakész
+                {% else %}
+                  Legújabb verzió - {{ state_attr(entity, 'latest_version') }}
+                {% endif %}"
+
+mushroom_karacsony_template:
+  default:
+    - primary: ''
+    - icon_color: blue
+    - icon: mdi:circle
+    - entity: light.feny_fuzer
+  card:
+    type: custom:mushroom-template-card
+    card_mod: *background_none
+    entity: '[[entity]]'
+    icon: '[[icon]]'
+    icon_color: "{% if is_state(entity, 'on') %}
+                   [[icon_color]]
+                 {% endif %}"
+    layout: vertical
+    primary: '[[primary]]'
+    tap_action:
+      action: call-service
+      service: '[[service]]'
+    <<: &none2
+      hold_action: none
+      double_tap_action: none
+
+mushroom_vacuum_template:
+  card:
+    type: custom:mushroom-template-card
+    card_mod: *background_none
+    entity: '[[entity]]'
+    layout: vertical
+    tap_action:
+      action: toggle
+    <<: *none2
+    icon: '[[icon]]'
+    icon_color: &icon_color
+      "{% if is_state(entity, 'on') %}
+         orange
+       {% endif %}"
+    primary: '[[primary]]'
+    secondary: "{% set clean = { 'ago': (as_timestamp(now()) - as_timestamp(states[entity | join | regex_replace('boolean', 'datetime')].state)) / 60 / 60 } %}
+                {% if clean.ago > 24 %}
+                  {{ (clean.ago / 24) | int }} napja
+                {% else %}
+                  {{ (clean.ago / 24) | int }} órája
+                {% endif %}"
+
+mushroom_humidity_timer_template:
+  card:
+    type: custom:mushroom-template-card
+    card_mod: *background_none
+    icon: '[[icon]]'
+    tap_action:
+      action: call-service
+      service: select.select_option
+      data:
+        option: "[[countdown]]"
+      target:
+        entity_id: select.aroma_diffuser_timer
+    <<: *none2
+
+mushroom_humidity_fan_template:
+  card:
+    type: custom:mushroom-fan-card
+    card_mod: *background_none
+    entity: '[[entity]]'
+    show_percentage_control: true
+    <<: *none2
+    collapsible_controls: true
+    secondary_info: none
+
+mushroom_humidity_chip_template:
+  card:
+    type: custom:mushroom-chips-card
+    card_mod:
+      style: |
+        ha-card {
+          --chip-box-shadow: none;
+          --chip-background: none;
+          top: 16px;
+          width: -webkit-fill-available;
+          right: 12px;
+          position: absolute;
+        } 
+        .chip-container {
+          right: 0px;
+          position: absolute;
+        }
+    chips: '[[chips]]'
+
+mushroom_humidity_light_template:
+  card:
+    type: custom:mushroom-light-card
+    card_mod:
+      style:
+        mushroom-shape-icon$: |
+          .shape {
+            {% if is_state_attr(config.entity, 'effect', 'Colorful') %}
+              --shape-animation: color 1s linear infinite;
+            {% else %}
+              --shape-color: rgb{{ state_attr(config.entity, 'rgb_color') }};
+            {% endif %}
+          }
+          @keyframes color {
+            0% {  --shape-color: rgb(var(--rgb-red), 0.2); }
+            6.25% {  --shape-color: rgb(var(--rgb-deep-orange), 0.2); }
+            12.5% {  --shape-color: rgb(var(--rgb-orange), 0.2); }
+            18.75% {  --shape-color: rgb(var(--rgb-amber), 0.2); }
+            25% {  --shape-color: rgb(var(--rgb-yellow), 0.2); }
+            31.25% {  --shape-color: rgb(var(--rgb-lime), 0.2); }
+            37.5% {  --shape-color: rgb(var(--rgb-light-green), 0.2); }
+            43.75% {  --shape-color: rgb(var(--rgb-green), 0.2); }
+            50% {  --shape-color: rgb(var(--rgb-teal), 0.2); }
+            56.25% {  --shape-color: rgb(var(--rgb-cyan), 0.2); }
+            62.5% {  --shape-color: rgb(var(--rgb-light-blue), 0.2); }
+            68.75% {  --shape-color: rgb(var(--rgb-blue), 0.2); }
+            75% {  --shape-color: rgb(var(--rgb-indigo), 0.2); }
+            81.25% {  --shape-color: rgb(var(--rgb-deep-purple), 0.2); }
+            87.5% {  --shape-color: rgb(var(--rgb-purple), 0.2); }
+            93.75% {  --shape-color: rgb(var(--rgb-pink), 0.2); }
+            100% {  --shape-color: rgb(var(--rgb-red), 0.2); }
+          }
+        .: &background_none2
+          |
+            ha-card {
+              background: none;
+              box-shadow: none;
+            }
+    entity: '[[entity]]'
+    show_color_control: true
+    collapsible_controls: true
+    secondary_info: none
+    <<: *none2
+
+mushroom_klima_template:
+  card:
+    type: custom:mushroom-template-card
+    entity: '[[entity]]'
+    tap_action:
+      action: call-service
+      service: climate.set_fan_mode
+      data:
+        fan_mode: '[[fan_mode]]'
+      target:
+        entity_id: '[[entity]]'
+    <<: *none2
+    card_mod: *background_none
+    icon: '[[icon]]'
+    icon_color: |
+      {% if is_state_attr(entity, 'fan_mode', '[[fan_mode]]') %}
+        #4caf4f
+      {% endif %}
+
+mushroom_entity_futes_template:
+  default:
+    color: '#2196f3'
+    layout: horizontal
+  card:
+    type: custom:mushroom-entity-card
+    entity: '[[entity]]'
+    primary_info: state
+    secondary_info: name
+    name: '[[name]]'
+    icon_color: '[[color]]'
+    layout: '[[layout]]'
+    <<: *none
+    card_mod: *background_none
+
+mushroom_button_futes_template:
+  default:
+    - hold_action: none
+    - secondary: "{% if is_state('timer.futes_mindenkepp', 'active') %}
+                    Hátralévő idő {{ ((as_timestamp(state_attr('timer.futes_mindenkepp', 'finishes_at')) - as_timestamp(now())) / 60) | round(0) }} perc
+                  {% else %}
+                    Ki
+                  {% endif %}"
+  card:
+    type: custom:mushroom-template-card
+    layout: vertical
+    entity: '[[entity]]'
+    icon: "{{ state_attr(config.entity, 'icon') }}"
+    icon_color: *icon_color
+    tap_action:
+      action: toggle
+    hold_action: '[[hold_action]]'
+    double_tap_action: none
+    primary: "{{ state_attr(config.entity, 'friendly_name') }}"
+    secondary: '[[secondary]]'
+    card_mod: *background_none
+
+mushroom_light_template:
+  card:
+    type: custom:mushroom-light-card
+    card_mod:
+      style:
+        mushroom-shape-icon$: |
+          ha-icon {
+            {% if is_state(config.entity, 'on') %}
+              {% set light_level = ((state_attr(config.entity, "brightness") / 255) * 10) | round(0) * 10 %}
+              --icon-animation: illumination 2s infinite;
+              {% if light_level == 100 %}
+                --card-mod-icon: mdi:lightbulb-on
+              {% elif light_level > 0 %}
+                --card-mod-icon:  mdi:lightbulb-on-{{ light_level }}
+              {% else %}
+                --card-mod-icon: mdi:lightbulb-on-outline
+              {% endif %};
+            {% endif %}
+          }
+          @keyframes illumination {
+            0%, 100% { clip-path: inset(0 0 0 0); }
+            80% { clip-path: polygon(0% 99%, 20% 55%, 22% 37%, 39% 20%, 61% 21%, 77% 35%, 79% 57%, 99% 100%); }
+          }                      
+        .: *background_none2 
+    entity: '[[entity]]'
+    show_brightness_control: true
+    show_color_control: true
+    <<: *none2
+
+mushroom_switch_light_template:
+  card:
+    type: custom:mushroom-light-card
+    entity: '[[entity]]'
+    layout: vertical
+    <<: *none2
+    card_mod: *background_none
+
+mushroom_home_template:
+  card:
+    type: custom:mushroom-template-card
+    primary: ''
+    secondary: '[[secondary]]'
+    icon: '[[icon]]'
+    icon_color: '[[color]]'
+    layout: vertical
+    tap_action:
+      action: navigate
+      navigation_path: '[[nav]]'
+    <<: *none2
+    card_mod:
+      style: |
+        ha-card { 
+          background: var(--card-background-color);
+          width: 60px;
+          border-radius: 30px;
+          margin: auto auto 2px auto
+        }
+
+atomic_calendar_template:
+  card:
+    type: custom:atomic-calendar-revive
+    entities:
+      - entity: '[[entity_1]]'
+      - entity: '[[entity_2]]'
+    enableModeChange: true
+    firstDayOfWeek: 1
+    maxDaysToShow: 1
+    refreshInterval: 240
+    showLoader: false
+    hideFinishedEvents: true
+    showLocation: false
+    hideDuplicates: true
+    card_mod: *background_none
+    disableEventLink: true
+
+datetime_template:
+  default:
+    color: white
+    font-weight: bold
+  element:
+    type: state-label
+    entity: '[[entity]]'
+    <<: *none
+    style:
+      color: '[[color]]'
+      filter: '[[filter]]'
+      font-size: '[[font-size]]'
+      font-weight: '[[font-weight]]'
+      left: 50%
+      top: '[[top]]'
+      text-shadow: 0px 10px 10px var(--divider-color)
+      z-index: '[[z-index]]'
+
+sidebar_person_template:
+  card:
+    type: custom:button-card
+    entity: '[[entity_person]]'
+    aspect_ratio: 1/1
+    label: |
+      [[[
+        return 'Battery: ' + states['[[entity_battery]]'].state + '%';
+      ]]]
+    styles:
+      card:
+        - background-image: url("[[background_url]]")
+        - background-size: 100% 100%
+      state:
+        - font-weight: bold
+        - background-color: rgba(0, 0, 0, 0.4)
+        - color: var(--text-primary-color)
+        - transform: initial
+        - width: 100%
+        - align-self: start
+        - line-height: 30px
+      label:
+        - font-weight: bold
+        - background-color: rgba(0, 0, 0, 0.4)
+        - color: var(--text-primary-color)
+        - transform: initial
+        - width: 100%
+        - align-self: end
+        - line-height: 30px
+    show_icon: false
+    show_name: false
+    show_state: true
+    show_label: true
+    tap_action:
+      action: fire-dom-event
+      browser_mod:
+        service: browser_mod.popup
+        data:
+          style: |
+            --popup-min-width: 700px;
+            --popup-border-width: var(--ha-card-border-width, 0px);
+            --popup-border-radius: var(--ha-card-border-radius, 12px);
+            --popup-padding-x: 0px;
+            --popup-padding-y: -2px;
+            --popup-margin: -24px;
+          content:
+            type: custom:vertical-stack-in-card
+            cards:
+              - type: custom:mushroom-person-card
+                entity: '[[entity_person]]'
+                icon: '[[icon_person]]'
+                secondary_info: last-changed
+              - type: grid
+                square: false
+                columns: 3
+                cards:
+                  - type: custom:mushroom-template-card
+                    entity: '[[entity_wifi]]'
+                    layout: vertical
+                    icon: mdi:wifi
+                    icon_color: "{% if is_state(entity, 'MiciMacko 5GHz') %}
+                                   blue
+                                 {% endif %}"
+                    primary: Wifi
+                  - type: custom:mushroom-template-card
+                    entity: '[[entity_bluetooth]]'
+                    layout: vertical
+                    icon: mdi:bluetooth
+                    icon_color: "{% if is_state(entity, 'on') %}
+                                   blue
+                                 {% endif %}"
+                    primary: Bluetooth
+                  - type: custom:mushroom-template-card
+                    entity: '[[entity_battery]]'
+                    layout: vertical
+                    icon: "{{ state_attr(entity, 'icon') }}"
+                    primary: "{{ states.[[entity_battery]].state }} %"
+                    card_mod:
+                      style:
+                        mushroom-shape-icon$: |
+                          ha-icon {
+                            {% set battery = {'state': states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state } %}
+                            {% if battery.state  == "charging" %}
+                              --icon-animation: charge 3s linear infinite;
+                              --card-mod-icon: mdi:battery-charging;
+                            {% endif %}
+                          }
+                          @keyframes charge {
+                            0%, 80% { clip-path: inset(0 0 0 0); }
+                            10% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 84%, 34% 84%, 34% 100%, 100% 100%, 100% 0%); }
+                            20% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 74%, 34% 74%, 34% 100%, 100% 100%, 100% 0%); }
+                            30% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 64%, 34% 64%, 34% 100%, 100% 100%, 100% 0%); }
+                            40% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 54%, 34% 54%, 34% 100%, 100% 100%, 100% 0%); }
+                            50% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 44%, 34% 44%, 34% 100%, 100% 100%, 100% 0%); }
+                            60% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 34%, 34% 34%, 34% 100%, 100% 100%, 100% 0%); }
+                            70% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 24%, 34% 24%, 34% 100%, 100% 100%, 100% 0%); }
+                          }
+                    icon_color: "{% set battery = { 
+                                   'level': states[entity].state | int,
+                                   'state': states[entity | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state
+                                 } %}
+                                 {% if battery.state  == 'charging' %}
+                                   blue
+                                 {% elif battery.level > 80 %}
+                                   green
+                                 {% elif battery.level <= 80 and battery.level >= 25 %}
+                                   orange
+                                 {% else %}
+                                   red
+                                 {% endif %}"
+              - type: map
+                default_zoom: 16
+                entities: 
+                  - '[[entity_device]]'

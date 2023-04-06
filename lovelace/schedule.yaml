@@ -1,0 +1,19 @@
+type: custom:scheduler-card
+include:
+  - group.family_gps
+  - input_boolean.elofuttes
+  - input_boolean.futes
+  - input_boolean_tavol
+  - sensor.kulteri_homerseklet
+  - binary_sensor.haloszoba_ablak_contact
+  - binary_sensor.nappali_ablak_contact
+  - climate.honeywell_home_termosztat
+display_options:
+  primary_info: default
+  secondary_info:
+    - relative-time
+    - action
+  icon: action
+exclude: []
+title: false
+icon: true

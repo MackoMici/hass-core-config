@@ -1,0 +1,85 @@
+decluttering_templates: !include decluttering_templates.yaml
+
+type: custom:vertical-stack-in-card
+style: &background-none
+  |
+    ha-card {
+      background: none;
+      box-shadow: none;
+    }
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: sidebar_person_template
+        variables:
+          - entity_person: person.hunyadvari_zoltan
+          - background_url: /local/person/zoolesz.png
+          - icon_person: mdi:face-man
+          - entity_wifi: sensor.sm_a536b_wifi_connection
+          - entity_bluetooth: binary_sensor.sm_a536b_bluetooth_state
+          - entity_battery: sensor.sm_a536b_battery_level
+          - entity_device: device_tracker.sm_a536b
+      - type: custom:decluttering-card
+        template: sidebar_person_template
+        variables:
+          - entity_person: person.szakacs_katalin
+          - background_url: /local/person/kata.png
+          - icon_person: mdi:face-woman
+          - entity_wifi: sensor.sm_a336b_wifi_connection
+          - entity_bluetooth: binary_sensor.sm_a336b_bluetooth_state
+          - entity_battery: sensor.sm_a336b_battery_level
+          - entity_device: device_tracker.sm_a336b
+  - type: picture-elements
+    style: *background-none
+    image: /local/background/time.png
+    elements:
+      - type: custom:decluttering-card
+        template: datetime_template
+        variables:
+          - entity: sensor.time
+          - color: '#EAC117'
+          - filter: opacity(60%)
+          - font-size: 8vw
+          - top: 50%
+          - z-index: 0
+      - type: custom:decluttering-card
+        template: datetime_template
+        variables:
+          - entity: sensor.week_day
+          - filter: opacity(50%)
+          - font-size: 5vw
+          - top: 15%
+          - z-index: 1
+      - type: custom:decluttering-card
+        template: datetime_template
+        variables:
+          - entity: sensor.current_date
+          - filter: opacity(100%)
+          - font-size: 2vw
+          - top: 80%
+          - z-index: 2
+  - type: custom:atomic-calendar-revive
+    style: |
+      ha-card {
+        box-shadow: none;
+        background: none;
+        margin-top: -20px;
+      }
+    entities:
+      - entity: calendar.macko_mici_gmail_com
+      - entity: calendar.zoltan_hunyadvari_gmail_com
+      - entity: calendar.unnepnapok_magyarorszag
+      - entity: calendar.szakacskata_gmail_com
+    maxEventCount: 5
+    maxDaysToShow: 7
+    showLoader: false
+    hideFinishedEvents: true
+    showWeekDay: true
+    disableLocationLink: true
+    disableEventLink: true
+    refreshInterval: 3600
+    showMultiDay: true
+    showMultiDayEventParts: true
+view_layout:
+  grid-area: sidebar

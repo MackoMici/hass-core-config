@@ -26,8 +26,6 @@ lovelace:
   resources:
     - url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js
       type: module
-    - url: /hacsfiles/bar-card/bar-card.js
-      type: module
     - url: /hacsfiles/button-card/button-card.js
       type: module
     - url: /hacsfiles/ha-floorplan/floorplan.js
@@ -42,15 +40,11 @@ lovelace:
       type: module
     - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
       type: module
-    - url: /hacsfiles/simple-thermostat/simple-thermostat.js
-      type: module
     - url: /hacsfiles/thermal_comfort_icons/thermal_comfort_icons.js
       type: module
     - url: /hacsfiles/vacuum-card/vacuum-card.js
       type: module
     - url: /hacsfiles/weather-radar-card/weather-radar-card.js
-      type: module
-    - url: /hacsfiles/kiosk-mode/kiosk-mode.js
       type: module
     - url: /hacsfiles/lovelace-card-tools/card-tools.js
       type: module
@@ -66,8 +60,6 @@ lovelace:
       type: module
     - url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
       type: module
-    - url: /hacsfiles/config-template-card/config-template-card.js
-      type: module
     - url: /hacsfiles/lovelace-flower-card/flower-card.js
       type: module
     - url: /hacsfiles/apexcharts-card/apexcharts-card.js
@@ -75,6 +67,8 @@ lovelace:
     - url: /hacsfiles/lovelace-auto-entities/auto-entities.js
       type: module      
     - url: /hacsfiles/lovelace-state-switch/state-switch.js
+      type: module
+    - url: /hacsfiles/decluttering-card/decluttering-card.js
       type: module
     - url: https://fonts.googleapis.com/css2?family=Oxygen&family=Ubuntu:wght@300&display=swap
       type: css
@@ -92,10 +86,19 @@ lovelace:
       icon: mdi:cellphone
       show_in_sidebar: true
 
+
 homeassistant:
   packages: !include_dir_named include
   allowlist_external_dirs:
     - "/home/zoolesz/.homeassistant"
+
+google_assistant:
+  project_id: home-assistant-2023-73138
+  service_account: !include service_account.json
+  report_state: true
+  exposed_domains:
+    - switch
+    - light
 
 #python_script:
 
