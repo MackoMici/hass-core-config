@@ -9,6 +9,8 @@
 * [Dashboard (Lovelace)](https://www.home-assistant.io/lovelace/) tabletre van optimalízálva a megjelenítés
 * [HA Floorplan-t](https://github.com/ExperienceLovelace/ha-floorplan) használok a 3D-s alaprajz megjelenítéséhez, melyen minden a házban található eszköz megjelenik és interaktív
 * Minden extra információ előugró ablakban jelenik meg
+!!Update 2023.04.01!!
+* Kéz a teljes mobilos nézet is, ami úgy lett kialakítva, hogy a tableten előúgró ablakoként is működjenek, így kevesebb helyen kell szerkeszteni a kinézetet. Valamint a mobilos kinézetnél elkezdtem haszálni a [Decluttering Card-ot](https://github.com/custom-cards/decluttering-card) szintén azért, hogy minnél kevesebb helyen legyen ugyan az a kód így egyszerűbb a szerkesztés.
 
 #### Oldalsáv
 
@@ -51,16 +53,15 @@ Ami az alaprajzon kezelhető az mind előugró ablakban fog megjelenni, melyhez 
 | Honeywell | [T6 Thermosztát](https://getconnected.honeywellhome.com/hu/t6.html) | [honeywell lyric](https://www.home-assistant.io/integrations/lyric) |
 | Broadlink | [RM4 mini](https://www.broadlink.ae/product-page/broadlink-rm4-mini) | [broadlink remote](https://www.home-assistant.io/integrations/broadlink) |
 | Blitzwolf | [BW-LT31](https://blitzwolf.hu/BlitzWolf-BW-LT31-smart-LED-fenycsik-5m-/10m-hossz) | [tuya](https://www.home-assistant.io/integrations/tuya) |
-| GX.Diffuser | [Diffuser](https://sea.banggood.com/GX_Diffuser-Intelligent-Air-Humidifier-Essential-Oil-Diffuser-Support-for-GeogleandAlexa-Voice-Control-Negative-Ion-Purification-p-1597711.html?rmmds=myorder&cur_warehouse=CN) | [tuya](https://www.home-assistant.io/integrations/tuya) |
+| GX.Diffuser | [Aroma Diffuser](https://sea.banggood.com/GX_Diffuser-Intelligent-Air-Humidifier-Essential-Oil-Diffuser-Support-for-GeogleandAlexa-Voice-Control-Negative-Ion-Purification-p-1597711.html?rmmds=myorder&cur_warehouse=CN) | [tuya-local](https://github.com/make-all/tuya-local) |
 | Yeelight | [Xiaomi Yeelight Smart LED Bulb W3](https://www.pcx.hu/xiaomi-yeelight-smart-led-bulb-w3-multicolor-okos-izzo-yldp005-00432819) | [yeelight](https://www.home-assistant.io/integrations/yeelight) |
+| Gosund | [Gosund EP2](https://www.emag.hu/gosund-wifis-okoskonnektor-ep2/pd/DKX2Y4MBM/) | [tuya-local](https://github.com/make-all/tuya-local) |
 
 ## Automatizációk
 
 * Fürdőszoba szellőztetés vezérlés külső belső páratartalom figyelenbevételével
 * Előszoba világítás ki/be kapcsolás, bejárati ajtó nyitás-ra
 * Alacsony elem riasztás küldés
-* Tablet töltés és képernyő kikapcsolás
-* Hazaérkezéskor köszöntés és informáűciók felolvasása
 * Kamra világítás vezérlés
 
 ## Szkriptek
@@ -68,4 +69,3 @@ Ami az alaprajzon kezelhető az mind előugró ablakban fog megjelenni, melyhez 
 * Reggeli információk, időjárás jelentés naptár események
 * Robot porszívó adott helység takarítás
 * Fényfűzérhez színek és módok váltásához
-* Párásító színek és módok váltásához

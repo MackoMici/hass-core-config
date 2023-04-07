@@ -172,7 +172,7 @@
       switch: input_boolean.futes
       timer: timer.futes_mindenkepp
       inumber: input_number.futes_mindenkepp
-- id: '1680262175844'
+- id: '1680850389335'
   alias: Kamra világítás vezérlés
   description: ''
   use_blueprint:
@@ -180,4 +180,5 @@
     input:
       season: sensor.season
       doorsensor_entity: binary_sensor.kamra_contact
+      doorsensor_light: binary_sensor.kamra_light
       light_switch: light.yeelight_colorb_kamra

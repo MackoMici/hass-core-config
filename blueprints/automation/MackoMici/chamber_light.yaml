@@ -9,20 +9,33 @@ blueprint:
       description: Évszakok érzékelője
       selector:
         entity:
-          domain: sensor
+          domain:
+          - sensor
           multiple: false
     doorsensor_entity:
       name: Door Sensor
       selector:
         entity:
-          domain: binary_sensor
-          device_class: door
+          domain:
+          - binary_sensor
+          device_class:
+          - door
+          multiple: false
+    doorsensor_light:
+      name: Door Light Sensor
+      selector:
+        entity:
+          domain:
+          - binary_sensor
+          device_class:
+          - light
           multiple: false
     light_switch:
       name: Light
       selector:
         entity:
-          domain: light
+          domain:
+          - light
           multiple: false
     light_off_wait:
       name: Wait time
@@ -86,6 +99,9 @@ action:
           before: sunrise
         - condition: time
           after: '12:00:00'
+        - condition: state
+          entity_id: !input doorsensor_light
+          state: 'on'
       - or:
         - condition: state
           entity_id: !input season
