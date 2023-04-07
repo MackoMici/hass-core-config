@@ -9,8 +9,7 @@
 * [Dashboard (Lovelace)](https://www.home-assistant.io/lovelace/) tabletre van optimalízálva a megjelenítés
 * [HA Floorplan-t](https://github.com/ExperienceLovelace/ha-floorplan) használok a 3D-s alaprajz megjelenítéséhez, melyen minden a házban található eszköz megjelenik és interaktív
 * Minden extra információ előugró ablakban jelenik meg
-!!Update 2023.04.01!!
-* Kéz a teljes mobilos nézet is, ami úgy lett kialakítva, hogy a tableten előúgró ablakoként is működjenek, így kevesebb helyen kell szerkeszteni a kinézetet. Valamint a mobilos kinézetnél elkezdtem haszálni a [Decluttering Card-ot](https://github.com/custom-cards/decluttering-card) szintén azért, hogy minnél kevesebb helyen legyen ugyan az a kód így egyszerűbb a szerkesztés.
+* !!Update 2023.04.01!! Kész a teljes mobilos nézet is, ami úgy lett kialakítva, hogy a tableten előúgró ablakoként is működjenek, így kevesebb helyen kell szerkeszteni a kinézetet. Valamint a mobilos kinézetnél elkezdtem haszálni a [Decluttering Card-ot](https://github.com/custom-cards/decluttering-card) szintén azért, hogy minnél kevesebb helyen legyen ugyan az a kód így egyszerűbb a szerkesztés.
 
 #### Oldalsáv
 
