@@ -2,11 +2,11 @@ notify:
   - name: zoolesz
     platform: group
     services:
-      - service: mobile_app_oneplus_a5000
+      - service: notify.mobile_app_sm_a536b
   - name: szakakata
     platform: group
     services:
-      - service: mobile_app_sm_a705fn
+      - service: notify.mobile_app_sm_a336b
   - name: all
     platform: group
     services:

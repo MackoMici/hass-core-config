@@ -101,7 +101,7 @@ action:
           after: '12:00:00'
         - condition: state
           entity_id: !input doorsensor_light
-          state: 'on'
+          state: 'off'
       - or:
         - condition: state
           entity_id: !input season

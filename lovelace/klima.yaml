@@ -5,7 +5,7 @@
   show_temperature_control: true
   name: Klíma
   layout: horizontal
-  card_mod:
+  card_mod: &background_none
     style: |
       ha-card {
         background: none;
@@ -87,19 +87,13 @@
       <<: *none
 - type: custom:mushroom-climate-card
   entity: climate.gree_klima
-  card_mod:
-    style: |
-      ha-card {
-        background: none;
-        box-shadow: none;
-      }  
+  card_mod: *background_none
   hvac_modes:
     - auto
     - heat
     - cool
     - dry
     - fan_only
-    - 'off'
   primary_info: none
   secondary_info: none
   icon_type: none

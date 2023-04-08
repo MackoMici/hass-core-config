@@ -81,7 +81,7 @@ template:
 
     - name: "Hunyadvári Zoltán Wifi"
       state: >
-        {% if states('sensor.oneplus_a5000_wifi_connection') == "MiciMacko 5GHz" %}
+        {% if states('sensor.sm_a536b_wifi_connection') == "MiciMacko 5GHz" %}
           home
         {% else %}
           not_home
@@ -89,7 +89,7 @@ template:
 
     - name: "Szakacs Katalin Wifi"
       state: >
-        {% if states('sensor.sm_a705fn_wifi_connection') == "MiciMacko 5GHz" %}
+        {% if states('sensor.sm_a336b_wifi_connection') == "MiciMacko 5GHz" %}
           home
         {% else %}
           not_home

@@ -447,11 +447,36 @@ sidebar_person_template:
                   - type: custom:mushroom-template-card
                     entity: '[[entity_wifi]]'
                     layout: vertical
-                    icon: mdi:wifi
+                    icon: |
+                      {% set signal = {'level': states['[[entity_wifi]]' | map('lower') | join | regex_replace(find='_connection', replace='_signal_strength')].state | int | abs } %}
+                      {% if signal.level > 90 %}
+                        mdi:wifi-strength-outline
+                      {% elif signal.level > 80 %} 
+                        mdi:wifi-strength-1
+                      {% elif signal.level > 70 %}
+                        mdi:wifi-strength-2
+                      {% elif signal.level > 60 %}
+                        mdi:wifi-strength-3
+                      {% elif signal.level > 1 %}
+                        mdi:wifi-strength-4
+                      {% else %}
+                        mdi:wifi-strength-off
+                      {% endif %}
                     icon_color: "{% if is_state(entity, 'MiciMacko 5GHz') %}
                                    blue
+                                 {% elif not is_state(entity, '<not connected>') %}
+                                   green
                                  {% endif %}"
-                    primary: Wifi
+                    primary: "{% if not is_state(entity, '<not connected>') %}
+                                {{ states(entity) }}
+                              {% else %}
+                                Not Connected
+                              {% endif %}"
+                    secondary: |
+                      {% set signal = {'level': states['[[entity_wifi]]' | map('lower') | join | regex_replace(find='_connection', replace='_signal_strength')].state | int } %}
+                      {% if signal.level  != -1 %}
+                        {{ signal.level }} dBm
+                      {% endif %}
                   - type: custom:mushroom-template-card
                     entity: '[[entity_bluetooth]]'
                     layout: vertical
@@ -463,8 +488,15 @@ sidebar_person_template:
                   - type: custom:mushroom-template-card
                     entity: '[[entity_battery]]'
                     layout: vertical
-                    icon: "{{ state_attr(entity, 'icon') }}"
-                    primary: "{{ states.[[entity_battery]].state }} %"
+                    icon: |
+                      {% set battery = {'state': states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state } %}
+                      {% if battery.state  == "charging" %}
+                        mdi:battery-charging;
+                      {% else %}
+                        {{ state_attr(entity, 'icon') }}
+                      {% endif %}
+                    primary: "{{ states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state }}"
+                    secondary: "{{ states.[[entity_battery]].state }} %"
                     card_mod:
                       style:
                         mushroom-shape-icon$: |

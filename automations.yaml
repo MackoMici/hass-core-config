@@ -172,7 +172,7 @@
       switch: input_boolean.futes
       timer: timer.futes_mindenkepp
       inumber: input_number.futes_mindenkepp
-- id: '1680850389335'
+- id: '1680933645175'
   alias: Kamra világítás vezérlés
   description: ''
   use_blueprint:
