@@ -20,4 +20,4 @@ www/community/*
 
 home-assistant_v2*
 home-assistant.log*
-zigbee.db*
+zigbee.*
