@@ -1,5 +1,4 @@
 type: custom:mini-media-player
-in_card: true
 entity: media_player.samsung_q80_series_65
 name: Living Room Samsung Q80 Tv
 icon: mdi:television
@@ -33,6 +32,12 @@ shortcuts:
       data:
         entity_id: media_player.samsung_q80_series_65
         source: HBO Max
+    - type: service
+      name: SkyShowtime
+      id: media_player.select_source
+      data:
+        entity_id: media_player.samsung_q80_series_65
+        source: SkyShowtime
     - type: service
       name: TARR MobilTv
       id: media_player.select_source

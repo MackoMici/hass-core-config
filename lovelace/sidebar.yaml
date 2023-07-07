@@ -1,12 +1,6 @@
 decluttering_templates: !include decluttering_templates.yaml
 
 type: custom:vertical-stack-in-card
-style: &background-none
-  |
-    ha-card {
-      background: none;
-      box-shadow: none;
-    }
 cards:
   - type: horizontal-stack
     cards:
@@ -17,7 +11,7 @@ cards:
           - background_url: /local/person/zoolesz.png
           - icon_person: mdi:face-man
           - entity_wifi: sensor.sm_a536b_wifi_connection
-          - entity_bluetooth: binary_sensor.sm_a536b_bluetooth_state
+          - find_service: notify.mobile_app_sm_a536b
           - entity_battery: sensor.sm_a536b_battery_level
           - entity_device: device_tracker.sm_a536b
       - type: custom:decluttering-card
@@ -27,11 +21,15 @@ cards:
           - background_url: /local/person/kata.png
           - icon_person: mdi:face-woman
           - entity_wifi: sensor.sm_a336b_wifi_connection
-          - entity_bluetooth: binary_sensor.sm_a336b_bluetooth_state
+          - find_service: notify.mobile_app_sm_a336b
           - entity_battery: sensor.sm_a336b_battery_level
           - entity_device: device_tracker.sm_a336b
   - type: picture-elements
-    style: *background-none
+    style: |
+      ha-card {
+        background: none;
+        box-shadow: none;
+      }
     image: /local/background/time.png
     elements:
       - type: custom:decluttering-card

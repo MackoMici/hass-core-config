@@ -187,8 +187,8 @@
         - service: script.feny_fuzer_music_dynamic
 - type: custom:mushroom-template-card
   secondary: Időzítés
-  card_mod: *background_none
   <<: *none
+  card_mod: *background_none
 - type: grid
   square: false
   columns: 4

@@ -20,6 +20,7 @@
 - type: custom:mushroom-title-card
   view_layout:
     grid-area: title
+  card_mod: *background_none
   title: '{{ states["sensor.idokep_elorejelzes"].state }}'
   subtitle: |
     {% if now().hour > 12 and now().hour < 18 %}
@@ -28,29 +29,18 @@
       {{ states['sensor.idokep_elorejelzes'].attributes.details }}
     {% endif %}
   alignment: justify
-- type: custom:hourly-weather
+- type: custom:decluttering-card
   view_layout:
     grid-area: hourly
-  entity: weather.forecast_home_hourly
-  name:
-  card_mod: *background_none
-  icons: true
-  language: hu
-  num_segments: |
-    {% set segments = 24 - now().hour %}
-    {{ segments if segments > 12 else 24}}
-  label_spacing: |
-    {% set segments = 24 - now().hour %}
-    {{ 4 if segments < 13 else 2 }}
-  show_wind: 'true'
-  show_precipitation_amounts: true
-  <<: *none
+  template: weather_template
+  variables:
+    - entity: weather.forecast_home_hourly
 - type: custom:clock-weather-card
   view_layout:
     grid-area: daily
   entity: weather.forecast_home
-  locale: hu
   card_mod: *background_none
+  locale: hu
   hide_today_section: true
   <<: *none
 - type: custom:weather-radar-card

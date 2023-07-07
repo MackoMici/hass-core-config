@@ -1,113 +1,99 @@
 template:
-  sensor:
-    - name: "Bejárati Ajtó Battery"
-      unit_of_measurement: "%"
-      state_class: measurement
-      device_class: battery
-      availability: >
-        {{ states('sensor.sonoff_bejarati_ajto_battery_voltage') not in ['unavailable', 'unknown'] }}      
-      state: >
-        {% if states('sensor.sonoff_bejarati_ajto_battery_voltage') != None %}
-          {% set min = 1.87 | float(2) %}
-          {% set current = states('sensor.sonoff_bejarati_ajto_battery_voltage') | float(2) %}
-          {{ ((current - min) / 0.011) | int }}
-        {% endif %}
-
-    - name: "Home Assistant Uptime"
-      icon: mdi:history
-      state: >
-        {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.last_boot'))) | int // 60 %}
-        {% set hours = mins // 60 %}
-        {% set days = mins // 1440 %}
-        {% if days > 1 %}
-          {{ days }} napja
-        {% elif hours > 1 %}
-          {{ hours }} órája
-        {% else %}
-          {{ mins }} perce
-        {% endif %}
-
-    - name: "Mikrotik Router Uptime"
-      icon: mdi:history
-      state: >
-        {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.mikrotik_hap_ac_2_uptime'))) | int // 60 %}
-        {% set hours = mins // 60 %}
-        {% set days = mins // 1440 %}
-        {% if days > 1 %}
-          {{ days }} napja
-        {% elif hours > 1 %}
-          {{ hours }} órája
-        {% else %}
-          {{ mins }} perce
-        {% endif %}
-      
-#    - name: "Tablet Uptime"
-#      icon: mdi:history
-#      state: >
-#        {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.u1006_last_reboot'))) | int // 60 %}
-#        {% set hours = mins // 60 %}
-#        {% set days = mins // 1440 %}
-#        {% if days > 1 %}
-#          {{ days }} napja
-#        {% elif hours > 1 %}
-#          {{ hours }} órája
-#        {% else %}
-#          {{ mins }} perce
-#        {% endif %}
-
-    - name: "Week Day"
-      state: >
-        {%- set days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'] %}
-        {{ days[now().weekday()]}}
-
-    - name: "Current Date"
-      state: >
-        {%- set months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'] %}
-        {{ (now().timestamp() | timestamp_custom('%d, # %Y')).replace('#', months[now().month-1]) }}
-
-#    - name: "Tablet Ram Use"
-#      icon: mdi:memory
-#      state: >
-#        {% if is_number(states.sensor.u1006_ram_free_memory.state) %}
-#          {{100 - states.sensor.u1006_ram_free_memory.state | float(0) / (states.sensor.u1006_ram_total_memory.state | float(0) / 100)}}
-#        {% endif %}
-
-#    - name: "Tablet Storage Use"
-#      icon: mdi:sd
-#      state: >
-#        {% if is_number(states.sensor.u1006_internal_storage_free_space.state) %}
-#          {{100 - states.sensor.u1006_internal_storage_free_space.state | float(0) / (states.sensor.u1006_internal_storage_total_space.state | float(0) / 100)}}
-#        {% endif %}
-
-    - name: "Hunyadvári Zoltán Wifi"
-      state: >
-        {% if states('sensor.sm_a536b_wifi_connection') == "MiciMacko 5GHz" %}
-          home
-        {% else %}
-          not_home
-        {% endif %}
-
-    - name: "Szakacs Katalin Wifi"
-      state: >
-        {% if states('sensor.sm_a336b_wifi_connection') == "MiciMacko 5GHz" %}
-          home
-        {% else %}
-          not_home
-        {% endif %}
-
-    - name: "MetNo Temperature"
-      unit_of_measurement: '°C'
-      state_class: 'measurement'
-      state: >
-        {{ state_attr('weather.forecast_home', 'temperature') }}
-
-    - name: "MetNo Humidity"
-      unit_of_measurement: '%'
-      state_class: 'measurement'
-      state: >
-        {{ state_attr('weather.forecast_home', 'humidity') }}
-
-    - name: "MetNo Wind Speed"
-      unit_of_measurement: 'km/h'
-      state: >
-        {{ state_attr('weather.forecast_home', 'wind_speed') }}
+  - sensor:
+      - name: "Bejárati Ajtó Battery"
+        unit_of_measurement: "%"
+        state_class: measurement
+        device_class: battery
+        availability: >
+          {{ states('sensor.sonoff_bejarati_ajto_battery_voltage') not in ['unavailable', 'unknown'] }}      
+        state: >
+          {% if states('sensor.sonoff_bejarati_ajto_battery_voltage') != None %}
+            {% set min = 1.87 | float(2) %}
+            {% set current = states('sensor.sonoff_bejarati_ajto_battery_voltage') | float(2) %}
+            {{ ((current - min) / 0.011) | int }}
+          {% endif %}
+  
+      - name: "Home Assistant Uptime"
+        icon: mdi:history
+        state: >
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.last_boot'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
+          {% endif %}
+  
+      - name: "Mikrotik Router Uptime"
+        icon: mdi:history
+        state: >
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.mikrotik_hap_ac_2_uptime'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
+          {% endif %}
+        
+      - name: "Week Day"
+        state: >
+          {%- set days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'] %}
+          {{ days[now().weekday()]}}
+  
+      - name: "Current Date"
+        state: >
+          {%- set months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'] %}
+          {{ (now().timestamp() | timestamp_custom('%d, # %Y')).replace('#', months[now().month-1]) }}
+  
+      - name: "Hunyadvári Zoltán Wifi"
+        state: >
+          {% if states('sensor.sm_a536b_wifi_connection') == "MiciMacko 5GHz" %}
+            home
+          {% else %}
+            not_home
+          {% endif %}
+  
+      - name: "Szakacs Katalin Wifi"
+        state: >
+          {% if states('sensor.sm_a336b_wifi_connection') == "MiciMacko 5GHz" %}
+            home
+          {% else %}
+            not_home
+          {% endif %}
+  
+      - name: "MetNo Temperature"
+        unit_of_measurement: '°C'
+        state_class: 'measurement'
+        state: >
+          {{ state_attr('weather.forecast_home', 'temperature') }}
+  
+      - name: "MetNo Humidity"
+        unit_of_measurement: '%'
+        state_class: 'measurement'
+        state: >
+          {{ state_attr('weather.forecast_home', 'humidity') }}
+  
+      - name: "MetNo Wind Speed"
+        unit_of_measurement: 'km/h'
+        state: >
+          {{ state_attr('weather.forecast_home', 'wind_speed') }}        
+  
+  - trigger:
+      - platform: time_pattern
+        hours: 0
+        minutes: 0
+    
+    sensor:
+      - name: "Napkelte"
+        state: >
+          {{ states('sensor.sun_next_rising') }}
+  
+      - name: "Napnyugta"
+        state: >
+          {{ states('sensor.sun_next_setting') }}

@@ -9,9 +9,10 @@
         entity_id:
         - sensor.u1006_battery_level
         - sensor.sm_a705fn_battery_level
-        - sensor.oneplus_a5000_battery_level
+        - sensor.sm_a336b_battery_level
+        - sensor.sm_a536b_battery_level
       actions:
-      - service: notify.zoolesz
+      - service: notify.mobile_app_sm_a536b
         data:
           message: Alacsony {{sensors}} elem.
           title: Elem állapot
@@ -43,16 +44,6 @@
     target:
       entity_id: input_boolean.reggeli_info
   mode: single
-- id: '1649997237707'
-  alias: Door Sensor Light
-  description: ''
-  use_blueprint:
-    path: MackoMici/Door_Sensor_Light.yaml
-    input:
-      calendar: calendar.unnepnapok_magyarorszag
-      doorsensor_entity: binary_sensor.sonoff_bejarati_ajto
-      light_switch: switch.sonoff_eloszoba
-      door_closed_wait: 90
 - id: '1651074945261'
   alias: TTS on door opening with persons at home
   description: ''
@@ -90,7 +81,7 @@
       alert_state: problem
       initial_delay: 900
       repeat_delay: 1800
-      notify_device: 823be0e7ca2f23eddf6402b3b655ee4e
+      notify_device: 24f3d1348620662fedaf75c1d0977196
       resolved_message: A {{ entity_name }} problémája elhárult.
       notify_message: 'Figyelem a {{ entity_name }}-nak problémája van: {{ entity_problem
         }}.'
@@ -138,10 +129,10 @@
     below: 21
   condition: []
   action:
-  - service: notify.zoolesz
+  - service: notify.mobile_app_sm_a536b
     data:
-      message: Az SSL tanúsítvány 21 nap múlva lejár, és nem újult meg automatikusan
-      title: Figyelmeztetés!!!
+      message: Az SSL kulcsot nem sikerült megújítani.
+      title: SSL újítás hiba
   mode: single
 - id: '1673609887095'
   alias: Hibák Keresése
@@ -172,7 +163,27 @@
       switch: input_boolean.futes
       timer: timer.futes_mindenkepp
       inumber: input_number.futes_mindenkepp
-- id: '1680933645175'
+- id: '1683179020941'
+  alias: Előszoba villany kapcsolás
+  description: ''
+  use_blueprint:
+    path: MackoMici/Door_Sensor_Light.yaml
+    input:
+      workday: binary_sensor.workday_sensor
+      calendar: calendar.unnepnapok_magyarorszag
+      doorsensor_entity: binary_sensor.sonoff_bejarati_ajto
+      light_switch: switch.sonoff_eloszoba
+- id: '1684847787385'
+  alias: Otthoni riasztás
+  description: ''
+  use_blueprint:
+    path: MackoMici/home_security.yaml
+    input:
+      notify_device: 24f3d1348620662fedaf75c1d0977196
+      security: alarm_control_panel.gateway_alarm
+      family: group.family_all
+      doorsensor: binary_sensor.sonoff_bejarati_ajto
+- id: '1686075706661'
   alias: Kamra világítás vezérlés
   description: ''
   use_blueprint:

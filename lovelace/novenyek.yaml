@@ -1,9 +1,44 @@
-type: custom:flower-card
-entity: plant.new_zealand_spinach
-show_bars:
-  - illuminance
-  - humidity
-  - moisture
-  - conductivity
-  - temperature
-  - dli
+- type: custom:flower-card
+  entity: plant.new_zealand_spinach
+  show_bars:
+    - illuminance
+    - humidity
+    - moisture
+    - conductivity
+    - temperature
+    - dli
+  card_mod: &background_none
+    style: |
+      ha-card {
+        background: none;
+        box-shadow: none;
+      }
+- type: custom:config-template-card
+  entities:
+    - sensor.sun_next_rising
+    - sensor.sun_next_setting
+  card:
+    type: custom:apexcharts-card
+    card_mod: *background_none
+    config_templates: default_chart
+    series:
+      - entity: sensor.new_zealand_spinach_dli
+      - entity: sensor.new_zealand_spinach_dli
+        opacity: 0.2
+        type: area
+        offset: -1d
+    apex_config:
+      annotations:
+        xaxis:
+          - x: ${new Date(states['sensor.napkelte'].state).getTime()}
+            label:
+              text: Napkelte
+              borderWidth: 0
+              style:
+                background: '#0000'
+          - x: ${new Date(states['sensor.napnyugta'].state).getTime()}
+            label:
+              text: Napnyugta
+              borderWidth: 0
+              style:
+                background: '#0000'

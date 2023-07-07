@@ -113,17 +113,22 @@ action:
     - service: light.turn_on
       entity_id: !input light_switch
   - conditions:
-    - condition: trigger
-      id: Door
-    - condition: state
-      entity_id: !input doorsensor_entity
-      state: 'on'
-    - condition: sun
-      after: sunset
-      before: sunrise
-    - condition: state
-      entity_id: !input season
-      state: summer
+    - and:
+      - condition: trigger
+        id: Door
+      - condition: state
+        entity_id: !input doorsensor_entity
+        state: 'on'
+      - or:
+        - condition: state
+          entity_id: !input doorsensor_light
+          state: 'off'
+        - condition: sun
+          after: sunset
+          before: sunrise
+      - condition: state
+        entity_id: !input season
+        state: summer
     sequence:
     - service: light.turn_on
       entity_id: !input light_switch

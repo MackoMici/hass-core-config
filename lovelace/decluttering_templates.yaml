@@ -1,103 +1,67 @@
-mini_graph_template:
-  default:
-    - color_piros: '#e91e63'
-    - color_kek: '#2196f3'
-    - points_per_hour: 6
+gauge_template:
   card:
-    type: custom:mini-graph-card
-    entities:
-      - entity: '[[entity_x]]'
-        color: '[[color_kek]]'
-      - entity: '[[entity_y]]'
-        color: '[[color_piros]]'
-        y_axis: secondary
-    hours_to_show: 24
-    points_per_hour: '[[points_per_hour]]'
-    line_width: 4
-    font_size: 50
-    animate: true
-    show:
-      name: false
-      icon: false
-      state: false
-      legend: false
-      points: false
-      fill: fade
+    type: gauge
     card_mod: &background_none
       style: |
         ha-card {
           background: none;
           box-shadow: none;
         }
-
-apexcharts_card_template:
-  default:
-    - size: 65
-    - strokeWidth: 80%
-    - max: 100
-    - charth: 170px
-  card:
-    type: custom:apexcharts-card
-    card_mod: *background_none
-    chart_type: radialBar
-    series:
-      - entity: '[[entity]]'
-        color: '[[color]]'
-        max: '[[max]]'
-        show:
-          legend_value: false
-    apex_config:
-      plotOptions:
-        radialBar:
-          offsetY: 0
-          startAngle: -108
-          endAngle: 108
-          hollow:
-            size: '[[size]]'
-          dataLabels:
-            name:
-              show: false
-            value:
-              show: false
-          track:
-            strokeWidth: '[[strokeWidth]]'
-            margin: 0
-      legend:
-        show: false
-      chart:
-        height: '[[charth]]'
-
-mushroom_entity_apex_template:
-  default:
-    - top: -63px;
-    - right: -1px;
-  card:
-    type: custom:mushroom-entity-card
     entity: '[[entity]]'
-    primary_info: state
-    secondary_info: name
     name: '[[name]]'
-    icon_color: '[[color]]'
-    layout: vertical
-    <<: &none
-      tap_action: none
-      hold_action: none
-      double_tap_action: none      
-    card_mod:
-      style: |
-        ha-card {
-          background: none;
-          box-shadow: none;
-          top: [[top]]
-          right: [[right]]
-        }
+    segments:
+      - from: 100
+        color: '#FF453A'
+      - from: 95
+        color: '#FE5335'
+      - from: 90
+        color: '#FE6230'
+      - from: 85
+        color: '#FE702B'
+      - from: 80
+        color: '#FE7F26'
+      - from: 75
+        color: '#FE8E21'
+      - from: 70
+        color: '#FE9C1C'
+      - from: 65
+        color: '#FEAB17'
+      - from: 60
+        color: '#FEB912'
+      - from: 55
+        color: '#FEC80D'
+      - from: 50
+        color: '#FED709'
+      - from: 45
+        color: '#EBD10F'
+      - from: 40
+        color: '#D8CC15'
+      - from: 35
+        color: '#C6C61B'
+      - from: 30
+        color: '#B3C121'
+      - from: 25
+        color: '#A1BB28'
+      - from: 20
+        color: '#8EB62E'
+      - from: 15
+        color: '#7BB034'
+      - from: 10
+        color: '#69AB3A'
+      - from: 5
+        color: '#56A540'
+      - from: 0
+        color: '#44A047'
 
 mushroom_update_template:
   card:
     type: custom:mushroom-template-card
     entity: '[[entity]]'
     card_mod: *background_none
-    <<: *none
+    <<: &none
+      - tap_action: none
+      - hold_action: none
+      - double_tapaction: none
     primary: '[[primary]]'
     icon: '[[icon]]'
     icon_color: '#2196f3'
@@ -115,8 +79,8 @@ mushroom_karacsony_template:
     - entity: light.feny_fuzer
   card:
     type: custom:mushroom-template-card
-    card_mod: *background_none
     entity: '[[entity]]'
+    card_mod: *background_none
     icon: '[[icon]]'
     icon_color: "{% if is_state(entity, 'on') %}
                    [[icon_color]]
@@ -133,8 +97,8 @@ mushroom_karacsony_template:
 mushroom_vacuum_template:
   card:
     type: custom:mushroom-template-card
-    card_mod: *background_none
     entity: '[[entity]]'
+    card_mod: *background_none
     layout: vertical
     tap_action:
       action: toggle
@@ -155,8 +119,8 @@ mushroom_vacuum_template:
 mushroom_humidity_timer_template:
   card:
     type: custom:mushroom-template-card
-    card_mod: *background_none
     icon: '[[icon]]'
+    card_mod: *background_none
     tap_action:
       action: call-service
       service: select.select_option
@@ -165,16 +129,6 @@ mushroom_humidity_timer_template:
       target:
         entity_id: select.aroma_diffuser_timer
     <<: *none2
-
-mushroom_humidity_fan_template:
-  card:
-    type: custom:mushroom-fan-card
-    card_mod: *background_none
-    entity: '[[entity]]'
-    show_percentage_control: true
-    <<: *none2
-    collapsible_controls: true
-    secondary_info: none
 
 mushroom_humidity_chip_template:
   card:
@@ -195,96 +149,59 @@ mushroom_humidity_chip_template:
         }
     chips: '[[chips]]'
 
-mushroom_humidity_light_template:
-  card:
-    type: custom:mushroom-light-card
-    card_mod:
-      style:
-        mushroom-shape-icon$: |
-          .shape {
-            {% if is_state_attr(config.entity, 'effect', 'Colorful') %}
-              --shape-animation: color 1s linear infinite;
-            {% else %}
-              --shape-color: rgb{{ state_attr(config.entity, 'rgb_color') }};
-            {% endif %}
-          }
-          @keyframes color {
-            0% {  --shape-color: rgb(var(--rgb-red), 0.2); }
-            6.25% {  --shape-color: rgb(var(--rgb-deep-orange), 0.2); }
-            12.5% {  --shape-color: rgb(var(--rgb-orange), 0.2); }
-            18.75% {  --shape-color: rgb(var(--rgb-amber), 0.2); }
-            25% {  --shape-color: rgb(var(--rgb-yellow), 0.2); }
-            31.25% {  --shape-color: rgb(var(--rgb-lime), 0.2); }
-            37.5% {  --shape-color: rgb(var(--rgb-light-green), 0.2); }
-            43.75% {  --shape-color: rgb(var(--rgb-green), 0.2); }
-            50% {  --shape-color: rgb(var(--rgb-teal), 0.2); }
-            56.25% {  --shape-color: rgb(var(--rgb-cyan), 0.2); }
-            62.5% {  --shape-color: rgb(var(--rgb-light-blue), 0.2); }
-            68.75% {  --shape-color: rgb(var(--rgb-blue), 0.2); }
-            75% {  --shape-color: rgb(var(--rgb-indigo), 0.2); }
-            81.25% {  --shape-color: rgb(var(--rgb-deep-purple), 0.2); }
-            87.5% {  --shape-color: rgb(var(--rgb-purple), 0.2); }
-            93.75% {  --shape-color: rgb(var(--rgb-pink), 0.2); }
-            100% {  --shape-color: rgb(var(--rgb-red), 0.2); }
-          }
-        .: &background_none2
-          |
-            ha-card {
-              background: none;
-              box-shadow: none;
-            }
-    entity: '[[entity]]'
-    show_color_control: true
-    collapsible_controls: true
-    secondary_info: none
-    <<: *none2
-
 mushroom_klima_template:
+  default: 
+    - entity: climate.gree_klima
+    - service: climate.set_fan_mode
+    - attr: fan_mode
   card:
     type: custom:mushroom-template-card
+    card_mod: *background_none
     entity: '[[entity]]'
+    layout: vertical
+    primary: '[[primary]]'
     tap_action:
       action: call-service
-      service: climate.set_fan_mode
+      service: '[[service]]'
       data:
-        fan_mode: '[[fan_mode]]'
+        '[[attr]]': '[[value]]'
       target:
         entity_id: '[[entity]]'
     <<: *none2
-    card_mod: *background_none
     icon: '[[icon]]'
     icon_color: |
-      {% if is_state_attr(entity, 'fan_mode', '[[fan_mode]]') %}
-        #4caf4f
+      {% if not is_state(entity, 'off') %}
+        {% if is_state_attr(entity, '[[attr]]', '[[value]]') %}
+          orange
+        {% endif %}
       {% endif %}
 
 mushroom_entity_futes_template:
   default:
-    color: '#2196f3'
-    layout: horizontal
+    - color: '#2196f3'
+    - layout: horizontal
   card:
     type: custom:mushroom-entity-card
     entity: '[[entity]]'
+    card_mod: *background_none
     primary_info: state
     secondary_info: name
     name: '[[name]]'
     icon_color: '[[color]]'
     layout: '[[layout]]'
     <<: *none
-    card_mod: *background_none
 
 mushroom_button_futes_template:
   default:
     - hold_action: none
     - secondary: "{% if is_state('timer.futes_mindenkepp', 'active') %}
                     Hátralévő idő {{ ((as_timestamp(state_attr('timer.futes_mindenkepp', 'finishes_at')) - as_timestamp(now())) / 60) | round(0) }} perc
-                  {% else %}
-                    Ki
                   {% endif %}"
   card:
     type: custom:mushroom-template-card
     layout: vertical
     entity: '[[entity]]'
+    card_mod: *background_none
     icon: "{{ state_attr(config.entity, 'icon') }}"
     icon_color: *icon_color
     tap_action:
@@ -293,7 +210,6 @@ mushroom_button_futes_template:
     double_tap_action: none
     primary: "{{ state_attr(config.entity, 'friendly_name') }}"
     secondary: '[[secondary]]'
-    card_mod: *background_none
 
 mushroom_light_template:
   card:
@@ -317,11 +233,17 @@ mushroom_light_template:
           @keyframes illumination {
             0%, 100% { clip-path: inset(0 0 0 0); }
             80% { clip-path: polygon(0% 99%, 20% 55%, 22% 37%, 39% 20%, 61% 21%, 77% 35%, 79% 57%, 99% 100%); }
-          }                      
-        .: *background_none2 
+          }
+        .: |
+          ha-card {
+            background: none;
+            box-shadow: none;
+          }
     entity: '[[entity]]'
     show_brightness_control: true
     show_color_control: true
+    show_color_temp_control: true
+    collapsible_controls: true
     <<: *none2
 
 mushroom_switch_light_template:
@@ -348,10 +270,33 @@ mushroom_home_template:
       style: |
         ha-card { 
           background: var(--card-background-color);
-          width: 60px;
-          border-radius: 30px;
-          margin: auto auto 2px auto
+          width: 54px;
+          border-radius: 27px;
+          margin: auto auto 1px auto
         }
+
+weather_template:
+  default:
+    tap_action: none
+    show_wind: speed
+    show_precipitation_amounts: true
+  card:
+    type: custom:hourly-weather
+    entity: '[[entity]]'
+    name:
+    card_mod: *background_none
+    icons: true
+    language: hu
+    num_segments: |
+      {% set segments = 24 - now().hour %}
+      {{ segments if segments >= 10 else 24 }}
+    label_spacing: |
+      {% set segments = 24 - now().hour %}
+      {{ 4 if (segments > 19) or (segments < 10) else 2 }}
+    <<: *none2
+    tap_action: '[[tap_action]]'
+    show_wind: '[[show_wind]]'
+    show_precipitation_amounts: '[[show_precipitation_amounts]]'
 
 atomic_calendar_template:
   card:
@@ -359,6 +304,7 @@ atomic_calendar_template:
     entities:
       - entity: '[[entity_1]]'
       - entity: '[[entity_2]]'
+    card_mod: *background_none
     enableModeChange: true
     firstDayOfWeek: 1
     maxDaysToShow: 1
@@ -367,7 +313,6 @@ atomic_calendar_template:
     hideFinishedEvents: true
     showLocation: false
     hideDuplicates: true
-    card_mod: *background_none
     disableEventLink: true
 
 datetime_template:
@@ -396,6 +341,13 @@ sidebar_person_template:
     label: |
       [[[
         return 'Battery: ' + states['[[entity_battery]]'].state + '%';
+      ]]]
+    state_display: |
+      [[[
+        if (entity.state == "home")
+          return "Otthon";
+        else
+          return "Távol";
       ]]]
     styles:
       card:
@@ -446,6 +398,7 @@ sidebar_person_template:
                 cards:
                   - type: custom:mushroom-template-card
                     entity: '[[entity_wifi]]'
+                    <<: *none
                     layout: vertical
                     icon: |
                       {% set signal = {'level': states['[[entity_wifi]]' | map('lower') | join | regex_replace(find='_connection', replace='_signal_strength')].state | int | abs } %}
@@ -478,15 +431,27 @@ sidebar_person_template:
                         {{ signal.level }} dBm
                       {% endif %}
                   - type: custom:mushroom-template-card
-                    entity: '[[entity_bluetooth]]'
+                    tap_action: none
+                    double_tap_action: none
+                    hold_action:
+                      action: call-service
+                      service: '[[find_service]]'
+                      data:
+                        message: Ringing phone...
+                        title: Find Phone
+                        data:
+                          ttl: 0
+                          importance: high
+                          priority: high
+                          tag: Find
+                          channel: alarm_stream
                     layout: vertical
-                    icon: mdi:bluetooth
-                    icon_color: "{% if is_state(entity, 'on') %}
-                                   blue
-                                 {% endif %}"
-                    primary: Bluetooth
+                    icon: mdi:target
+                    icon_color: red
+                    primary: Find Phone
                   - type: custom:mushroom-template-card
                     entity: '[[entity_battery]]'
+                    <<: *none
                     layout: vertical
                     icon: |
                       {% set battery = {'state': states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state } %}

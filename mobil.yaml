@@ -1,4 +1,5 @@
 decluttering_templates: !include lovelace/decluttering_templates.yaml
+apexcharts_card_templates: !include lovelace/apexcharts_card_templates.yaml
 
 swipe_nav:
   animate: swipe
@@ -6,27 +7,32 @@ views:
   - path: kezdolap
     icon: mdi:home
     badges: []
-    type: custom:vertical-stack-in-card
+    type: custom:vertical-layout
     cards:
-      !include lovelace/home.yaml
+      - !include lovelace/fejlec.yaml
+      - !include lovelace/home.yaml
   - path: kapcsolo
     icon: mdi:gesture-tap-button
     badges: []
-    type: custom:grid-layout
+    type: custom:vertical-layout
     cards:
       !include lovelace/kapcsolo.yaml
   - path: futes
     icon: mdi:radiator
     badges: []
-    type: custom:grid-layout
+    type: custom:vertical-layout
     cards:
-      !include lovelace/futes.yaml
+      - !include lovelace/fejlec.yaml
+      - !include lovelace/futes.yaml
+      - !include lovelace/grafikon.yaml
   - path: klima
     icon: mdi:snowflake
     badges: []
-    type: custom:grid-layout
+    type: custom:vertical-layout
     cards:
-      !include lovelace/klima.yaml
+      - !include lovelace/fejlec.yaml
+      - !include lovelace/klima.yaml
+      - !include lovelace/grafikon.yaml
   - path: idojaras
     icon: mdi:weather-partly-snowy-rainy
     badges: []
@@ -45,31 +51,32 @@ views:
   - path: parasitas
     icon: mdi:air-humidifier
     badges: []
-    type: custom:grid-layout
+    type: custom:vertical-layout
     cards:
-      !include lovelace/parasitas.yaml
+      - !include lovelace/fejlec.yaml
+      - !include lovelace/parasitas.yaml
   - path: porszivo
     icon: mdi:robot-vacuum
     badges: []
-    type: custom:grid-layout
+    type: custom:vertical-layout
     cards:
       !include lovelace/vacuum.yaml
   - path: novenyek
     icon: mdi:leaf
     badges: []
-    type: custom:grid-layout
+    type: custom:vertical-layout
     cards:
-      - !include lovelace/novenyek.yaml
+      !include lovelace/novenyek.yaml
   - path: tv
     icon: mdi:television
     badges: []
-    type: custom:grid-layout
+    type: custom:vertical-layout
     cards:
       - !include lovelace/tv.yaml
   - path: karacsony
     icon: mdi:pine-tree
     badges: []
-    type: custom:grid-layout
+    type: custom:vertical-layout
     cards:
       !include lovelace/karacsony.yaml
   - path: informacio
@@ -83,7 +90,8 @@ views:
         "HA-title"
         "HA"
         "Debian-title"
-        "Debian"
+        "Debian-1"
+        "Debian-2"
         "Network-title"
         "Network-1"
         "Network-2"
@@ -93,7 +101,7 @@ views:
   - path: schedule
     icon: mdi:calendar-range
     badges: []
-    type: custom:grid-layout
+    type: custom:vertical-layout
     subview: true
     cards:
       - !include lovelace/schedule.yaml

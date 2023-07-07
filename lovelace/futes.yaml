@@ -1,197 +1,118 @@
-- type: horizontal-stack
-  cards:
-    - type: custom:mushroom-template-card
-      entity: climate.honeywell_home_termosztat
-      card_mod:
-        style:
-          mushroom-shape-icon$: |
-            ha-icon {
-              {% if is_state_attr(config.entity, 'hvac_action', 'heating') %}
-                --icon-animation: pulse 2s ease-in-out infinite;
-              {% endif %}
-            }
-          .: &background_none
-            |
-            ha-card {
-              background: none;
-              box-shadow: none;
-            }
-      primary: |
-        A kazán jelenleg
-        {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
-        {% if hvac.info == "heating" %}
-          fűt.
-        {% elif hvac.info == "idle" %}
-          tétlen.
-        {% else %}
-          ki van kapcsolva.
-        {% endif %}
-      secondary: |
-        {% if is_state(entity, 'heat') %}
-          A kívánt hőmérséklet {{ states[entity].attributes.temperature }} °C
-        {% endif %}
-      icon: |
-        {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
-        {% if hvac.info == "heating" %}
-          mdi:radiator
-        {% elif hvac.info == "idle" %}
-          mdi:radiator-disabled
-        {% else %}
-          mdi:radiator-off
-        {% endif %} 
-      layout: vertical
-      icon_color: |
-          {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
-          {% if hvac.info == "heating" %}
-            orange
-          {% elif hvac.info == "idle" %}
-            blue
-          {% else %}
-          {% endif %}
-      tap_action:
-         action: navigate
-         navigation_path: schedule
-#        action: fire-dom-event
-#        browser_mod:
-#          service: browser_mod.popup
-#          data:
-#            style: &popup_style
-#              |
-#              --popup-border-width: var(--ha-card-border-width);
-#              --popup-border-radius: var(--ha-card-border-radius);
-#            content:
-#              type: custom:scheduler-card
-#              card_mod: 
-#                style: *background_none
-#              include:
-#                - binary_sensor.haloszoba_ablak_contact
-#                - binary_sensor.nappali_ablak_contact
-#                - climate.honeywell_home_termosztat
-#                - group.family_gps
-#                - input_boolean.elofutes
-#                - input_boolean.futes
-#                - input_boolean.tavol
-#                - sensor.kulteri_homerseklet
-#              exclude: []
-#              display_options:
-#                primary_info: default
-#                secondary_info:
-#                  - relative-time
-#                  - action
-#              title: false
-#              show_add_button: false
-      <<: &none2
-        hold_action: none
-        double_tap_action: none
-- type: horizontal-stack
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_button_futes_template
-      variables:
-        - entity: input_boolean.elofutes
-        - secondary: "{{ states[config.entity].state }}"
-    - type: custom:decluttering-card
-      template: mushroom_button_futes_template
-      variables:
-        - entity: input_boolean.tavol
-        - secondary: "{{ states[config.entity].state }}"
-    - type: custom:decluttering-card
-      template: mushroom_button_futes_template
-      variables:
-        - entity: input_boolean.futes
-        - hold_action:
-            action: fire-dom-event
-            browser_mod:
-              service: browser_mod.popup
-              data:
-                style: |
-                  --popup-border-with: var(--ha-card-border-width);
-                  --popup-border-radius: var(--ha-card-border-radius);
-                content:
-                  type: custom:mushroom-number-card
-                  card_mod: 
-                    style: *background_none
-                  <<: &none
-                    tap_action: none
-                    hold_action: none
-                    double_tap_action: none
-                  entity: input_number.futes_mindenkepp
-- type: grid
-  square: false
-  columns: 3
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.ebedlo_temperature
-        - name: Ebédlő
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.nappali_temperature
-        - name: Nappali
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.haloszoba_temperature
-        - name: Háló
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.konyha_temperature
-        - name: Konyha
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.gyerekszoba_temperature
-        - name: Gyerekszoba
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.furdoszoba_homerseklet
-        - name: Fürdő
-- type: grid
-  square: false
-  columns: 3
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.belteri_homerseklet
-        - name: Beltéri
-        - layout: vertical
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.kulteri_homerseklet
-        - name: Kültéri
-        - color: '#e91e63'
-        - layout: vertical
-    - type: custom:mushroom-chips-card
-      style: |
-        ha-card {
-          --chip-box-shadow: none;
-          --chip-background: none;
-          --chip-padding: 0px;          
-        }
-      alignment: justify
-      chips:
-        - type: template
-          content: '{{ expand(states.binary_sensor.ablakok) | selectattr( "state", "eq", "on") | list | count }} Ablak nyitva'
-          icon: mdi:window-open
-          <<: *none
-          icon_color: |
-            {% if (expand(states.binary_sensor.ablakok) | selectattr( 'state', 'eq', 'on') | list | count) > 0 %}
-              red
+type: vertical-stack
+cards:
+  - type: custom:mushroom-template-card
+    entity: climate.honeywell_home_termosztat
+    card_mod:
+      style:
+        mushroom-shape-icon$: |
+          ha-icon {
+            {% if is_state_attr(config.entity, 'hvac_action', 'heating') %}
+              --icon-animation: pulse 2s ease-in-out infinite;
             {% endif %}
-        - type: template
-          content: '{{ states(entity) | int }}% Páratartalom'
-          entity: sensor.belteri_paratartalom
-          icon: mdi:water
-          icon_color: '#2196f3'
-          <<: *none
-- type: custom:decluttering-card
-  template: mini_graph_template
-  variables:
-    - entity_x: sensor.belteri_homerseklet
-    - entity_y: sensor.kulteri_homerseklet
+          }
+        .: |
+          ha-card {
+            background: none;
+            box-shadow: none;
+          }
+    primary: |
+      A kazán jelenleg
+      {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
+      {% if hvac.info == "heating" %}
+        fűt.
+      {% elif hvac.info == "idle" %}
+        tétlen.
+      {% else %}
+        ki van kapcsolva.
+      {% endif %}
+    secondary: |
+      {% if is_state(entity, 'heat') %}
+        A kívánt hőmérséklet {{ states[entity].attributes.temperature }} °C
+      {% endif %}
+    icon: |
+      {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
+      {% if hvac.info == "heating" %}
+        mdi:radiator
+      {% elif hvac.info == "idle" %}
+        mdi:radiator-disabled
+      {% else %}
+        mdi:radiator-off
+      {% endif %} 
+    layout: vertical
+    icon_color: |
+      {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
+      {% if hvac.info == "heating" %}
+        orange
+      {% elif hvac.info == "idle" %}
+        blue
+      {% else %}
+      {% endif %}
+    tap_action:
+      action: navigate
+      navigation_path: schedule
+    <<: &none2
+      hold_action: none
+      double_tap_action: none
+  - type: grid
+    square: false
+    columns: 3
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_button_futes_template
+        variables:
+          - entity: input_boolean.elofutes
+          - secondary: ""
+      - type: custom:decluttering-card
+        template: mushroom_button_futes_template
+        variables:
+          - entity: input_boolean.tavol
+          - secondary: ""
+      - type: custom:decluttering-card
+        template: mushroom_button_futes_template
+        variables:
+          - entity: input_boolean.futes
+          - hold_action:
+              action: fire-dom-event
+              browser_mod:
+                service: browser_mod.popup
+                data:
+                  style: |
+                    --popup-border-with: var(--ha-card-border-width);
+                    --popup-border-radius: var(--ha-card-border-radius);
+                  content:
+                    type: custom:mushroom-number-card
+                    <<: &none
+                      tap_action: none
+                      hold_action: none
+                      double_tap_action: none
+                    entity: input_number.futes_mindenkepp
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.ebedlo_temperature
+          - name: Ebédlő
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.nappali_temperature
+          - name: Nappali
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.haloszoba_temperature
+          - name: Háló
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.konyha_temperature
+          - name: Konyha
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.gyerekszoba_temperature
+          - name: Gyerekszoba
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.furdoszoba_homerseklet
+          - name: Fürdő

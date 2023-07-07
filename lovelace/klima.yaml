@@ -1,135 +1,246 @@
-- type: custom:mushroom-climate-card
-  entity: climate.gree_klima
-  hold_action: none
-  double_tap_action: none      
-  show_temperature_control: true
-  name: Klíma
-  layout: horizontal
-  card_mod: &background_none
-    style: |
-      ha-card {
-        background: none;
-        box-shadow: none;
-      }
-      mushroom-shape-icon {
-        {% if is_state(config.entity, 'auto') %}
-          --card-mod-icon: mdi:autorenew;
-          animation: spin 3s ease-in-out infinite alternate;
-        {% elif is_state(config.entity, 'heat') %}
-          --card-mod-icon: mdi:fire;
-          animation: heat 2s infinite;
-        {% elif is_state(config.entity, 'cool') %}
-          --card-mod-icon: mdi:snowflake;
-          animation: cool 6s ease-in-out infinite;
-        {% elif is_state(config.entity, 'dry') %}
-          --card-mod-icon: mdi:water-percent;
-          animation: dry 1.5s linear infinite;
-        {% elif is_state(config.entity, 'fan_only') %}
-          --card-mod-icon: mdi:fan;
-          animation: spin 1s linear infinite;
-        {% else %}
-          --card-mod-icon: mdi:air-conditioner; 
-        {% endif %}
-        display: flex;
-      }
-      @keyframes cool {
-        0%, 100% { transform: rotate(25deg); }
-        25% { transform: rotate(-25deg); }
-        50% { transform: rotate(50deg); }
-        75% { transform: rotate(-50deg); }
-      }
-      @keyframes heat {
-        0%, 100% { --icon-color: rgba(var(--rgb-red), 1); }
-        10%, 90% { --icon-color: rgba(var(--rgb-red), 0.8); }
-        20%, 80% { --icon-color: rgba(var(--rgb-red), 0.6); }
-        30%, 70% { --icon-color: rgba(var(--rgb-red), 0.4); }
-        40%, 60% { --icon-color: rgba(var(--rgb-red), 0.2); }
-        50% { --icon-color: rgba(var(--rgb-red), 0); }
-      }
-      @keyframes dry {
-        0%, 100% { --icon-symbol-size: 21px; }
-        10%, 90% { --icon-symbol-size: 22px; }
-        20%, 80% { --icon-symbol-size: 23px; }
-        30%, 70% { --icon-symbol-size: 24px; }
-        40%, 60% { --icon-symbol-size: 25px; }
-        50% { --icon-symbol-size: 26px; }
-      }
-- type: custom:mushroom-chips-card
-  style: |
-    ha-card {
-      --chip-box-shadow: none;
-      --chip-background: none;
-      --chip-padding: 0px;
-    }
-  alignment: justify
-  chips:
-    - type: template
-      content: '{{ expand(states.binary_sensor.ablakok) | selectattr( "state", "eq", "on") | list | count }} Ablak nyitva'
-      icon: mdi:window-open
-      icon_color: |
-        {% if (expand(states.binary_sensor.ablakok) | selectattr( 'state', 'eq', 'on') | list | count) > 0 %}
-          red
-        {% endif %}
-      <<: &none
-        tap_action: none
-        hold_action: none
-        double_tap_action: none 
-    - type: weather
-      entity: weather.forecast_home_hourly
-      show_conditions: true
-      show_temperature: true
-      <<: *none
-    - type: template
-      content: '{{ states(entity) |int }}% Páratartalom'
-      entity: sensor.belteri_paratartalom
-      icon: mdi:water
-      icon_color: blue
-      <<: *none
-- type: custom:mushroom-climate-card
-  entity: climate.gree_klima
-  card_mod: *background_none
-  hvac_modes:
-    - auto
-    - heat
-    - cool
-    - dry
-    - fan_only
-  primary_info: none
-  secondary_info: none
-  icon_type: none
-- type: grid
-  square: false
-  columns: 3
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.belteri_homerseklet
-        - name: Beltéri
-        - layout: vertical
-    - type: custom:decluttering-card
-      template: mushroom_entity_futes_template
-      variables:
-        - entity: sensor.kulteri_homerseklet
-        - name: Kültéri
-        - color: '#e91e63'
-        - layout: vertical
-    - type: horizontal-stack
-      cards:
-        - type: custom:decluttering-card
-          template: mushroom_klima_template
-          variables:
-            - entity: climate.gree_klima
-            - fan_mode: auto
-            - icon: mdi:fan-auto
-        - type: custom:decluttering-card
-          template: mushroom_klima_template
-          variables:
-            - entity: climate.gree_klima
-            - fan_mode: low
-            - icon: mdi:fan
-- type: custom:decluttering-card
-  template: mini_graph_template
-  variables:
-    - entity_x: sensor.belteri_homerseklet
-    - entity_y: sensor.kulteri_homerseklet
+type: custom:layout-card
+layout_type: custom:grid-layout
+layout:
+  grid-template-columns: 100%
+  grid-template-rows: auto
+  grid-template-areas: |
+    "Klima-1"
+    "Klima-2"
+    "Seb-title"
+    "Seb-1"
+    "Seb-2"
+    "Legy-title"
+    "Legy-1"
+    "Mod-title"
+    "Mod-1"
+  mediaquery:
+    "(min-width: 900px)":
+      grid-template-columns: 50% 50%
+      grid-template-areas: |
+        "Klima-1 Legy-title"
+        "Klima-2 Legy-1"
+        "Seb-title Mod-title"
+        "Seb-2 Mod-1"
+        "Seb-1 Seb-1"
+cards:
+  - type: custom:mushroom-climate-card
+    view_layout:
+      grid-area: Klima-1
+    entity: climate.gree_klima
+    hold_action: none
+    double_tap_action: none      
+    show_temperature_control: true
+    name: Klíma
+    layout: horizontal
+    card_mod:
+      style: |
+        ha-card {
+          background: none;
+          box-shadow: none;
+        }
+        mushroom-shape-icon {
+          {% if is_state(config.entity, 'auto') %}
+            --card-mod-icon: mdi:autorenew;
+            animation: spin 3s ease-in-out infinite alternate;
+          {% elif is_state(config.entity, 'heat') %}
+            --card-mod-icon: mdi:fire;
+            animation: heat 2s infinite;
+          {% elif is_state(config.entity, 'cool') %}
+            --card-mod-icon: mdi:snowflake;
+            animation: cool 6s ease-in-out infinite;
+          {% elif is_state(config.entity, 'dry') %}
+            --card-mod-icon: mdi:water-percent;
+            animation: dry 1.5s linear infinite;
+          {% elif is_state(config.entity, 'fan_only') %}
+            --card-mod-icon: mdi:fan;
+            animation: spin 1s linear infinite;
+          {% else %}
+            --card-mod-icon: mdi:air-conditioner; 
+          {% endif %}
+          display: flex;
+        }
+        @keyframes cool {
+          0%, 100% { transform: rotate(25deg); }
+          25% { transform: rotate(-25deg); }
+          50% { transform: rotate(50deg); }
+          75% { transform: rotate(-50deg); }
+        }
+        @keyframes heat {
+          0%, 100% { --icon-color: rgba(var(--rgb-red), 1); }
+          10%, 90% { --icon-color: rgba(var(--rgb-red), 0.8); }
+          20%, 80% { --icon-color: rgba(var(--rgb-red), 0.6); }
+          30%, 70% { --icon-color: rgba(var(--rgb-red), 0.4); }
+          40%, 60% { --icon-color: rgba(var(--rgb-red), 0.2); }
+          50% { --icon-color: rgba(var(--rgb-red), 0); }
+        }
+        @keyframes dry {
+          0%, 100% { --icon-symbol-size: 21px; }
+          10%, 90% { --icon-symbol-size: 22px; }
+          20%, 80% { --icon-symbol-size: 23px; }
+          30%, 70% { --icon-symbol-size: 24px; }
+          40%, 60% { --icon-symbol-size: 25px; }
+          50% { --icon-symbol-size: 26px; }
+        }
+  - type: custom:mushroom-climate-card
+    view_layout:
+      grid-area: Klima-2
+    entity: climate.gree_klima
+    card_mod: &background_none
+      style: |
+        ha-card {
+          background: none;
+          box-shadow: none;
+        } 
+    hvac_modes:
+      - auto
+      - heat
+      - cool
+      - dry
+      - fan_only
+    primary_info: none
+    secondary_info: none
+    icon_type: none
+  - type: custom:mushroom-template-card
+    view_layout:
+      grid-area: Seb-title
+    secondary: Sebesség
+    card_mod: *background_none
+  - type: horizontal-stack
+    view_layout:
+      grid-area: Seb-1
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - primary: Low
+          - icon: mdi:numeric-1
+          - value: low
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - primary: Med-Low
+          - icon: mdi:numeric-2
+          - value: medium low
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - primary: Medium
+          - icon: mdi:numeric-3
+          - value: medium
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - primary: Med-High
+          - icon: mdi:numeric-4
+          - value: medium high
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - primary: High
+          - icon: mdi:numeric-5
+          - value: high
+  - type: horizontal-stack
+    view_layout:
+      grid-area: Seb-2
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - primary: Auto
+          - icon: mdi:fan-auto
+          - value: auto
+      - type: custom:decluttering-card
+        template: mushroom_button_futes_template
+        variables:
+          - entity: switch.gree_klima_quiet
+          - secondary: ''
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - service: climate.set_preset_mode
+          - primary: Turbo
+          - icon: mdi:rocket-launch
+          - attr: preset_mode
+          - value: boost
+  - type: custom:mushroom-template-card
+    view_layout:
+      grid-area: Legy-title
+    secondary: Legyezés
+    card_mod: *background_none
+  - type: horizontal-stack
+    view_layout:
+      grid-area: Legy-1
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - service: gree_ext.set_swing_mode_ext
+          - primary: Teljes
+          - icon: mdi:swap-vertical
+          - attr: swing_mode_vertical
+          - value: FullSwing
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - service: gree_ext.set_swing_mode_ext
+          - primary: Fent
+          - icon: mdi:format-vertical-align-top
+          - attr: swing_mode_vertical
+          - value: FixedUpper
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - service: gree_ext.set_swing_mode_ext
+          - primary: Középen
+          - icon: mdi:format-vertical-align-center
+          - attr: swing_mode_vertical
+          - value: FixedMiddle
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - service: gree_ext.set_swing_mode_ext
+          - primary: Lent
+          - icon: mdi:format-vertical-align-bottom
+          - attr: swing_mode_vertical
+          - value: FixedLower
+  - type: custom:mushroom-template-card
+    view_layout:
+      grid-area: Mod-title
+    secondary: Mód
+    card_mod: *background_none
+  - type: horizontal-stack
+    view_layout:
+      grid-area: Mod-1
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - service: climate.set_preset_mode
+          - primary: Eco
+          - icon: mdi:leaf
+          - attr: preset_mode
+          - value: eco
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - service: climate.set_preset_mode
+          - primary: Away
+          - icon: mdi:home-outline
+          - attr: preset_mode
+          - value: away
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - service: climate.set_preset_mode
+          - primary: Sleep
+          - icon: mdi:sleep
+          - attr: preset_mode
+          - value: sleep
+      - type: custom:decluttering-card
+        template: mushroom_klima_template
+        variables:
+          - service: climate.set_preset_mode
+          - primary: None
+          - icon: mdi:power-off
+          - attr: preset_mode
+          - value: none

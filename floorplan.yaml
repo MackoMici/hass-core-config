@@ -1,4 +1,5 @@
 decluttering_templates: !include lovelace/decluttering_templates.yaml
+apexcharts_card_templates: !include lovelace/apexcharts_card_templates.yaml
 
 views:
   - type: custom:grid-layout
@@ -107,6 +108,7 @@ views:
                       --popup-border-width: var(--ha-card-border-width);
                       --popup-border-radius: var(--ha-card-border-radius);
                       --popup-padding-y: -1px;
+                      --popup-background-color: var(--card-background-color);
                     content:
                       type: custom:layout-card
                       layout_type: custom:grid-layout 
@@ -173,16 +175,19 @@ views:
                 browser_mod:
                   service: browser_mod.popup
                   data:
-                    style: &browser_mod_style
+                    style: &browser_mod_900
                       |
+                      --popup-min-width: 900px;
                       --popup-border-width: var(--ha-card-border-width);
                       --popup-border-radius: var(--ha-card-border-radius);
                       --popup-padding-y: -1px;
+                      --popup-background-color: var(--card-background-color);
                     content:
                       type: custom:layout-card
                       layout_type: custom:grid-layout
                       cards:
-                        !include lovelace/klima.yaml
+                        - !include lovelace/klima.yaml
+                        - !include lovelace/grafikon.yaml
               state_action:
                 service: floorplan.class_set
                 service_data: '${ (entity.state === "off") ? "thing-off" : ((entity.state === "unavailable") ? "thing-unavailable" : "thing-on") }'
@@ -201,12 +206,18 @@ views:
                 browser_mod:
                   service: browser_mod.popup
                   data:
-                    style: *browser_mod_style
+                    style: &browser_mod_style
+                      |
+                      --popup-border-width: var(--ha-card-border-width);
+                      --popup-border-radius: var(--ha-card-border-radius);
+                      --popup-padding-y: -1px;
+                      --popup-background-color: var(--card-background-color);
                     content:
                       type: custom:layout-card
                       layout_type: custom:grid-layout
                       cards:
-                        !include lovelace/futes.yaml
+                        - !include lovelace/futes.yaml
+                        - !include lovelace/grafikon.yaml
               state_action:
                 service: floorplan.class_set
                 service_data: '${ (entity.state === "off") ? "thing-off" : ((entity.state === "unavailable") ? "thing-unavailable" : "thing-on") }'
@@ -224,8 +235,12 @@ views:
                       --popup-border-width: var(--ha-card-border-width);
                       --popup-border-radius: var(--ha-card-border-radius);
                       --popup-padding-y: -1px;
+                      --popup-background-color: var(--card-background-color);
                     content:
-                      !include lovelace/novenyek.yaml
+                      type: custom:layout-card
+                      layout_type: custom:grid-layout
+                      cards:
+                        !include lovelace/novenyek.yaml
               state_action:
                 service: floorplan.style_set
                 service_data:
@@ -233,17 +248,6 @@ views:
                     opacity: ${ entity.state === "ok" ? "0" : "1" };
                     fill: ${ entity.state === "ok" ? "" : "#C1424299" };
                     transition: ${ entity.state === "ok" ? "fill 5s ease" : "" };
-#            - name: Tablet
-#              entity: light.u1006_screen
-#              element: tablet
-#              tap_action: toggle              
-#              state_action:
-#                service: floorplan.style_set
-#                service_data:
-#                  style: >
-#                    opacity: ${ entity.state === "on" ? "1" : "0" };
-#                    fill: ${ entity.state === "on" ? "#F9D27C99" : "" };
-#                    transition: ${ entity.state === "off" ? "fill 5s ease" : "" };
             - name: Párásítás
               entity: fan.aroma_diffuser
               element: things.parasito
@@ -254,9 +258,10 @@ views:
                   data:
                     style: *browser_mod_style
                     content:
-                      type: custom:vertical-stack-in-card
+                      type: custom:layout-card
+                      layout_type: custom:grid-layout
                       cards:
-                        !include lovelace/parasitas.yaml
+                        - !include lovelace/parasitas.yaml
               state_action:
                 service: floorplan.class_set
                 service_data: '${ (entity.state === "off") ? "thing-off" : ((entity.state === "unavailable") ? "thing-unavailable" : "thing-on") }'
@@ -314,14 +319,14 @@ views:
                       type: custom:layout-card
                       layout_type: custom:grid-layout
                       layout:
-                        grid-template-columns: repeat(2, 1ft)
-                        grid-template-rows: 1fr
+                        grid-template-columns: 2fr 2fr
+                        grid-template-rows: auto
                         grid-template-areas: |
-                          "HA-title Debian-title"
-                          "HA Debian"
-                          "Network-title Network-title"
-                          "Network-1 Network-2"
-                          "Network-1 Network-3"
+                          "Debian-title Network-title"
+                          "Debian-2 Network-1"
+                          "Debian-1 Network-2"
+                          "HA-title ."
+                          "HA Network-3"
                       cards:
                         !include lovelace/system.yaml
             - name: Karácsony

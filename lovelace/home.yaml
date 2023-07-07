@@ -1,299 +1,101 @@
-- type: custom:mushroom-chips-card
-  style: |
-    ha-card {
-      --chip-box-shadow: none;
-      --chip-background: none;
-    }
-  chips:
-    - type: alarm-control-panel
-      entity: alarm_control_panel.gateway_alarm
-      content_info: none
-      name: Alarm
-    - type: conditional
-      conditions:
-        - entity: media_player.samsung_q80_series_65
-          state: 'on'
-      chip:
-        type: template
-        icon: mdi:television
-        content: '{{ state_attr(entity, "source") }}'
-        tap_action:
+type: vertical-stack
+cards:
+  - type: custom:mushroom-title-card
+    title: |
+      {% set time = now().hour %}
+      {% if (time >= 18) %} 
+       Jó estét, {{user}}!
+      {% elif (time >= 10) %}
+       Szép napot, {{user}}!
+      {% elif (time >= 5) %}
+       Jó reggelt, {{user}}!
+      {% else %}
+       Szia, {{user}}
+      {% endif %}
+    subtitle: |
+      {% if now().hour > 12 and now().hour < 18 %}
+        {{ states['sensor.idokep_elorejelzes'].attributes.forecast_details }}
+      {% else %}
+        {{ states['sensor.idokep_elorejelzes'].attributes.details }}
+      {% endif %}
+    card_mod: &background_none
+      style: |
+        ha-card {
+          background: none;
+          box-shadow: none;
+        }
+  - type: custom:decluttering-card
+    template: weather_template
+    variables:
+      - tap_action: 
           action: navigate
-          navigation_path: tv
-        <<: &none2
-          hold_action: none
-          double_tap_action: none
-        entity: media_player.samsung_q80_series_65
-        icon_color: grey
-    - type: conditional
-      conditions:
-        - entity: plant.new_zealand_spinach
-          state: problem
-      chip:
-        type: template
-        icon: mdi:flower
-        content: |
-          {% if is_state_attr(entity, 'dli_status', 'Low') %}
-            DLI alacsony
-          {% endif %}
-          {% if is_state_attr(entity, 'dli_status', 'High') %}
-            DLI nagy
-          {% endif %}
-          {% if is_state_attr(entity, 'moisture_status', 'Low') %}
-            Talajnedvesség alacsony
-          {% endif %}
-          {% if is_state_attr(entity, 'moisture_status', 'High') %}
-            Talajnedvesség nagy
-          {% endif %}
-          {% if is_state_attr(entity, 'temperature_status', 'Low') %}
-            Hőmérséklet alacsony
-          {% endif %}
-          {% if is_state_attr(entity, 'temperature_status', 'High') %}
-            Hőmérséklet nagy
-          {% endif %}
-          {% if is_state_attr(entity, 'conductivity_status', 'Low') %}
-            Talajvezetőképesség alacsony
-          {% endif %}
-          {% if is_state_attr(entity, 'conductivity_status', 'High') %}
-            Talajvezetőképesség nagy
-          {% endif %}
-          {% if is_state_attr(entity, 'illuminance_status', 'Low') %}
-            Fényerősség alacsony
-          {% endif %}
-          {% if is_state_attr(entity, 'illuminance_status', 'High') %}
-            Fényerősség nagy
-          {% endif %}
-          {% if is_state_attr(entity, 'humidity_status', 'Low') %}
-            Levegő Páratartalom alacsony
-          {% endif %}
-          {% if is_state_attr(entity, 'humidity_status', 'High') %}
-            Levegő Páratartalom nagy
-          {% endif %}
-        tap_action:
-          action: navigate
-          navigation_path: novenyek
-        <<: *none2
-        entity: plant.new_zealand_spinach
-        icon_color: grey
-    - type: conditional
-      conditions:
-        - entity: light.vilagitas
-          state: 'on'
-      chip:
-        type: template
-        icon: mdi:lightbulb
-        content: |
-          {{ expand(states.light.vilagitas) | selectattr( 'state', 'eq', 'on') | list | count }} Lámpa ég
-        entity: light.vilagitas
-        icon_color: grey
-        tap_action:
-          action: navigate
-          navigation_path: kapcsolo
-        <<: *none2
-    - type: conditional
-      conditions:
-        - entity: binary_sensor.ablakok
-          state: 'on'
-      chip:
-        type: template
-        icon_color: grey
-        icon: mdi:window-open
-        content: '{{ expand(states.binary_sensor.ablakok) | selectattr( "state", "eq", "on") | list | count }} Ablak nyitva'
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              content:
-                type: custom:auto-entities
-                filter:
-                  include:
-                    - attributes:
-                        device_class: window
-                      state: 'on'
-                      options:
-                        type: custom:mushroom-entity-card
-                        secondary_info: last-changed
-                        <<: &none
-                          tap_action: none
-                          hold_action: none
-                          double_tap_action: none
-                show_empty: false
-                card:
-                  type: custom:layout-card
-                  cards: []
-                  layout_type: masonry
-                sort:
-                  method: friendly_name
-        <<: *none2
-        entity: binary_sensor.ablakok
-    - type: conditional
-      conditions:
-        - entity: sensor.devices_with_low_battery
-          state_not: '0'
-      chip:
-        type: template
-        icon_color: red
-        icon: mdi:battery-alert
-        content: '{{ states(entity) }}'
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              content:
-                type: custom:auto-entities
-                filter:
-                  include:
-                    - attributes:
-                        device_class: battery
-                      state: "< 30"
-                      options:
-                        type: custom:mushroom-template-card
-                        primary: '{{ states(entity) }}%'
-                        secondary: '{{ state_attr(entity, ''friendly_name'') | title }}'
-                        icon: |
-                          {% set battery_level = (states(entity) | int / 10) |
-                          round(0) | int * 10 %} {% if battery_level == 100 %}
-                            mdi:battery
-                          {% elif battery_level > 0 %}
-                            mdi:battery-{{ battery_level }}
-                          {% else %}
-                            mdi:battery-outline
-                          {% endif %}
-                        icon_color: |
-                          {% set battery_level = states(entity) | int %}
-                          {% if battery_level < 10 %}
-                            red
-                          {% elif battery_level < 20 %}
-                            deep-orange
-                          {% elif battery_level < 30 %}
-                            orange
-                          {% else %}
-                            amber
-                          {% endif %} 
-                        layout: horizontal
-                        <<: *none
-                        badge_icon: |
-                          {% set battery_level = states(entity) | int %}
-                          {% if battery_level < 10 %} 
-                            mdi:exclamation-thick
-                          {% endif %}
-                        badge_color: red
-                  exclude:
-                    - attributes:
-                        icon: "mdi:*"
-                show_empty: false
-                card:
-                  type: custom:layout-card
-                  cards: []
-                  layout_type: masonry
-                sort:
-                  method: friendly_name                  
-        <<: *none2
-        entity: sensor.devices_with_low_battery
-- type: custom:mushroom-title-card
-  title: |
-    {% set time = now().hour %}
-    {% if (time >= 18) %} 
-     Jó estét, {{user}}!
-    {% elif (time >= 10) %}
-     Szép napot, {{user}}!
-    {% elif (time >= 5) %}
-     Jó reggelt, {{user}}!
-    {% else %}
-     Szia, {{user}}
-    {% endif %}
-  subtitle: |
-    {% if now().hour > 12 and now().hour < 18 %}
-      {{ states['sensor.idokep_elorejelzes'].attributes.forecast_details }}
-    {% else %}
-      {{ states['sensor.idokep_elorejelzes'].attributes.details }}
-    {% endif %}
-- type: custom:hourly-weather
-  card_mod: 
-    style: |
-      ha-card {
-        background: none;
-        box-shadow: none;
-      }
-  tap_action:
-    action: navigate
-    navigation_path: idojaras
-  <<: *none2
-  entity: weather.forecast_home_hourly
-  name: 
-  icons: true
-  language: hu
-  num_segments: |
-    {% set segments = 24 - now().hour %}
-    {{ segments if segments > 12 else 24}}
-  label_spacing: |
-    {% set segments = 24 - now().hour %}
-    {{ 4 if segments < 13 else 2 }}
-- type: custom:state-switch
-  entity: user
-  default: default
-  states:
-    "Hunyadvári Zoltán":
-      type: custom:decluttering-card
-      template: atomic_calendar_template
-      variables:
-        - entity_1: calendar.zoltan_hunyadvari_gmail_com
-        - entity_2: calendar.macko_mici_gmail_com
-    "Szakács Kata":
-      type: custom:decluttering-card
-      template: atomic_calendar_template
-      variables:
-        - entity_1: calendar.szakacskata_gmail_com
-        - entity_2: calendar.zoltan_hunyadvari_gmail_com
-    default:
-      type: custom:decluttering-card
-      template: atomic_calendar_template
-      variables:
-        - entity_1: calendar.magyar_nevnapok
-        - entity_2: calendar.unnepnapok_magyarorszag
-- type: horizontal-stack
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_home_template
-      variables: 
-         - secondary: Világítás
-         - icon: mdi:lightbulb
-         - color: amber
-         - nav: kapcsolo
-    - type: custom:decluttering-card
-      template: mushroom_home_template
-      variables:
-        - secondary: Fűtés
-        - icon: mdi:radiator
-        - color: blue
-        - nav: futes
-    - type: custom:decluttering-card
-      template: mushroom_home_template
-      variables:
-        - secondary: Klíma
-        - icon: mdi:air-conditioner
-        - color: green
-        - nav: klima
-    - type: custom:decluttering-card
-      template: mushroom_home_template
-      variables:
-        - secondary: Párásítás
-        - icon: mdi:air-humidifier
-        - color: red
-        - nav: parasitas
-    - type: custom:decluttering-card
-      template: mushroom_home_template
-      variables:
-        - secondary: Takarítás
-        - icon: mdi:robot-vacuum
-        - color: cyan
-        - nav: porszivo
-    - type: custom:decluttering-card
-      template: mushroom_home_template
-      variables:
-        - secondary: System
-        - icon: mdi:lan
-        - color: orange
-        - nav: informacio
+          navigation_path: idojaras
+      - entity: weather.forecast_home_hourly
+      - show_wind: 'false'
+      - show_precipitation_amounts: false
+  - type: custom:state-switch
+    entity: user
+    default: default
+    states:
+      "Hunyadvári Zoltán":
+        type: custom:decluttering-card
+        template: atomic_calendar_template
+        variables:
+          - entity_1: calendar.zoltan_hunyadvari_gmail_com
+          - entity_2: calendar.macko_mici_gmail_com
+      "Szakács Kata":
+        type: custom:decluttering-card
+        template: atomic_calendar_template
+        variables:
+          - entity_1: calendar.szakacskata_gmail_com
+          - entity_2: calendar.zoltan_hunyadvari_gmail_com
+      default:
+        type: custom:decluttering-card
+        template: atomic_calendar_template
+        variables:
+          - entity_1: calendar.magyar_nevnapok
+          - entity_2: calendar.unnepnapok_magyarorszag
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_home_template
+        variables: 
+           - secondary: Világítás
+           - icon: mdi:lightbulb
+           - color: amber
+           - nav: kapcsolo
+      - type: custom:decluttering-card
+        template: mushroom_home_template
+        variables:
+          - secondary: Fűtés
+          - icon: mdi:radiator
+          - color: blue
+          - nav: futes
+      - type: custom:decluttering-card
+        template: mushroom_home_template
+        variables:
+          - secondary: Klíma
+          - icon: mdi:air-conditioner
+          - color: green
+          - nav: klima
+      - type: custom:decluttering-card
+        template: mushroom_home_template
+        variables:
+          - secondary: Párásítás
+          - icon: mdi:air-humidifier
+          - color: red
+          - nav: parasitas
+      - type: custom:decluttering-card
+        template: mushroom_home_template
+        variables:
+          - secondary: Takarítás
+          - icon: mdi:robot-vacuum
+          - color: cyan
+          - nav: porszivo
+      - type: custom:decluttering-card
+        template: mushroom_home_template
+        variables:
+          - secondary: System
+          - icon: mdi:lan
+          - color: orange
+          - nav: informacio

@@ -1,0 +1,97 @@
+blueprint:
+  name: Otthoni riasztás
+  description: Otthoni riasztás ki és be kapcsolás és üzenet küldés telefonra ha esemény
+    történik és nincs otthon senki
+  domain: automation
+  input:
+    doorsensor:
+      name: Door Sensor
+      selector:
+        entity:
+          domain:
+          - binary_sensor
+          device_class:
+          - door
+          multiple: false
+    family:
+      name: Family Location
+      selector:
+        entity:
+          domain:
+          - group
+          multiple: false
+    security:
+      name: Security System
+      selector:
+        entity:
+          domain:
+          - alarm_control_panel
+          device_class:
+          - alarm
+          multiple: false
+    notify_device:
+      name: Device to notify
+      description: Device needs to run the official Home Assistant app to receive
+        notifications.
+      selector:
+        device:
+          integration: mobile_app
+          multiple: false
+  source_url: https://gist.github.com/MackoMici/721dd6ac1e68127fc198cbf8a44d1af9
+trigger:
+- platform: state
+  entity_id: !input family
+- platform: state
+  entity_id: !input doorsensor
+  from: 'off'
+  to: 'on'
+action:
+- choose:
+  - conditions:
+    - condition: state
+      entity_id: !input family
+      state: not_home
+    - condition: state
+      entity_id: !input security
+      state: disarmed
+    sequence:
+    - service: alarm_control_panel.alarm_arm_away
+      target:
+        entity_id: !input security
+      data: {}
+    - domain: mobile_app
+      type: notify
+      device_id: !input notify_device
+      title: Figyelem!
+      message: Riasztó bekapcsolva!
+  - conditions:
+    - condition: state
+      entity_id: !input family
+      state: home
+    - condition: state
+      entity_id: !input security
+      state: armed_away
+    sequence:
+    - service: alarm_control_panel.alarm_disarm
+      target:
+        entity_id: !input security
+      data: {}
+    - domain: mobile_app
+      type: notify
+      device_id: !input notify_device
+      title: Figyelem!
+      message: Riasztó kikapcsolva!
+  - conditions:
+    - condition: state
+      entity_id: !input security
+      state: armed_away
+    - condition: state
+      entity_id: !input family
+      state: not_home
+    sequence:
+    - domain: mobile_app
+      type: notify
+      device_id: !input notify_device
+      title: Riasztás!
+      message: Valaki kinyította a bejárati ajtót!
+mode: single

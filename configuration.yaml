@@ -18,6 +18,13 @@ http:
   ip_ban_enabled: true
   login_attempts_threshold: 5
 
+zone:
+  - name: Home
+    latitude: !secret latitude
+    longitude: !secret longitude
+    radius: 50
+    icon: mdi:home
+
 recorder:
   purge_keep_days: 30
 
@@ -70,6 +77,8 @@ lovelace:
       type: module
     - url: /hacsfiles/decluttering-card/decluttering-card.js
       type: module
+    - url: /hacsfiles/config-template-card/config-template-card.js
+      type: module
     - url: https://fonts.googleapis.com/css2?family=Oxygen&family=Ubuntu:wght@300&display=swap
       type: css
   dashboards:
@@ -86,7 +95,6 @@ lovelace:
       icon: mdi:cellphone
       show_in_sidebar: true
 
-
 homeassistant:
   packages: !include_dir_named include
   allowlist_external_dirs:
@@ -101,6 +109,8 @@ google_assistant:
     - light
 
 #python_script:
+
+gree_ext:
 
 vacuum:
   - platform: viomise
@@ -129,4 +139,3 @@ frontend:
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
-

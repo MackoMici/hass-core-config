@@ -3,24 +3,37 @@ blueprint:
   description: Kapcsolja le vagy fel a lámpát amikor hazaérek vagy elmegyek otthonról.
   domain: automation
   input:
-    calendar:
-      name: Google Calendar
+    workday:
+      name: Workday Sensor
+      description: Munkanapok figyelése.
       selector:
         entity:
-          domain: calendar
+          domain:
+          - binary_sensor
+          multiple: false
+    calendar:
+      name: Google Calendar
+      description: Naptár ami megmondja hogy ünnepnap van vagy sem.
+      selector:
+        entity:
+          domain:
+          - calendar
           multiple: false
     doorsensor_entity:
       name: Door Sensor
       selector:
         entity:
-          domain: binary_sensor
-          device_class: door
+          domain:
+          - binary_sensor
+          device_class:
+          - door
           multiple: false
     light_switch:
       name: Light
       selector:
         entity:
-          domain: switch
+          domain:
+          - switch
           multiple: false
     door_closed_wait:
       name: Wait time
@@ -36,27 +49,25 @@ blueprint:
   source_url: https://gist.github.com/MackoMici/c34cb44e00d6b7b139d6ecd3c8a16cc6
 mode: single
 max_exceeded: silent
-variables:
-  calendar: !input 'calendar'
 trigger:
   platform: state
-  entity_id: !input 'doorsensor_entity'
+  entity_id: !input doorsensor_entity
   from: 'off'
   to: 'on'
 action:
 - choose:
   - conditions:
     - condition: state
-      entity_id: !input 'light_switch'
+      entity_id: !input light_switch
       state: 'on'
     sequence:
     - wait_for_trigger:
         platform: state
-        entity_id: !input 'doorsensor_entity'
+        entity_id: !input doorsensor_entity
         from: 'on'
         to: 'off'
     - service: switch.turn_off
-      entity_id: !input 'light_switch'
+      entity_id: !input light_switch
   - conditions:
     - condition: state
       entity_id: sun.sun
@@ -64,36 +75,36 @@ action:
     - condition: and
       conditions:
       - condition: state
-        entity_id: binary_sensor.workday_sensor
+        entity_id: !input workday
         state: 'on'
       - condition: state
-        entity_id: !input 'calendar'
+        entity_id: !input calendar
         state: 'off'
     sequence:
     - service: switch.turn_on
-      entity_id: !input 'light_switch'
+      entity_id: !input light_switch
     - wait_for_trigger:
         platform: state
-        entity_id: !input 'doorsensor_entity'
+        entity_id: !input doorsensor_entity
         from: 'on'
         to: 'off'
-        for: !input 'door_closed_wait'
+        for: !input door_closed_wait
     - service: switch.turn_off
-      entity_id: !input 'light_switch'
+      entity_id: !input light_switch
   - conditions:
     - condition: sun
       after: sunset
     - condition: state
-      entity_id: binary_sensor.workday_sensor
+      entity_id: !input workday
       state: 'off'
     sequence:
     - service: switch.turn_on
-      entity_id: !input 'light_switch'
+      entity_id: !input light_switch
     - wait_for_trigger:
         platform: state
-        entity_id: !input 'doorsensor_entity'
+        entity_id: !input doorsensor_entity
         from: 'on'
         to: 'off'
-        for: !input 'door_closed_wait'
+        for: !input door_closed_wait
     - service: switch.turn_off
-      entity_id: !input 'light_switch'
+      entity_id: !input light_switch

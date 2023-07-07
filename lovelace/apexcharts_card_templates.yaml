@@ -1,0 +1,47 @@
+default_chart:
+  graph_span: 1d
+  span:
+    start: day
+  apex_config:
+    chart:
+      height: 150px
+      fontFamily: Raleway,sans-serif
+    legend:
+      show: false
+    stroke:
+      width: 2
+    grid:
+      show: true
+      borderColor: '#ffffff30'
+      strokeDashArray: 4
+      position: back
+  experimental:
+    color_threshold: true
+  header:
+    show: false
+    show_states: false
+  color_list: ['#2196f3', '#e91e63', '#4caf4f']
+  all_series_config:
+    extend_to: false
+    curve: smooth
+    show:
+      legend_value: false
+    group_by:
+      func: avg
+      duration: 10min
+
+system_chart:
+  apex_config:
+    legend:
+      show: true
+    chart:
+      height: 265px
+  color_list: ['#2196f3', '#e91e63', '#ffc662']
+  all_series_config:
+    extend_to: false
+    curve: smooth
+    type: line    
+    show:
+      legend_value: true
+    group_by:
+      func: raw

@@ -1,109 +1,135 @@
-- type: custom:vertical-stack-in-card
-  card_mod: &background_none
-    style: |
-      ha-card {
-        background: none;
-        box-shadow: none;
-      }
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_humidity_fan_template
-      variables:
-        - entity: fan.aroma_diffuser
-    - type: custom:decluttering-card
-      template: mushroom_humidity_chip_template
-      variables:
-        - chips:
-            - type: conditional
-              conditions:
-                - entity: select.aroma_diffuser_timer
-                  state_not: 'Off'
-                - entity: fan.aroma_diffuser
-                  state: 'on'
-              chip:
-                type: template
-                tap_action: none
-                hold_action: none
-                double_tap_action: none
-                entity: select.aroma_diffuser_timer
-                content: |
-                  {% if not is_state_attr(entity, 'remaining', 0) %}
-                    {{ state_attr(entity, 'remaining') }} perc a leállásig
-                  {% endif %}
-- type: custom:vertical-stack-in-card
-  card_mod: *background_none
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_humidity_light_template
-      variables:
-        - entity: light.aroma_diffuser_nightlight
-    - type: custom:decluttering-card
-      template: mushroom_humidity_chip_template
-      variables:
-        - chips:
-            - type: conditional
-              conditions:
-                - entity: light.aroma_diffuser_nightlight
-                  state: 'on'
-              chip:
-                type: action
-                icon: mdi:creation
-                tap_action:
-                  action: call-service
-                  service: light.turn_on
-                  data:
-                    effect: Colorful
-                  target:
-                    entity_id: light.aroma_diffuser_nightlight
-                hold_action: none
-                double_tap_action: none
-- type: grid
-  square: false
-  columns: 2
-  cards:
-    - type: grid
-      square: false
-      columns: 2
-      cards:
-        - type: custom:decluttering-card
-          template: mushroom_humidity_timer_template
-          variables:
-            - icon: mdi:numeric-1
-            - countdown: "1 hour"
-        - type: custom:decluttering-card
-          template: mushroom_humidity_timer_template
-          variables:
-            - icon: mdi:numeric-3
-            - countdown: "3 hours"
-        - type: custom:decluttering-card
-          template: mushroom_humidity_timer_template
-          variables:
-            - icon: mdi:numeric-6
-            - countdown: "6 hours"
-        - type: custom:decluttering-card
-          template: mushroom_humidity_timer_template
-          variables:
-            - icon: mdi:timer-off
-            - countdown: "Off"
-    - type: grid
-      square: false
-      columns: 2
-      cards:
-        - type: custom:decluttering-card
-          template: mushroom_entity_futes_template
-          variables:
-            - entity: sensor.belteri_paratartalom
-            - name: Beltéri
-            - layout: vertical
-        - type: custom:decluttering-card
-          template: mushroom_entity_futes_template
-          variables:
-            - entity: sensor.furdoszoba_paratartalom
-            - name: Fürdő
-            - color: '#e91e63'
-            - layout: vertical
-- type: custom:decluttering-card
-  template: mini_graph_template
-  variables:
-    - entity_x: sensor.belteri_paratartalom
-    - entity_y: sensor.furdoszoba_paratartalom
+type: vertical-stack
+cards:
+  - type: custom:vertical-stack-in-card
+    card_mod: &background_none
+      style: |
+        ha-card {
+          background: none;
+          box-shadow: none;
+        }
+    cards:
+      - type: custom:mushroom-fan-card
+        entity: fan.aroma_diffuser
+        card_mod: *background_none
+        show_percentage_control: true
+        <<: &none2
+          hold_action: none
+          double_tap_action: none
+        collapsible_controls: true
+        secondary_info: none
+      - type: custom:decluttering-card
+        template: mushroom_humidity_chip_template
+        variables:
+          - chips:
+              - type: conditional
+                conditions:
+                  - entity: select.aroma_diffuser_timer
+                    state_not: 'Off'
+                  - entity: fan.aroma_diffuser
+                    state: 'on'
+                chip:
+                  type: template
+                  tap_action: none
+                  hold_action: none
+                  double_tap_action: none
+                  entity: select.aroma_diffuser_timer
+                  content: |
+                    {% if not is_state_attr(entity, 'remaining', 0) %}
+                      {{ state_attr(entity, 'remaining') }} perc a leállásig
+                    {% endif %}
+  - type: custom:vertical-stack-in-card
+    card_mod: *background_none
+    cards:
+      - type: custom:mushroom-light-card
+        card_mod:
+          style:
+            mushroom-shape-icon$: |
+              .shape {
+                  --shape-color: rgb{{ state_attr(config.entity, 'rgb_color') }};
+              }
+            .: |
+                ha-card {
+                  background: none;
+                  box-shadow: none;
+                }
+        entity: light.aroma_diffuser_nightlight
+        show_color_control: true
+        collapsible_controls: true
+        secondary_info: none
+        <<: *none2
+      - type: custom:decluttering-card
+        template: mushroom_humidity_chip_template
+        variables:
+          - chips:
+              - type: conditional
+                conditions:
+                  - entity: light.aroma_diffuser_nightlight
+                    state: 'on'
+                chip:
+                  type: action
+                  icon: mdi:creation
+                  tap_action:
+                    action: call-service
+                    service: light.turn_on
+                    data:
+                      effect: Colorful
+                    target:
+                      entity_id: light.aroma_diffuser_nightlight
+                  hold_action: none
+                  double_tap_action: none
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_humidity_timer_template
+        variables:
+          - icon: mdi:numeric-1
+          - countdown: "1 hour"
+      - type: custom:decluttering-card
+        template: mushroom_humidity_timer_template
+        variables:
+          - icon: mdi:numeric-3
+          - countdown: "3 hours"
+      - type: custom:decluttering-card
+        template: mushroom_humidity_timer_template
+        variables:
+          - icon: mdi:numeric-6
+          - countdown: "6 hours"
+      - type: custom:decluttering-card
+        template: mushroom_humidity_timer_template
+        variables:
+          - icon: mdi:timer-off
+          - countdown: "Off"
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.belteri_paratartalom
+          - name: Beltéri
+          - layout: vertical
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.kulteri_paratartalom
+          - name: Kültéri
+          - color: '#e91e63'
+          - layout: vertical
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.furdoszoba_paratartalom
+          - name: Fürdő
+          - color: '#4caf4f'
+          - layout: vertical
+  - type: custom:apexcharts-card
+    card_mod: *background_none
+    config_templates: default_chart
+    series:
+      - entity: sensor.belteri_paratartalom
+        name: Beltéri
+      - entity: sensor.kulteri_paratartalom
+        name: Kültéri
+        type: area
+        opacity: 0.2
+      - entity: sensor.furdoszoba_paratartalom
+        name: Fürdő

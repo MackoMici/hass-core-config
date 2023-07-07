@@ -1,0 +1,32 @@
+type: vertical-stack
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.belteri_homerseklet
+          - name: Beltéri
+          - layout: vertical
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.kulteri_homerseklet
+          - name: Kültéri
+          - color: '#e91e63'
+          - layout: vertical
+  - type: custom:apexcharts-card
+    config_templates: default_chart
+    card_mod:
+      style: |
+        ha-card {
+          background: none;
+          box-shadow: none;
+        }
+    series:
+      - entity: sensor.belteri_homerseklet
+        name: Beltéri
+      - entity: sensor.kulteri_homerseklet
+        name: Kültéri
+        type: area
+        opacity: 0.2

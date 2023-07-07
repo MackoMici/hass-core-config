@@ -1,11 +1,5 @@
 - type: custom:mushroom-vacuum-card
   entity: vacuum.viomi_se
-  card_mod: &background_none
-    style: |
-      ha-card {
-        background: none;
-        box-shadow: none;
-      }
   icon_animation: true
   commands:
     - start_pause
@@ -16,6 +10,12 @@
     tap_action: none
     hold_action: none
     double_tap_action: none
+  card_mod: &background_none
+    style: |
+      ha-card {
+        background: none;
+        box-shadow: none;
+      }
 - type: custom:mushroom-chips-card
   style: |
     ha-card {

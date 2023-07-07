@@ -1,13 +1,13 @@
 - type: custom:mushroom-title-card
   title: Home Assistant
-  view_layout:
-    grid-area: HA-title
   card_mod: &background_none
     style: |
       ha-card {
         background: none;
         box-shadow: none;
       }
+  view_layout:
+    grid-area: HA-title
 - type: grid
   view_layout:
     grid-area: HA
@@ -27,137 +27,77 @@
       secondary: |
         {% if states(entity) == states('sensor.home_assistant_website') %}
           Naprakész - {{ states(entity) }}
-        {% else %}
+        {% elif states('sensor.home_assistant_website') != 'unavailable' %}
           Legújabb verzió - {{ states('sensor.home_assistant_website') }}
+        {% else %}
+          Verzió - {{ states(entity) }}
         {% endif %}
     - type: custom:mushroom-entity-card
       entity: sensor.hacs
-      <<: *none
       card_mod: *background_none
+      <<: *none
     - type: custom:mushroom-entity-card
       entity: sensor.home_assistant_v2_db_size
-      <<: *none
       card_mod: *background_none
+      <<: *none
       icon: mdi:database
     - type: custom:mushroom-entity-card
       entity: sensor.home_assistant_log_size
-      <<: *none
       card_mod: *background_none
+      <<: *none
     - type: custom:mushroom-entity-card
       entity: sensor.watchman_missing_entities
-      <<: *none
       card_mod: *background_none
+      <<: *none
     - type: custom:mushroom-entity-card
       entity: sensor.watchman_missing_services
-      <<: *none
       card_mod: *background_none
+      <<: *none
 - type: custom:mushroom-title-card
-  card_mod: *background_none
   title: Debian Server
+  card_mod: *background_none
   view_layout:
     grid-area: Debian-title
   subtitle: Uptime - {{ states('sensor.home_assistant_uptime') }}
-- type: grid
+- type: custom:apexcharts-card
   view_layout:
-    grid-area: Debian
-  square: false
-  columns: 3
+    grid-area: Debian-1
+  card_mod: *background_none
+  config_templates: 
+    - default_chart
+    - system_chart
+  series:
+    - entity: sensor.processor_use
+      name: Processor
+    - entity: sensor.memory_use_percent
+      name: Memory
+    - entity: sensor.processor_temperature
+      name: Temp
+- type: horizontal-stack
+  view_layout:
+    grid-area: Debian-2
+  card_mod: *background_none
   cards:
-    - type: custom:vertical-stack-in-card
-      card_mod: &vertical_height
-        style: |
-          ha-card {
-            background: none;
-            box-shadow: none;
-            height: 158px;
-          }
-      cards:
-        - type: custom:decluttering-card
-          template: apexcharts_card_template
-          variables:
-            - entity: sensor.processor_use
-            - color: '#2196f3'
-        - type: custom:decluttering-card
-          template: mushroom_entity_apex_template
-          variables:
-            - entity: sensor.processor_use
-            - name: Core
-            - color: '#2196f3'                  
-    - type: custom:vertical-stack-in-card
-      card_mod: *vertical_height
-      cards:
-        - type: custom:decluttering-card
-          template: apexcharts_card_template
-          variables:
-            - entity: sensor.memory_use_percent
-            - color: '#e91e63'
-        - type: custom:decluttering-card
-          template: mushroom_entity_apex_template
-          variables:
-            - entity: sensor.memory_use_percent
-            - name: Memory
-            - color: '#e91e63'
-    - type: custom:vertical-stack-in-card
-      card_mod: *vertical_height
-      cards:
-        - type: custom:decluttering-card
-          template: apexcharts_card_template
-          variables:
-            - entity: sensor.processor_temperature
-            - color: '#ffc662'
-        - type: custom:decluttering-card
-          template: mushroom_entity_apex_template
-          variables:
-            - entity: sensor.processor_temperature
-            - name: Temperature
-            - color: '#ffc662'
-    - type: custom:vertical-stack-in-card
-      card_mod: *vertical_height
-      cards:
-        - type: custom:decluttering-card
-          template: apexcharts_card_template
-          variables:
-            - entity: sensor.disk_use_percent
-            - color: '#4caf4f'
-        - type: custom:decluttering-card
-          template: mushroom_entity_apex_template
-          variables:
-            - entity: sensor.disk_use_percent
-            - name: SSD 120 GB
-            - color: '#4caf4f'
-    - type: custom:vertical-stack-in-card
-      card_mod: *vertical_height
-      cards:
-        - type: custom:decluttering-card
-          template: apexcharts_card_template
-          variables:
-            - entity: sensor.disk_use_percent_mnt_hdd1
-            - color: '#4caf4f'
-        - type: custom:decluttering-card
-          template: mushroom_entity_apex_template
-          variables:
-            - entity: sensor.disk_use_percent_mnt_hdd1
-            - name: HDD 2TB
-            - color: '#4caf4f'
-    - type: custom:vertical-stack-in-card
-      card_mod: *vertical_height
-      cards:
-        - type: custom:decluttering-card
-          template: apexcharts_card_template
-          variables:
-            - entity: sensor.disk_use_percent_mnt_hdd2
-            - color: '#4caf4f'
-        - type: custom:decluttering-card
-          template: mushroom_entity_apex_template
-          variables:
-            - entity: sensor.disk_use_percent_mnt_hdd2
-            - name: HDD 4TB
-            - color: '#4caf4f'
+    - type: custom:decluttering-card
+      template: gauge_template
+      variables:
+        - entity: sensor.disk_use_percent
+        - name: SSD
+    - type: custom:decluttering-card
+      template: gauge_template
+      variables:
+        - entity: sensor.disk_use_percent_mnt_hdd1
+        - name: HDD 2T
+    - type: custom:decluttering-card
+      template: gauge_template
+      variables:
+        - entity: sensor.disk_use_percent_mnt_hdd2
+        - name: HDD 4T
 - type: custom:mushroom-title-card
   title: Network
+  card_mod: *background_none
   view_layout:
     grid-area: Network-title
-  card_mod: *background_none
   subtitle: Uptime - {{ states('sensor.mikrotik_router_uptime') }}
 - type: grid
   view_layout:
@@ -165,8 +105,7 @@
   square: false
   columns: 2
   cards:
-    - type: custom:vertical-stack-in-card
-      card_mod: *background_none
+    - type: vertical-stack
       cards:
         - type: custom:decluttering-card
           template: mushroom_update_template
@@ -180,106 +119,33 @@
             - entity: update.mikrotik_hap_ac_2_routeros_update
             - primary: Mikrotik RouterOS
             - icon: mdi:router-network
-        - type: custom:mushroom-entity-card
-          entity: sensor.mikrotik_hap_ac_2_wired_clients
-          <<: *none
-          card_mod: *background_none
-        - type: custom:mushroom-entity-card
-          entity: sensor.mikrotik_hap_ac_2_wireless_clients
-          <<: *none
-          card_mod: *background_none
-    - type: custom:vertical-stack-in-card
-      card_mod: *background_none
-      cards:
-        - type: custom:vertical-stack-in-card
-          card_mod: *vertical_height
-          cards:
-            - type: custom:decluttering-card
-              template: apexcharts_card_template
-              variables:
-                - entity: sensor.mikrotik_pppoe_out1_rx
-                - color: '#2196f3'
-                - size: 80%
-                - strokeWidth: 70%
-                - max: 1000
-                - charth: 130px
-            - type: custom:decluttering-card
-              template: mushroom_entity_apex_template
-              variables:
-                - entity: sensor.mikrotik_pppoe_out1_rx
-                - name: Download
-                - color: '#2196f3'
-        - type: custom:vertical-stack-in-card
-          card_mod: *vertical_height
-          cards:
-            - type: custom:decluttering-card
-              template: apexcharts_card_template
-              variables:
-                - entity: sensor.mikrotik_pppoe_out1_tx
-                - color: '#e91e63'
-                - size: 80%
-                - strokeWidth: 70%
-                - max: 1000
-                - charth: 130px
-            - type: custom:decluttering-card
-              template: mushroom_entity_apex_template
-              variables:
-                - entity: sensor.mikrotik_pppoe_out1_tx
-                - name: Upload
-                - color: '#e91e63'
-- type: grid
+    - type: custom:decluttering-card
+      template: gauge_template
+      variables:
+        - entity: sensor.mikrotik_hap_ac_2_hdd_usage
+        - name: Storage
+- type: custom:apexcharts-card
+  card_mod: *background_none
   view_layout:
     grid-area: Network-2
-  square: false
-  columns: 3
-  cards:
-    - type: custom:vertical-stack-in-card
-      card_mod: *vertical_height
-      cards:
-        - type: custom:decluttering-card
-          template: apexcharts_card_template
-          variables:
-            - entity: sensor.mikrotik_hap_ac_2_cpu_load
-            - color: '#2196f3'
-        - type: custom:decluttering-card
-          template: mushroom_entity_apex_template
-          variables:
-            - entity: sensor.mikrotik_hap_ac_2_cpu_load
-            - name: Core
-            - color: '#2196f3'
-    - type: custom:vertical-stack-in-card
-      card_mod: *vertical_height
-      cards:
-        - type: custom:decluttering-card
-          template: apexcharts_card_template
-          variables:
-            - entity: sensor.mikrotik_hap_ac_2_memory_usage
-            - color: '#e91e63'
-        - type: custom:decluttering-card
-          template: mushroom_entity_apex_template
-          variables:
-            - entity: sensor.mikrotik_hap_ac_2_memory_usage
-            - name: Memory
-            - color: '#e91e63'
-    - type: custom:vertical-stack-in-card
-      card_mod: *vertical_height
-      cards:
-        - type: custom:decluttering-card
-          template: apexcharts_card_template
-          variables:
-            - entity: sensor.mikrotik_hap_ac_2_hdd_usage
-            - color: '#4caf4f'
-        - type: custom:decluttering-card
-          template: mushroom_entity_apex_template
-          variables:
-            - entity: sensor.mikrotik_hap_ac_2_hdd_usage
-            - name: Storage
-            - icon_color: '#4caf4f'
-- type: custom:decluttering-card
+  config_templates:
+    - default_chart
+    - system_chart
+  series:
+    - entity: sensor.mikrotik_hap_ac_2_cpu_load
+      name: CPU
+    - entity: sensor.mikrotik_hap_ac_2_memory_usage
+      name: Memory
+- type: custom:apexcharts-card
   view_layout:
     grid-area: Network-3
-  template: mini_graph_template
-  variables:
-    - entity_x: sensor.mikrotik_pppoe_out1_rx
-    - entity_y: sensor.mikrotik_pppoe_out1_tx
-    - points_per_hour: 120
+  card_mod: *background_none
+  config_templates: 
+    - default_chart
+    - system_chart
+  series:
+    - entity: sensor.mikrotik_pppoe_out1_rx
+      name: Download
+    - entity: sensor.mikrotik_pppoe_out1_tx
+      name: Upload
+      invert: true
