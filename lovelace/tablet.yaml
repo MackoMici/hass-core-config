@@ -1,0 +1,68 @@
+type: vertical-stack
+cards:
+  - type: custom:mushroom-title-card
+    subtitle: Uptime - {{ states('sensor.hipad_xpro_tablet_uptime') }} | App - {{ states('sensor.tablet_app_uptime') }}
+    title: HiPad XPro tablet
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_bar_template
+        variables:
+          - entity: sensor.hipad_xpro_elem_akku
+          - name: Battery
+          - template: bar_card_left_tempalte
+      - type: custom:decluttering-card
+        template: mushroom_bar_template
+        variables:
+          - entity: sensor.ha_tablet_battery_temperature
+          - name: Battery Temp
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_bar_template
+        variables:
+          - entity: sensor.hipad_xpro_tablet_memory
+          - name: Memory 6G
+      - type: custom:decluttering-card
+        template: mushroom_bar_template
+        variables:
+          - entity: sensor.hipad_xpro_tablet_storage
+          - name: Storage 128G
+      - type: custom:decluttering-card
+        template: mushroom_bar_template
+        variables:
+          - entity: sensor.ha_tablet_app_used_memory
+          - name: App Memory
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_number_template
+        variables:
+          - entity: number.hipad_xpro_kepernyo_fenyereje
+      - type: custom:decluttering-card
+        template: mushroom_number_template
+        variables:
+          - entity: number.hipad_xpro_kepernyo_kikapcsolasi_idozito
+          - display_mode: buttons
+      - type: custom:decluttering-card
+        template: mushroom_button_futes_template
+        variables:
+          - entity: binary_sensor.ha_tablet_mqtt_connected
+          - secondary: ''
+  - type: horizontal-stack
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_button_futes_template
+        variables:
+          - entity: switch.hipad_xpro_kepernyo
+          - secondary: ''
+      - type: custom:decluttering-card
+        template: mushroom_button_futes_template
+        variables:
+          - entity: switch.hipad_xpro_mozgaserzekeles
+          - secondary: ''
+      - type: custom:decluttering-card
+        template: mushroom_button_futes_template
+        variables:
+          - entity: button.hipad_xpro_bongeszo_ujrainditasa
+          - secondary: ''

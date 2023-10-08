@@ -1,0 +1,21 @@
+type: horizontal-stack
+cards:
+- type: custom:decluttering-card
+  template: mushroom_klima_template
+  variables:
+    - primary: Auto
+    - icon: mdi:fan-auto
+    - value: auto
+- type: custom:decluttering-card
+  template: mushroom_button_futes_template
+  variables:
+    - entity: switch.gree_klima_quiet
+    - secondary: ''
+- type: custom:decluttering-card
+  template: mushroom_klima_template
+  variables:
+    - service: climate.set_preset_mode
+    - primary: Turbo
+    - icon: mdi:rocket-launch
+    - attr: preset_mode
+    - value: boost

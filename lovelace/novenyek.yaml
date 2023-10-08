@@ -15,12 +15,14 @@
       }
 - type: custom:config-template-card
   entities:
-    - sensor.sun_next_rising
-    - sensor.sun_next_setting
+    - sensor.napkelte
+    - sensor.napnyugta
   card:
     type: custom:apexcharts-card
     card_mod: *background_none
-    config_templates: default_chart
+    config_templates: 
+      - default_chart
+      - flora_chart
     series:
       - entity: sensor.new_zealand_spinach_dli
       - entity: sensor.new_zealand_spinach_dli

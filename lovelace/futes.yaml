@@ -80,12 +80,10 @@ cards:
                     --popup-border-with: var(--ha-card-border-width);
                     --popup-border-radius: var(--ha-card-border-radius);
                   content:
-                    type: custom:mushroom-number-card
-                    <<: &none
-                      tap_action: none
-                      hold_action: none
-                      double_tap_action: none
-                    entity: input_number.futes_mindenkepp
+                    type: custom:decluttering-card
+                    template: mushroom_number_template
+                    variables:
+                      - entity: input_number.futes_mindenkepp
       - type: custom:decluttering-card
         template: mushroom_entity_futes_template
         variables:

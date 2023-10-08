@@ -1,0 +1,34 @@
+type: horizontal-stack
+cards:
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - service: gree_ext.set_swing_mode_ext
+      - primary: Teljes
+      - icon: mdi:swap-vertical
+      - attr: swing_mode_vertical
+      - value: FullSwing
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - service: gree_ext.set_swing_mode_ext
+      - primary: Fent
+      - icon: mdi:format-vertical-align-top
+      - attr: swing_mode_vertical
+      - value: FixedUpper
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - service: gree_ext.set_swing_mode_ext
+      - primary: Középen
+      - icon: mdi:format-vertical-align-center
+      - attr: swing_mode_vertical
+      - value: FixedMiddle
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - service: gree_ext.set_swing_mode_ext
+      - primary: Lent
+      - icon: mdi:format-vertical-align-bottom
+      - attr: swing_mode_vertical
+      - value: FixedLower

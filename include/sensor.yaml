@@ -23,7 +23,15 @@ sensor:
         friendly_name: 'Devices with Low Battery'
         unit_of_measurement: devices
         value_template: >
-          {{ states.sensor | selectattr('attributes.device_class', 'eq', 'battery') | rejectattr('entity_id', 'search', 'battery_level') | map(attribute='state') | reject('in', ['unknown', 'unavailable']) | map('int', -1) | select('le', 30) | select('ge', 0) | list | count }}
+          {{ states.sensor
+            | selectattr('attributes.device_class', 'defined')
+            | selectattr('attributes.device_class', 'eq', 'battery')
+            | rejectattr('entity_id', 'search', 'battery_level')
+            | map(attribute = 'state')
+            | map('int', -1)
+            | select('lessthan', states('input_number.battery_threshold') | int)
+            | list
+            | count }}
         icon_template: >
           {% if is_state('sensor.devices_with_low_battery', 0) %}
             mdi:battery-check

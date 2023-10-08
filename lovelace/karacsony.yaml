@@ -1,23 +1,27 @@
-- type: grid
-  square: false
-  columns: 2
+- type: custom:mushroom-light-card
+  view_layout:
+    grid-area: Kapcsolo-1
+  entity: light.feny_fuzer
+  layout: vertical
+  card_mod: &background_none
+    style: |
+      ha-card {
+        background: none;
+        box-shadow: none;
+      }
+  <<: &none2
+    hold_action: none
+    double_tap_action: none
+- type: custom:decluttering-card
+  view_layout:
+    grid-area: Kapcsolo-2
+  template: mushroom_switch_light_template
+  variables:
+    - entity: switch.karacsonyfa_izzo
+- type: vertical-stack
+  view_layout:
+    grid-area: Feny
   cards:
-    - type: custom:mushroom-light-card
-      entity: light.feny_fuzer
-      layout: vertical
-      card_mod: &background_none
-        style: |
-          ha-card {
-            background: none;
-            box-shadow: none;
-          }
-      <<: &none2
-        hold_action: none
-        double_tap_action: none
-    - type: custom:decluttering-card
-      template: mushroom_switch_light_template
-      variables:
-        - entity: switch.karacsonyfa_izzo
     - type: custom:mushroom-template-card
       layout: vertical
       secondary: Fényerősség vagy Érzékenység
@@ -26,14 +30,7 @@
         tap_action: none
         hold_action: none
         double_tap_action: none
-    - type: custom:mushroom-template-card
-      layout: vertical
-      secondary: Sebesség
-      card_mod: *background_none
-      <<: *none
-    - type: grid
-      square: false
-      columns: 2
+    - type: horizontal-stack
       cards:
         - type: custom:decluttering-card
           template: mushroom_karacsony_template
@@ -45,9 +42,16 @@
           variables:
             - icon: mdi:plus
             - service: script.feny_fuzer_brightness_increase
-    - type: grid
-      square: false
-      columns: 2
+- type: vertical-stack
+  view_layout:
+    grid-area: Speed
+  cards:
+    - type: custom:mushroom-template-card
+      layout: vertical
+      secondary: Sebesség
+      card_mod: *background_none
+      <<: *none
+    - type: horizontal-stack
       cards:
         - type: custom:decluttering-card
           template: mushroom_karacsony_template
@@ -59,9 +63,9 @@
           variables:
             - icon: mdi:plus
             - service: script.feny_fuzer_speed_up
-- type: grid
-  square: false
-  columns: 6
+- type: horizontal-stack
+  view_layout:
+    grid-area: Szin-1
   cards:
     - type: custom:decluttering-card
       template: mushroom_karacsony_template
@@ -93,6 +97,10 @@
       variables:
         - icon_color: blue
         - service: script.feny_fuzer_color_blue
+- type: horizontal-stack
+  view_layout:
+    grid-area: Szin-2
+  cards:
     - type: custom:decluttering-card
       template: mushroom_karacsony_template
       variables:
@@ -123,9 +131,9 @@
       variables:
         - icon_color: '#87cefa'
         - service: script.feny_fuzer_color_lightblue
-- type: grid
-  square: false
-  columns: 5
+- type: horizontal-stack
+  view_layout:
+    grid-area: Mode-1
   cards:
     - type: custom:decluttering-card
       template: mushroom_karacsony_template
@@ -157,9 +165,9 @@
         - icon: mdi:view-module
         - primary: Egyéb
         - service: script.feny_fuzer_mode
-- type: grid
-  square: false
-  columns: 4
+- type: horizontal-stack
+  view_layout:
+    grid-area: Mode-2
   cards:
     - type: custom:decluttering-card
       template: mushroom_karacsony_template
@@ -185,13 +193,9 @@
         - icon: mdi:music
         - primary: Dynamic
         - service: script.feny_fuzer_music_dynamic
-- type: custom:mushroom-template-card
-  secondary: Időzítés
-  <<: *none
-  card_mod: *background_none
-- type: grid
-  square: false
-  columns: 4
+- type: horizontal-stack
+  view_layout:
+    grid-area: Time
   cards:
     - type: custom:decluttering-card
       template: mushroom_karacsony_template

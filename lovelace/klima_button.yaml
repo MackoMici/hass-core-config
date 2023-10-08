@@ -1,0 +1,26 @@
+type: horizontal-stack
+cards:
+  - type: custom:decluttering-card
+    template: mushroom_button_futes_template
+    variables:
+      - entity: switch.gree_klima_fresh_air
+      - secondary: 'Levegő elszívás'
+  - type: custom:decluttering-card
+    template: mushroom_button_futes_template
+    variables:
+      - entity: switch.gree_klima_health_mode
+      - secondary: 'Levegő tisztítás'
+  - type: conditional
+    conditions:
+      - entity: climate.gree_klima
+        state_not: auto
+      - entity: climate.gree_klima
+        state_not: fan_only
+      - entity: climate.gree_klima
+        state_not: heat
+    card:
+      type: custom:decluttering-card
+      template: mushroom_button_futes_template
+      variables:
+        - entity: switch.gree_klima_xfan
+        - secondary: 'Klíma tisztítás'

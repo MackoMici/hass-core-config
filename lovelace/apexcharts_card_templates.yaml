@@ -18,8 +18,10 @@ default_chart:
   experimental:
     color_threshold: true
   header:
-    show: false
-    show_states: false
+    show: true
+    show_states: true
+    colorize_states: true
+    disable_actions: true
   color_list: ['#2196f3', '#e91e63', '#4caf4f']
   all_series_config:
     extend_to: false
@@ -30,18 +32,23 @@ default_chart:
       func: avg
       duration: 10min
 
+flora_chart:
+  header:
+    show: false
+
 system_chart:
   apex_config:
     legend:
       show: true
     chart:
-      height: 265px
+      height: 180px
+  header:
+    show: true
+    show_states: false
   color_list: ['#2196f3', '#e91e63', '#ffc662']
   all_series_config:
-    extend_to: false
-    curve: smooth
-    type: line    
     show:
       legend_value: true
+    type: line    
     group_by:
       func: raw

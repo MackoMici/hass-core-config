@@ -1,9 +1,10 @@
 type: custom:scheduler-card
 include:
+  - climate.honeywell_home_termosztat
   - group.family_gps
-  - input_boolean.elofuttes
+  - input_boolean.elofutes
   - input_boolean.futes
-  - input_boolean_tavol
+  - input_boolean.tavol
   - sensor.kulteri_homerseklet
   - binary_sensor.haloszoba_ablak_contact
   - binary_sensor.nappali_ablak_contact

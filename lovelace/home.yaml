@@ -18,6 +18,7 @@ cards:
       {% else %}
         {{ states['sensor.idokep_elorejelzes'].attributes.details }}
       {% endif %}
+    alignment: justify
     card_mod: &background_none
       style: |
         ha-card {
@@ -30,7 +31,7 @@ cards:
       - tap_action: 
           action: navigate
           navigation_path: idojaras
-      - entity: weather.forecast_home_hourly
+      - entity: weather.forecast_home
       - show_wind: 'false'
       - show_precipitation_amounts: false
   - type: custom:state-switch
@@ -77,7 +78,7 @@ cards:
           - secondary: Klíma
           - icon: mdi:air-conditioner
           - color: green
-          - nav: klima
+          - nav: klima_mobil
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:

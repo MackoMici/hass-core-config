@@ -51,28 +51,42 @@
               --popup-border-radius: var(--ha-card-border-radius);
               --popup-background-color: var(--primary-background-color);
             content:
-              type: custom:mushroom-number-card
-              tap_action: none
-              hold_action: none
-              double_tap_action: none
-              entity: input_number.furdoszoba_futes
-              card_mod:
-                style: *background_none
+              type: custom:decluttering-card
+              template: mushroom_number_template
+              variables: 
+                - entity: input_number.furdoszoba_futes
       secondary: |
         {% if is_state('timer.furdoszoba_futes', 'active') %}
           Hátralévő idő {{ ((as_timestamp(state_attr('timer.furdoszoba_futes', 'finishes_at')) - as_timestamp(now())) / 60) | round(0) }} perc
         {% else %}
           Ki
         {% endif %}
+- type: horizontal-stack
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_light_template
+      variables:              
+        - entity: light.wc_main
+        - layout: vertical
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_illatosito
 - type: custom:decluttering-card
   template: mushroom_light_template
   variables:
-    - entity: light.yeelight_colorb_kamra
+    - entity: light.kamra_main
 - type: custom:decluttering-card
   template: mushroom_light_template
   variables:              
-    - entity: light.yeelight_colorb_wc
-- type: custom:decluttering-card
-  template: mushroom_light_template
-  variables:              
-    - entity: light.nappali_asztali_lampa_light
+    - entity: light.nappali_asztali_lampa
+- type: horizontal-stack
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_tablet_konnektor
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.hipad_xpro_mozgaserzekeles

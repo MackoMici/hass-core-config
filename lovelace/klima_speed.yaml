@@ -1,0 +1,32 @@
+type: horizontal-stack
+cards:
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - primary: Alacsony
+      - icon: mdi:numeric-1
+      - value: low
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - primary: Közép-alacsony
+      - icon: mdi:numeric-2
+      - value: medium low
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - primary: Közepes
+      - icon: mdi:numeric-3
+      - value: medium
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - primary: Közép-magas
+      - icon: mdi:numeric-4
+      - value: medium high
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - primary: Magas
+      - icon: mdi:numeric-5
+      - value: high

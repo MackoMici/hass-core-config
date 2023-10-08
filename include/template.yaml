@@ -16,6 +16,20 @@ template:
       - name: "Home Assistant Uptime"
         icon: mdi:history
         state: >
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.uptime'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
+          {% endif %}
+
+      - name: "Debian Server Uptime"
+        icon: mdi:history
+        state: >
           {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.last_boot'))) | int // 60 %}
           {% set hours = mins // 60 %}
           {% set days = mins // 1440 %}
@@ -40,7 +54,65 @@ template:
           {% else %}
             {{ mins }} perce
           {% endif %}
-        
+
+      - name: "HiPad XPro Tablet Uptime"
+        icon: mdi:history
+        availability: >
+          {{ states('sensor.hipad_xpro_last_reboot') not in ['unavailable', 'unknown'] }}
+        state: >
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.hipad_xpro_last_reboot'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
+          {% endif %}
+
+      - name: "Tablet App Uptime"
+        icon: mdi:history
+        availability: >
+          {{ states('sensor.ha_tablet_last_app_start') not in ['unavailable', 'unknown'] }}
+        state: >
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.ha_tablet_last_app_start'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
+          {% endif %}
+
+      - name: "HiPad XPro Tablet Storage"
+        availability: >
+          {{ (states('sensor.hipad_xpro_belso_tarhely_szabad') or states('sensor.hipad_xpro_belso_tarhely_kapacitas')) not in ['unavailable', 'unknown'] }}
+        state: >
+          {% set FreeSpace = states('sensor.hipad_xpro_belso_tarhely_szabad') | float(default=0) %}
+          {% set TotalSpace = states('sensor.hipad_xpro_belso_tarhely_kapacitas') | float(default=0) %}
+          {% if not (FreeSpace == 0.0 or TotalSpace == 0.0) %}
+            {{ 100 - (FreeSpace / TotalSpace * 100) | int(default=0) }}
+          {% endif %}
+        icon: mdi:sd
+        unit_of_measurement: '%'
+        state_class: measurement
+
+      - name: "HiPad XPro Tablet Memory"
+        availability: >
+          {{ (states('sensor.hipad_xpro_szabad_memoria') or states('sensor.hipad_xpro_teljes_memoria')) not in ['unavailable', 'unknown'] }} 
+        state: >
+          {% set FreeMemory = states('sensor.hipad_xpro_szabad_memoria') | float(default=0) %}
+          {% set TotalMemory = states('sensor.hipad_xpro_teljes_memoria') | float(default=0) %}
+          {% if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
+            {{ 100 - (FreeMemory / TotalMemory * 100) | int(default=0) }}
+          {% endif %}
+        icon: mdi:memory
+        unit_of_measurement: '%'
+        state_class: measurement
+
       - name: "Week Day"
         state: >
           {%- set days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'] %}
@@ -66,23 +138,6 @@ template:
           {% else %}
             not_home
           {% endif %}
-  
-      - name: "MetNo Temperature"
-        unit_of_measurement: '°C'
-        state_class: 'measurement'
-        state: >
-          {{ state_attr('weather.forecast_home', 'temperature') }}
-  
-      - name: "MetNo Humidity"
-        unit_of_measurement: '%'
-        state_class: 'measurement'
-        state: >
-          {{ state_attr('weather.forecast_home', 'humidity') }}
-  
-      - name: "MetNo Wind Speed"
-        unit_of_measurement: 'km/h'
-        state: >
-          {{ state_attr('weather.forecast_home', 'wind_speed') }}        
   
   - trigger:
       - platform: time_pattern

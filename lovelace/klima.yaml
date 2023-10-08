@@ -4,31 +4,29 @@ layout:
   grid-template-columns: 100%
   grid-template-rows: auto
   grid-template-areas: |
-    "Klima-1"
-    "Klima-2"
-    "Seb-title"
-    "Seb-1"
-    "Seb-2"
-    "Legy-title"
-    "Legy-1"
-    "Mod-title"
-    "Mod-1"
+    "klima"
+    "klima-hvac"
+    "klima-speed"
+    "klima-func"
+    "klima-preset"
+    "klima-swing"
+    "klima-button"
   mediaquery:
     "(min-width: 900px)":
-      grid-template-columns: 50% 50%
+      grid-template-columns: 16% 16% 16% 16% 16% 16%
+      grid-template-row: auto
       grid-template-areas: |
-        "Klima-1 Legy-title"
-        "Klima-2 Legy-1"
-        "Seb-title Mod-title"
-        "Seb-2 Mod-1"
-        "Seb-1 Seb-1"
+        "klima klima klima klima-hvac klima-hvac klima-hvac"
+        "klima-func klima-func klima-preset klima-preset klima-button klima-button"
+        "klima-swing klima-swing klima-swing klima-speed klima-speed klima-speed"
 cards:
   - type: custom:mushroom-climate-card
     view_layout:
-      grid-area: Klima-1
+      grid-area: klima
     entity: climate.gree_klima
-    hold_action: none
-    double_tap_action: none      
+    <<: &none2
+      hold_action: none
+      double_tap_action: none
     show_temperature_control: true
     name: Klíma
     layout: horizontal
@@ -81,166 +79,79 @@ cards:
           40%, 60% { --icon-symbol-size: 25px; }
           50% { --icon-symbol-size: 26px; }
         }
-  - type: custom:mushroom-climate-card
-    view_layout:
-      grid-area: Klima-2
-    entity: climate.gree_klima
-    card_mod: &background_none
-      style: |
-        ha-card {
-          background: none;
-          box-shadow: none;
-        } 
-    hvac_modes:
-      - auto
-      - heat
-      - cool
-      - dry
-      - fan_only
-    primary_info: none
-    secondary_info: none
-    icon_type: none
-  - type: custom:mushroom-template-card
-    view_layout:
-      grid-area: Seb-title
-    secondary: Sebesség
-    card_mod: *background_none
   - type: horizontal-stack
     view_layout:
-      grid-area: Seb-1
+      grid-area: klima-hvac
     cards:
       - type: custom:decluttering-card
-        template: mushroom_klima_template
+        template: mushroom_klima_hvac_template
         variables:
-          - primary: Low
-          - icon: mdi:numeric-1
-          - value: low
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - primary: Med-Low
-          - icon: mdi:numeric-2
-          - value: medium low
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - primary: Medium
-          - icon: mdi:numeric-3
-          - value: medium
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - primary: Med-High
-          - icon: mdi:numeric-4
-          - value: medium high
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - primary: High
-          - icon: mdi:numeric-5
-          - value: high
-  - type: horizontal-stack
-    view_layout:
-      grid-area: Seb-2
-    cards:
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - primary: Auto
-          - icon: mdi:fan-auto
+          - secondary: Auto
+          - icon: mdi:autorenew
           - value: auto
       - type: custom:decluttering-card
-        template: mushroom_button_futes_template
+        template: mushroom_klima_hvac_template
         variables:
-          - entity: switch.gree_klima_quiet
-          - secondary: ''
+          - secondary: Hűtés
+          - icon: mdi:snowflake
+          - value: cool
       - type: custom:decluttering-card
-        template: mushroom_klima_template
+        template: mushroom_klima_hvac_template
         variables:
-          - service: climate.set_preset_mode
-          - primary: Turbo
-          - icon: mdi:rocket-launch
-          - attr: preset_mode
-          - value: boost
-  - type: custom:mushroom-template-card
+          - secondary: Fűtés
+          - icon: mdi:fire
+          - value: heat
+      - type: custom:decluttering-card
+        template: mushroom_klima_hvac_template
+        variables:
+          - secondary: Párátlanítás
+          - icon: mdi:water-percent
+          - value: dry
+      - type: custom:decluttering-card
+        template: mushroom_klima_hvac_template
+        variables:
+          - secondary: Ventillátor
+          - icon: mdi:fan
+          - value: fan_only
+  - type: conditional
     view_layout:
-      grid-area: Legy-title
-    secondary: Legyezés
-    card_mod: *background_none
-  - type: horizontal-stack
+      grid-area: klima-func
+    conditions:
+      - entity: climate.gree_klima
+        state_not: 'off'
+    card:
+      !include klima_func.yaml
+  - type: conditional
     view_layout:
-      grid-area: Legy-1
-    cards:
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - service: gree_ext.set_swing_mode_ext
-          - primary: Teljes
-          - icon: mdi:swap-vertical
-          - attr: swing_mode_vertical
-          - value: FullSwing
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - service: gree_ext.set_swing_mode_ext
-          - primary: Fent
-          - icon: mdi:format-vertical-align-top
-          - attr: swing_mode_vertical
-          - value: FixedUpper
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - service: gree_ext.set_swing_mode_ext
-          - primary: Középen
-          - icon: mdi:format-vertical-align-center
-          - attr: swing_mode_vertical
-          - value: FixedMiddle
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - service: gree_ext.set_swing_mode_ext
-          - primary: Lent
-          - icon: mdi:format-vertical-align-bottom
-          - attr: swing_mode_vertical
-          - value: FixedLower
-  - type: custom:mushroom-template-card
+      grid-area: klima-preset
+    conditions:
+      - entity: climate.gree_klima
+        state_not: 'off'
+    card:
+      !include klima_preset.yaml
+  - type: conditional
     view_layout:
-      grid-area: Mod-title
-    secondary: Mód
-    card_mod: *background_none
-  - type: horizontal-stack
+      grid-area: klima-button
+    conditions:
+      - entity: climate.gree_klima
+        state_not: 'off'
+    card:
+      !include klima_button.yaml
+  - type: conditional
     view_layout:
-      grid-area: Mod-1
-    cards:
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - service: climate.set_preset_mode
-          - primary: Eco
-          - icon: mdi:leaf
-          - attr: preset_mode
-          - value: eco
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - service: climate.set_preset_mode
-          - primary: Away
-          - icon: mdi:home-outline
-          - attr: preset_mode
-          - value: away
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - service: climate.set_preset_mode
-          - primary: Sleep
-          - icon: mdi:sleep
-          - attr: preset_mode
-          - value: sleep
-      - type: custom:decluttering-card
-        template: mushroom_klima_template
-        variables:
-          - service: climate.set_preset_mode
-          - primary: None
-          - icon: mdi:power-off
-          - attr: preset_mode
-          - value: none
+      grid-area: klima-speed
+    conditions:
+      - entity: climate.gree_klima
+        state_not: dry
+      - entity: climate.gree_klima
+        state_not: 'off'
+    card:
+      !include klima_speed.yaml
+  - type: conditional
+    view_layout:
+      grid-area: klima-swing
+    conditions:
+      - entity: climate.gree_klima
+        state_not: 'off'
+    card:
+      !include klima_swing.yaml

@@ -1,0 +1,185 @@
+- type: vertical-stack
+  view_layout:
+    grid-area: HA
+  cards:
+    - type: custom:mushroom-template-card
+      layout: vertical
+      primary: Home Assistant
+      secondary: Uptime - {{ states('sensor.home_assistant_uptime') }}
+      card_mod: &background_none
+        style: |
+          ha-card {
+            background: none;
+            box-shadow: none;
+          }
+      <<: &none
+        - tap_action: none
+        - hold_action: none
+        - double_tapaction: none
+    - type: custom:mushroom-template-card
+      entity: sensor.current_version
+      card_mod: *background_none
+      <<: *none
+      primary: Core
+      icon: mdi:home-assistant
+      icon_color: '#2196f3'
+      secondary: |
+        {% if states(entity) == states('sensor.home_assistant_website') %}
+          Naprakész - {{ states(entity) }}
+        {% elif states('sensor.home_assistant_website') != 'unavailable' %}
+          Legújabb verzió - {{ states('sensor.home_assistant_website') }}
+        {% else %}
+          Verzió - {{ states(entity) }}
+        {% endif %}
+    - type: custom:mushroom-entity-card
+      entity: sensor.hacs
+      card_mod: *background_none
+      <<: *none
+    - type: custom:mushroom-entity-card
+      entity: sensor.home_assistant_v2_db_size
+      card_mod: *background_none
+      <<: *none
+      icon: mdi:database
+    - type: custom:mushroom-entity-card
+      entity: sensor.home_assistant_log_size
+      card_mod: *background_none
+      <<: *none
+- type: vertical-stack
+  view_layout:
+    grid-area: Debian
+  cards:
+    - type: custom:mushroom-template-card
+      primary: Debian Server
+      secondary: Uptime - {{ states('sensor.debian_server_uptime') }}
+      layout: vertical
+      card_mod: *background_none
+      <<: *none
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.disk_use_percent
+        - name: SSD
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.disk_use_percent_mnt_hdd1
+        - name: HDD 2T
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.disk_use_percent_mnt_hdd2
+        - name: HDD 4T
+- type: vertical-stack
+  view_layout:
+    grid-area: Network
+  cards:
+    - type: custom:mushroom-template-card
+      primary: Network
+      secondary: Uptime - {{ states('sensor.mikrotik_router_uptime') }}
+      layout: vertical
+      card_mod: *background_none
+      <<: *none
+    - type: custom:decluttering-card
+      template: mushroom_update_template
+      variables:
+        - entity: update.mikrotik_hap_ac_2_routerboard_firmware_update
+        - primary: Mikrotik Firmware
+        - icon: mdi:router-network
+    - type: custom:decluttering-card
+      template: mushroom_update_template
+      variables:
+        - entity: update.mikrotik_hap_ac_2_routeros_update
+        - primary: Mikrotik RouterOS
+        - icon: mdi:router-network
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.mikrotik_hap_ac_2_hdd_usage
+        - name: Storage 16M
+- type: vertical-stack
+  view_layout:
+    grid-area: Tablet
+  cards:
+    - type: custom:mushroom-template-card
+      primary: HiPad XPro tablet
+      secondary: Uptime - {{ states('sensor.hipad_xpro_tablet_uptime') }}
+      layout: vertical
+      card_mod: *background_none
+      <<: *none
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.hipad_xpro_elem_akku
+        - name: Battery
+        - template: bar_card_left_tempalte
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.ha_tablet_battery_temperature
+        - name: Battery Temp
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.hipad_xpro_tablet_memory
+        - name: Memory 6G
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.hipad_xpro_tablet_storage
+        - name: Storage 128G
+- type: custom:swipe-card
+  view_layout:
+    grid-area: Grafikon
+  parameters:
+    spaceBetween: 3
+    scrollbar:
+      hide: false
+      draggable: true
+      snapOnRelease: true
+    effect: fade
+    fadeEffect:
+      crossFade: true
+    slideShadows: false
+    autoplay:
+      delay: 1500
+    speed: 1000
+  cards:
+  - type: custom:apexcharts-card
+    card_mod: *background_none
+    config_templates: 
+      - default_chart
+      - system_chart
+    header:
+      title: Debian Server
+    series:
+      - entity: sensor.processor_use
+        name: Processor
+      - entity: sensor.memory_use_percent
+        name: Memory
+      - entity: sensor.processor_temperature
+        name: Temp
+  - type: custom:apexcharts-card
+    card_mod: *background_none
+    config_templates: 
+      - default_chart
+      - system_chart
+    header:
+      title: Network Stat
+    series:
+      - entity: sensor.mikrotik_pppoe_out1_rx
+        name: Download
+      - entity: sensor.mikrotik_pppoe_out1_tx
+        name: Upload
+        invert: true
+  - type: custom:apexcharts-card
+    card_mod: *background_none
+    header:
+      title: Mikrotik Router
+    config_templates: 
+      - default_chart
+      - system_chart
+    series:
+      - entity: sensor.mikrotik_hap_ac_2_cpu_load
+        name: CPU
+      - entity: sensor.mikrotik_hap_ac_2_memory_usage
+        name: Memory

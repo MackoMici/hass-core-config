@@ -11,11 +11,13 @@ service_account.json
 
 appdaemon/*
 backups/*
+blueprints/*
 custom_components/*
 deps/*
 image/*
 themes/*
 tts/*
+www/camera/*
 www/community/*
 
 home-assistant_v2*

@@ -12,3 +12,10 @@ multiscrape:
           - name: Forecast Details
             select: "div.hosszutavu-elorejelzes-container > div > div > p:nth-of-type(2)"
             value_template: '{{ (value.split("\n")[1]) }}'
+          - name: Forecast Details 2
+            select: "div.hosszutavu-elorejelzes-container > div > div > p:nth-of-type(2)"
+            value_template: '{{ (value.split("\n")[3]) }}'
+          - name: Forecast Details 3
+            select: "div.hosszutavu-elorejelzes-container > div > div > p:nth-of-type(3)"
+            value_template: '{{ (value.split("\n")[1]) }}'
+       

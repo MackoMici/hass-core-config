@@ -1,27 +1,28 @@
 - type: custom:mushroom-title-card
   title: Home Assistant
+  <<: &none
+    tap_action: none
+    hold_action: none
+    doubletap_action: none
   card_mod: &background_none
     style: |
       ha-card {
         background: none;
         box-shadow: none;
       }
-  view_layout:
-    grid-area: HA-title
-- type: grid
-  view_layout:
-    grid-area: HA
-  columns: 2
-  square: false
+  subtitle: Uptime - {{ states('sensor.home_assistant_uptime') }}
+- type: horizontal-stack
   cards:
     - type: custom:mushroom-template-card
       entity: sensor.current_version
       card_mod: *background_none
-      <<: &none
-        tap_action: none
+      <<: &none2
         hold_action: none
         double_tap_action: none
       primary: Core
+      tap_action:
+        action: url
+        url_path: https://www.home-assistant.io/latest-release-notes/
       icon: mdi:home-assistant
       icon_color: '#2196f3'
       secondary: |
@@ -35,7 +36,12 @@
     - type: custom:mushroom-entity-card
       entity: sensor.hacs
       card_mod: *background_none
-      <<: *none
+      <<: *none2
+      tap_action:
+        action: navigate
+        navigation_path: /hacs
+- type: horizontal-stack
+  cards:
     - type: custom:mushroom-entity-card
       entity: sensor.home_assistant_v2_db_size
       card_mod: *background_none
@@ -45,23 +51,30 @@
       entity: sensor.home_assistant_log_size
       card_mod: *background_none
       <<: *none
-    - type: custom:mushroom-entity-card
-      entity: sensor.watchman_missing_entities
-      card_mod: *background_none
-      <<: *none
-    - type: custom:mushroom-entity-card
-      entity: sensor.watchman_missing_services
-      card_mod: *background_none
-      <<: *none
 - type: custom:mushroom-title-card
   title: Debian Server
   card_mod: *background_none
-  view_layout:
-    grid-area: Debian-title
-  subtitle: Uptime - {{ states('sensor.home_assistant_uptime') }}
+  subtitle: Uptime - {{ states('sensor.debian_server_uptime') }}
+  <<: *none
+- type: vertical-stack
+  card_mod: *background_none
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.disk_use_percent
+        - name: SSD
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.disk_use_percent_mnt_hdd1
+        - name: HDD 2T
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.disk_use_percent_mnt_hdd2
+        - name: HDD 4T
 - type: custom:apexcharts-card
-  view_layout:
-    grid-area: Debian-1
   card_mod: *background_none
   config_templates: 
     - default_chart
@@ -73,61 +86,32 @@
       name: Memory
     - entity: sensor.processor_temperature
       name: Temp
-- type: horizontal-stack
-  view_layout:
-    grid-area: Debian-2
-  card_mod: *background_none
-  cards:
-    - type: custom:decluttering-card
-      template: gauge_template
-      variables:
-        - entity: sensor.disk_use_percent
-        - name: SSD
-    - type: custom:decluttering-card
-      template: gauge_template
-      variables:
-        - entity: sensor.disk_use_percent_mnt_hdd1
-        - name: HDD 2T
-    - type: custom:decluttering-card
-      template: gauge_template
-      variables:
-        - entity: sensor.disk_use_percent_mnt_hdd2
-        - name: HDD 4T
 - type: custom:mushroom-title-card
   title: Network
   card_mod: *background_none
-  view_layout:
-    grid-area: Network-title
+  <<: *none
   subtitle: Uptime - {{ states('sensor.mikrotik_router_uptime') }}
-- type: grid
-  view_layout:
-    grid-area: Network-1
-  square: false
-  columns: 2
+- type: vertical-stack
   cards:
-    - type: vertical-stack
-      cards:
-        - type: custom:decluttering-card
-          template: mushroom_update_template
-          variables:
-            - entity: update.mikrotik_hap_ac_2_routerboard_firmware_update
-            - primary: Mikrotik Firmware
-            - icon: mdi:router-network
-        - type: custom:decluttering-card
-          template: mushroom_update_template
-          variables:
-            - entity: update.mikrotik_hap_ac_2_routeros_update
-            - primary: Mikrotik RouterOS
-            - icon: mdi:router-network
     - type: custom:decluttering-card
-      template: gauge_template
+      template: mushroom_update_template
+      variables:
+        - entity: update.mikrotik_hap_ac_2_routerboard_firmware_update
+        - primary: Mikrotik Firmware
+        - icon: mdi:router-network
+    - type: custom:decluttering-card
+      template: mushroom_update_template
+      variables:
+        - entity: update.mikrotik_hap_ac_2_routeros_update
+        - primary: Mikrotik RouterOS
+        - icon: mdi:router-network
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
       variables:
         - entity: sensor.mikrotik_hap_ac_2_hdd_usage
-        - name: Storage
+        - name: Storage 16M
 - type: custom:apexcharts-card
   card_mod: *background_none
-  view_layout:
-    grid-area: Network-2
   config_templates:
     - default_chart
     - system_chart
@@ -137,8 +121,6 @@
     - entity: sensor.mikrotik_hap_ac_2_memory_usage
       name: Memory
 - type: custom:apexcharts-card
-  view_layout:
-    grid-area: Network-3
   card_mod: *background_none
   config_templates: 
     - default_chart
@@ -149,3 +131,41 @@
     - entity: sensor.mikrotik_pppoe_out1_tx
       name: Upload
       invert: true
+- type: custom:mushroom-title-card
+  title: HiPad XPro tablet
+  card_mod: *background_none
+  subtitle: Uptime - {{ states('sensor.hipad_xpro_tablet_uptime') }} | App - {{ states('sensor.tablet_app_uptime') }}
+  <<: *none
+- type: vertical-stack
+  card_mod: *background_none
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.hipad_xpro_elem_akku
+        - name: Battery
+        - template: bar_card_left_tempalte
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.ha_tablet_battery_temperature
+        - name: Battery Temp
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.hipad_xpro_tablet_memory
+        - name: Memory 6G
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.hipad_xpro_tablet_storage
+        - name: Storage 128G
+    - type: custom:decluttering-card
+      template: mushroom_bar_template
+      variables:
+        - entity: sensor.ha_tablet_app_used_memory
+        - name: App Memory
+    - type: custom:mushroom-entity-card
+      entity: binary_sensor.ha_tablet_mqtt_connected
+      card_mod: *background_none
+      <<: *none

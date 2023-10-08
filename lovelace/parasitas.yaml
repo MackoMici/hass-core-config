@@ -1,6 +1,6 @@
 type: vertical-stack
 cards:
-  - type: custom:vertical-stack-in-card
+  - type: custom:stack-in-card
     card_mod: &background_none
       style: |
         ha-card {
@@ -37,7 +37,7 @@ cards:
                     {% if not is_state_attr(entity, 'remaining', 0) %}
                       {{ state_attr(entity, 'remaining') }} perc a leállásig
                     {% endif %}
-  - type: custom:vertical-stack-in-card
+  - type: custom:stack-in-card
     card_mod: *background_none
     cards:
       - type: custom:mushroom-light-card
@@ -99,28 +99,6 @@ cards:
         variables:
           - icon: mdi:timer-off
           - countdown: "Off"
-  - type: horizontal-stack
-    cards:
-      - type: custom:decluttering-card
-        template: mushroom_entity_futes_template
-        variables:
-          - entity: sensor.belteri_paratartalom
-          - name: Beltéri
-          - layout: vertical
-      - type: custom:decluttering-card
-        template: mushroom_entity_futes_template
-        variables:
-          - entity: sensor.kulteri_paratartalom
-          - name: Kültéri
-          - color: '#e91e63'
-          - layout: vertical
-      - type: custom:decluttering-card
-        template: mushroom_entity_futes_template
-        variables:
-          - entity: sensor.furdoszoba_paratartalom
-          - name: Fürdő
-          - color: '#4caf4f'
-          - layout: vertical
   - type: custom:apexcharts-card
     card_mod: *background_none
     config_templates: default_chart

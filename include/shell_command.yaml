@@ -1,0 +1,2 @@
+shell_command:
+  ffmpeg_record: bash /home/zoolesz/.homeassistant/www/camera/ffmpeg.sh "{{ arg }}"

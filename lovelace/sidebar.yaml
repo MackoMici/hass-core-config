@@ -1,29 +1,7 @@
 decluttering_templates: !include decluttering_templates.yaml
 
-type: custom:vertical-stack-in-card
+type: vertical-stack
 cards:
-  - type: horizontal-stack
-    cards:
-      - type: custom:decluttering-card
-        template: sidebar_person_template
-        variables:
-          - entity_person: person.hunyadvari_zoltan
-          - background_url: /local/person/zoolesz.png
-          - icon_person: mdi:face-man
-          - entity_wifi: sensor.sm_a536b_wifi_connection
-          - find_service: notify.mobile_app_sm_a536b
-          - entity_battery: sensor.sm_a536b_battery_level
-          - entity_device: device_tracker.sm_a536b
-      - type: custom:decluttering-card
-        template: sidebar_person_template
-        variables:
-          - entity_person: person.szakacs_katalin
-          - background_url: /local/person/kata.png
-          - icon_person: mdi:face-woman
-          - entity_wifi: sensor.sm_a336b_wifi_connection
-          - find_service: notify.mobile_app_sm_a336b
-          - entity_battery: sensor.sm_a336b_battery_level
-          - entity_device: device_tracker.sm_a336b
   - type: picture-elements
     style: |
       ha-card {
@@ -57,6 +35,34 @@ cards:
           - font-size: 2vw
           - top: 80%
           - z-index: 2
+  - type: custom:decluttering-card
+    template: weather_template
+    variables:
+      - tap_action: 
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              style: |
+                --popup-min-width: 1080px;
+                --popup-border-width: var(--ha-card-border-width);
+                --popup-border-radius: var(--ha-card-border-radius);
+              content:
+                type: custom:layout-card
+                layout_type: custom:grid-layout 
+                layout:
+                  grid-template-columns: 65% auto
+                  grid-template-rows: 160px 185px 150px 106px
+                  grid-template-areas: |
+                    "clock radar"
+                    "title radar"
+                    "daily radar"
+                    "hourly radar"
+                cards:
+                  !include idojaras.yaml
+      - entity: weather.forecast_home
+      - show_wind: 'false'
+      - show_precipitation_amounts: false
   - type: custom:atomic-calendar-revive
     style: |
       ha-card {

@@ -38,9 +38,20 @@ blueprint:
           - light
           multiple: false
     light_off_wait:
-      name: Wait time
+      name: Várakozás csukott ajtónál
       description: Mennyi ideig marad égve a lámpa ha csukott ajtónál valamiért felkapcsol
       default: 120
+      selector:
+        number:
+          min: 0.0
+          max: 3600.0
+          unit_of_measurement: seconds
+          mode: slider
+          step: 1.0
+    light_on_wait:
+      name: Várakozás nyitott ajtónál
+      description: Mennyi ideig marad égve a lámpa ha nyitva van az ajtó
+      default: 240
       selector:
         number:
           min: 0.0
@@ -58,6 +69,11 @@ trigger:
   entity_id: !input light_switch
   to: 'on'
   for: !input light_off_wait
+  id: Light_off
+- platform: state
+  entity_id: !input light_switch
+  to: 'on'
+  for: !input light_on_wait
   id: Light_on
 action:
 - choose:
@@ -65,13 +81,20 @@ action:
     - condition: trigger
       id:
       - Door
-      - Light_on
+      - Light_off
     - condition: state
       entity_id: !input doorsensor_entity
       state: 'off'
     - condition: state
       entity_id: !input light_switch
       state: 'on'
+    - or:
+      - condition: trigger
+        id:
+        - Light_on
+      - condition: state
+        entity_id: !input light_switch
+        state: 'on'
     sequence:
     - service: light.turn_off
       entity_id: !input light_switch

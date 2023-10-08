@@ -1,6 +1,7 @@
 command_line:
   - sensor:
       name: SSL cert expiry
-      unit_of_measurement: days
+      unit_of_measurement: d
       scan_interval: 10800
+      device_class: duration
       command: "ssl-cert-check -b -c /etc/letsencrypt/live/8a2a08365c8a.sn.mynetname.net/cert.pem | awk '{ print $NF }'"

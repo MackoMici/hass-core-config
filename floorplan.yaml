@@ -3,343 +3,463 @@ apexcharts_card_templates: !include lovelace/apexcharts_card_templates.yaml
 
 views:
   - type: custom:grid-layout
-    path: 0
     layout:
       grid-gap: var(--custom-layout-card-padding)
-      grid-template-columns: repeat(4, 1fr) 0
-      grid-template-rows: repeat(2, fit-content(100%)) 0fr
+      grid-template-columns: 32% auto
       grid-template-areas: |
-        "sidebar  floorplan  floorplan  floorplan"
-        "sidebar  floorplan  floorplan  floorplan"
-        "sidebar  floorplan  floorplan  floorplan"
-    icon: mdi:floor-plan
+        "sidebar floorplan"
     badges: []
     cards:
-      - type: custom:floorplan-card
-        full_height: true
-        style: |
-          ha-card {
-            box-shadow: none;
-            background: none;
-          }
+      - type: custom:popup-card
+        entity: light.kamra_main
+        card:
+          type: custom:decluttering-card
+          template: mushroom_light_template
+          variables:
+            - entity: light.kamra_main
+      - type: custom:popup-card
+        entity: light.wc_main
+        card:
+          type: custom:decluttering-card
+          template: mushroom_light_template
+          variables:              
+            - entity: light.wc_main
+      - type: custom:popup-card
+        entity: light.nappali_asztali_lampa
+        card:
+          type: custom:decluttering-card
+          template: mushroom_light_template
+          variables:              
+            - entity: light.nappali_asztali_lampa
+      - type: horizontal-stack
         view_layout:
-          grid-area: floorplan
-        config:
-          image: /local/floorplan/House.svg
-          stylesheet: /local/floorplan/House.css
-          defaults:
-            hover_action: hover-info
-            tap_action: none
-          rules:
-            - name: Világítás
-              entities:
-                - entity: switch.sonoff_haloszoba
-                  element: area.haloszoba
-                - entity: switch.sonoff_eloszoba
-                  element: area.eloszoba
-                - entity: switch.sonoff_furdoszoba
-                  element: area.furdoszoba
-                - entity: light.yeelight_colorb_kamra
-                  element: area.raktar
-                - entity: light.yeelight_colorb_wc
-                  element: area.wc
-              tap_action: toggle
-              state_action:
-                service: floorplan.class_set
-                service_data: '${(entity.state === "on") ? "light-on" : "light-off"}'
-            - name: Időjárás adatok 1
-              entities:
-                - sensor.metno_temperature
-              state_action:
-                - service: floorplan.text_set
-                  service_data: '${(entity.state !== undefined) ? Math.round(entity.state * 10) / 10 + "°C" : "unknown"}'
-            - name: Időjárás adatok 2
-              entities:
-                - sensor.metno_humidity
-                - sensor.metno_wind_speed
-              state_action:
-                - service: floorplan.text_set
-                  service_data: '${(entity.state !== undefined) ? Math.round(entity.state * 10) / 10 : "unknown"}'
-            - name: Időjárás szöveg
-              entities:
-                - weather.forecast_home
-              state_action:
-                - service: floorplan.text_set
+          grid-arena: floorplan
+        cards:
+          - type: custom:floorplan-card
+            style: |
+              ha-card {
+                  max-width: 100%;
+                  margin: 0 auto;
+                  background: none;
+                  box-shadow: none;
+              }
+            config:
+              image: /local/floorplan/House_2023_optimized.svg
+              stylesheet: /local/floorplan/House_2023.css
+              defaults:
+                tap_action: none
+              rules:
+              - name: Hőmérséklet
+                entities:
+                  - sensor.haloszoba_temperature
+                  - sensor.konyha_temperature
+                  - sensor.nappali_temperature
+                  - sensor.ebedlo_temperature
+                  - sensor.gyerekszoba_temperature
+                  - sensor.furdoszoba_homerseklet
+                state_action:
+                  - service: floorplan.text_set
+                    service_data: '${(entity.state !== undefined) ? Math.round(entity.state* 10) / 10 + "°C" : "unknown"}'
+              - name: Páratartalom
+                entities:
+                  - sensor.haloszoba_humidity
+                  - sensor.konyha_humidity
+                  - sensor.nappali_humidity
+                  - sensor.ebedlo_humidity
+                  - sensor.gyerekszoba_humidity
+                  - sensor.furdoszoba_paratartalom
+                state_action:
+                  - service: floorplan.text_set
+                    service_data: '${(entity.state !== undefined) ? Math.round(entity.state * 10) / 10 + "%" : "unknown"}'
+              - name: Entitások
+                entities:
+                  - switch.sonoff_furdo_szelloztetes
+                  - switch.sonoff_illatosito
+                  - switch.sonoff_furdoszoba_futes
+                  - media_player.samsung_q80_series_65
+                  - fan.aroma_diffuser
+                  - climate.gree_klima
+                state_action:
+                  action: call-service
+                  service: floorplan.class_set
+                  service_data: entities entity-state-${entity.state}
+              - name: Ajtók
+                entities:
+                  - binary_sensor.sonoff_bejarati_ajto
+                  - binary_sensor.kamra_contact
+                  - binary_sensor.wc_contact
+                state_action:
+                  action: call-service
+                  service: floorplan.class_set
+                  service_data: motion door-${entity.state}
+              - name: Ablakok
+                entities:
+                  - binary_sensor.haloszoba_ablak_contact
+                  - binary_sensor.nappali_ablak_contact
+                state_action:
+                  action: call-service
+                  service: floorplan.class_set
+                  service_data: motion window-${entity.state}
+              - name: Fények 1
+                entities:
+                  - light.eloszoba_main
+                  - light.furdo_main
+                  - light.kamra_main
+                  - light.wc_main
+                  - light.halo_main
+                  - light.nappali_asztali_lampa
+                  - light.aroma_diffuser_nightlight
+                state_action:
+                  action: call-service
+                  service: floorplan.class_set
+                  service_data: light-${entity.state}
+              - name: Fények 2
+                entities:
+                  - light.eloszoba_main
+                  - light.furdo_main
+                  - light.kamra_main
+                  - light.wc_main
+                  - light.halo_main
+                  - light.nappali_asztali_lampa
+                  - light.aroma_diffuser_nightlight
+                tap_action:
+                  action: toggle
+                state_action:
+                  action: call-service
+                  service: floorplan.style_set
+                  service_data:
+                    element: ${entity.entity_id.replace('light.', 'light_overlay.')}
+                    style: |
+                      >
+                      if( entity.state !== "on" )
+                          return "display: none;";
+                      let hue = 0;
+                      let sat = 0;
+                      if( entity.attributes.hs_color ) {
+                          hue = entity.attributes.hs_color[0];
+                          sat = entity.attributes.hs_color[1];
+                      }
+                      if( sat < 10 ) {
+                          return `
+                            display: block;
+                            filter:
+                              brightness(calc( ${entity.attributes.brightness} / 255));`
+                      }
+                      return `
+                        display: block;
+                        filter:
+                          sepia(100%)
+                          hue-rotate(calc( ${hue}deg - 55deg ))
+                          saturate(calc( ${sat}% * 2 ))
+                          brightness(calc( ${entity.attributes.brightness} / 255));`
+              - name: Fények 3
+                entities: 
+                  - light.kamra_main
+                  - light.wc_main
+                  - light.nappali_asztali_lampa
+                hold_action: more-info
+              - name: Párásító
+                entity: fan.aroma_diffuser
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      style: &browser_mod
+                        |
+                        --popup-border-width: var(--ha-card-border-width);
+                        --popup-border-radius: var(--ha-card-border-radius);
+                      content:
+                        type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        cards:
+                          - !include lovelace/parasitas.yaml
+              - name: Törölköző szárító
+                entity: switch.sonoff_furdoszoba_futes
+                tap_action: toggle
+                hold_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      style: *browser_mod
+                      content:
+                        type: custom:decluttering-card
+                        template: mushroom_number_template
+                        variables:
+                          - entity: input_number.furdoszoba_futes
+              - name: Szellőztetés
+                entity: switch.sonoff_furdo_szelloztetes
+                tap_action: toggle
+              - name: Tv
+                entity: media_player.samsung_q80_series_65
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      style: *browser_mod
+                      content:
+                        !include lovelace/tv.yaml
+              - name: Klíma
+                entity: climate.gree_klima
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      style: &browser_mod_1080
+                        |
+                        --popup-min-width: 1080px;
+                        --popup-border-width: var(--ha-card-border-width);
+                        --popup-border-radius: var(--ha-card-border-radius);
+                      content:
+                        type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        cards:
+                          - !include lovelace/klima.yaml
+                          - !include lovelace/grafikon.yaml
+              - name: Tablet
+                entities:
+                  - switch.hipad_xpro_kepernyo
+                  - binary_sensor.hipad_xpro_csatlakoztatva
+                element: switch.hipad_xpro_kepernyo
+                state_action:
+                  action: call-service
+                  service: floorplan.class_set
                   service_data: |
                     >
-                    var strName = '';
-                    switch (entity.state) { 
-                      case 'clear-night': strName = 'Tiszta este'; break;
-                      case 'cloudy': strName = 'Felhős idő'; break;
-                      case 'exceptional': strName = 'Extrém idő'; break;
-                      case 'fog': strName = 'Köd'; break;
-                      case 'hail': strName = 'Jégeső'; break;
-                      case 'lightning': strName = 'Vihar'; break;
-                      case 'lightning-rainy': strName = 'Viharos eső'; break;
-                      case 'partlycloudy': strName = 'Részben felhős idő'; break;
-                      case 'pouring': strName = 'Szakadó eső'; break;
-                      case 'rainy': strName = 'Esős idő'; break;
-                      case 'snowy': strName = 'Havazás'; break;
-                      case 'snowy-rainy': strName = 'Havas eső'; break;
-                      case 'sunny': strName = 'Napos idő'; break;
-                      case 'windy': strName = 'Szeles idő'; break;
-                      case 'windy-variant': strName = 'Változóan szeles idő'; break;
-                      default: srtName = 'unknown'; break; 
-                    } 
-                    return strName;
-            - name: Időjárás ikon
-              entity: weather.forecast_home
-              element: weather.condition
-              state_action:
-                service: floorplan.image_set
-                service_data:
-                  image: /local/floorplan/weather_icons/${entity.state}.svg
-                  cache: true
-            - name: Időjárás
-              element: things.weather
-              tap_action:
-                action: fire-dom-event
-                browser_mod:
-                  service: browser_mod.popup
-                  data:
-                    style: &browser_mod_1080
-                      |
-                      --popup-min-width: 1080px;
-                      --popup-border-width: var(--ha-card-border-width);
-                      --popup-border-radius: var(--ha-card-border-radius);
-                      --popup-padding-y: -1px;
-                      --popup-background-color: var(--card-background-color);
-                    content:
-                      type: custom:layout-card
-                      layout_type: custom:grid-layout 
-                      layout:
-                        grid-template-columns: 1fr 2fr
-                        grid-template-rows: 1fr
-                        grid-template-areas: |
-                          "clock radar"
-                          "title radar"
-                          "daily hourly"
-                      cards:
-                        !include lovelace/idojaras.yaml
-            - name: Hőmérséklet
-              entities:
-                - sensor.haloszoba_temperature
-                - sensor.konyha_temperature
-                - sensor.nappali_temperature
-                - sensor.ebedlo_temperature
-                - sensor.gyerekszoba_temperature
-                - sensor.furdoszoba_homerseklet
-              state_action:
-                - service: floorplan.text_set
-                  service_data: '${(entity.state !== undefined) ? Math.round(entity.state * 10) / 10 : "unknown"}'
-            - name: Páratartalom
-              entities:
-                - sensor.haloszoba_humidity
-                - sensor.konyha_humidity
-                - sensor.nappali_humidity
-                - sensor.ebedlo_humidity
-                - sensor.gyerekszoba_humidity
-                - sensor.furdoszoba_paratartalom
-              state_action:
-                - service: floorplan.text_set
-                  service_data: '${ (entity.state !== undefined) ? Math.round(entity.state * 10) / 10 : "unknown" }'
-            - name: Elemek
-              entities:
-                - sensor.haloszoba_ablak_battery
-                - sensor.nappali_ablak_battery
-                - sensor.haloszoba_battery
-                - sensor.konyha_battery
-                - sensor.nappali_battery
-                - sensor.ebedlo_battery
-                - sensor.gyerekszoba_battery
-                - sensor.furdoszoba_battery
-                - sensor.furdoszoba_2_battery
-                - sensor.bejarati_ajto_battery
-              state_action:
-                service: floorplan.image_set
-                service_data:
-                  image: /local/floorplan/battery/battery-${Math.round(entity.state / 10) * 10}.png
-                  cache: true
-            - name: Szellőztetés
-              entity: switch.sonoff_furdo_szelloztetes
-              element: switch.furdo_fan
-              tap_action: toggle
-              state_action:
-                service: floorplan.class_set
-                service_data: '${(entity.state === "on") ? "spinning" : ""}'
-            - name: Klíma
-              entity: climate.gree_klima
-              element: things.klima
-              tap_action:
-                action: fire-dom-event
-                browser_mod:
-                  service: browser_mod.popup
-                  data:
-                    style: &browser_mod_900
-                      |
-                      --popup-min-width: 900px;
-                      --popup-border-width: var(--ha-card-border-width);
-                      --popup-border-radius: var(--ha-card-border-radius);
-                      --popup-padding-y: -1px;
-                      --popup-background-color: var(--card-background-color);
-                    content:
-                      type: custom:layout-card
-                      layout_type: custom:grid-layout
-                      cards:
-                        - !include lovelace/klima.yaml
-                        - !include lovelace/grafikon.yaml
-              state_action:
-                service: floorplan.class_set
-                service_data: '${ (entity.state === "off") ? "thing-off" : ((entity.state === "unavailable") ? "thing-unavailable" : "thing-on") }'
-            - name: Törölköző
-              entity: switch.sonoff_furdoszoba_futes
-              element: things.torolkozo
-              tap_action: toggle
-              state_action:
-                service: floorplan.class_set
-                service_data: '${ (entity.state === "off") ? "thing-off" : ((entity.state === "unavailable") ? "thing-unavailable" : "thing-on") }'
-            - name: Fűtés
-              entity: climate.honeywell_home_termosztat
-              element: things.termosztat
-              tap_action:
-                action: fire-dom-event
-                browser_mod:
-                  service: browser_mod.popup
-                  data:
-                    style: &browser_mod_style
-                      |
-                      --popup-border-width: var(--ha-card-border-width);
-                      --popup-border-radius: var(--ha-card-border-radius);
-                      --popup-padding-y: -1px;
-                      --popup-background-color: var(--card-background-color);
-                    content:
-                      type: custom:layout-card
-                      layout_type: custom:grid-layout
-                      cards:
-                        - !include lovelace/futes.yaml
-                        - !include lovelace/grafikon.yaml
-              state_action:
-                service: floorplan.class_set
-                service_data: '${ (entity.state === "off") ? "thing-off" : ((entity.state === "unavailable") ? "thing-unavailable" : "thing-on") }'
-            - name: Növény
-              entity: plant.new_zealand_spinach
-              element: flora
-              tap_action:
-                action: fire-dom-event
-                browser_mod:
-                  service: browser_mod.popup
-                  data:
-                    style: &browser_mod_650
-                      |
-                      --popup-min-width: 650px;
-                      --popup-border-width: var(--ha-card-border-width);
-                      --popup-border-radius: var(--ha-card-border-radius);
-                      --popup-padding-y: -1px;
-                      --popup-background-color: var(--card-background-color);
-                    content:
-                      type: custom:layout-card
-                      layout_type: custom:grid-layout
-                      cards:
-                        !include lovelace/novenyek.yaml
-              state_action:
-                service: floorplan.style_set
-                service_data:
-                  style: >
-                    opacity: ${ entity.state === "ok" ? "0" : "1" };
-                    fill: ${ entity.state === "ok" ? "" : "#C1424299" };
-                    transition: ${ entity.state === "ok" ? "fill 5s ease" : "" };
-            - name: Párásítás
-              entity: fan.aroma_diffuser
-              element: things.parasito
-              tap_action:
-                action: fire-dom-event
-                browser_mod:
-                  service: browser_mod.popup
-                  data:
-                    style: *browser_mod_style
-                    content:
-                      type: custom:layout-card
-                      layout_type: custom:grid-layout
-                      cards:
-                        - !include lovelace/parasitas.yaml
-              state_action:
-                service: floorplan.class_set
-                service_data: '${ (entity.state === "off") ? "thing-off" : ((entity.state === "unavailable") ? "thing-unavailable" : "thing-on") }'
-            - name: Tv
-              entity: media_player.samsung_q80_series_65
-              elements: 
-               - things.tv
-               - things.arnyek
-              tap_action:
-                action: fire-dom-event
-                browser_mod:
-                  service: browser_mod.popup
-                  data:
-                    style: *browser_mod_style
-                    content:
-                      !include lovelace/tv.yaml
-              state_action:
-                service: floorplan.class_set
-                service_data: '${ (entity.state === "off") ? "thing-off" : ((entity.state === "unavailable") ? "thing-unavailable" : "thing-on") }'
-            - name: Binary Sensor
-              entities:
-               - entity: binary_sensor.sonoff_bejarati_ajto
-                 element: bejarat
-               - entity: binary_sensor.haloszoba_ablak_contact
-                 element: haloszoba_ablak
-               - entity: binary_sensor.nappali_ablak_contact
-                 element: nappali_ablak
-              state_action:
-                service: floorplan.class_set
-                service_data: '${ (entity.state === "on") ? "binary-sensor-on" : "binary-sensor-off" }'
-            - name: Vacuum
-              entity: vacuum.viomi_se
-              elements:
-                - vacuum
-              tap_action:
-                action: fire-dom-event
-                browser_mod:
-                  service: browser_mod.popup
-                  data:
-                    style: *browser_mod_style
-                    content:
-                      type: custom:vertical-stack-in-card
-                      cards:
-                        !include lovelace/vacuum.yaml
-            - name: Information
-              elements:
-                - information
-              tap_action:
-                action: fire-dom-event
-                browser_mod:
-                  service: browser_mod.popup
-                  data:
-                    style: *browser_mod_1080
-                    content:
-                      type: custom:layout-card
-                      layout_type: custom:grid-layout
-                      layout:
-                        grid-template-columns: 2fr 2fr
-                        grid-template-rows: auto
-                        grid-template-areas: |
-                          "Debian-title Network-title"
-                          "Debian-2 Network-1"
-                          "Debian-1 Network-2"
-                          "HA-title ."
-                          "HA Network-3"
-                      cards:
-                        !include lovelace/system.yaml
-            - name: Karácsony
-              elements:
-                - karacsony
-              tap_action:
-                action: fire-dom-event
-                browser_mod:
-                  service: browser_mod.popup
-                  data:
-                    style: *browser_mod_style
-                    content:
-                      type: custom:vertical-stack-in-card
-                      cards:
-                        !include lovelace/karacsony.yaml
+                    let classes = [];
+
+                    if (entities['binary_sensor.hipad_xpro_csatlakoztatva'].state === 'on')
+                      classes.push('charging charge-state-on');
+                    else
+                      classes.push('charging charge-state-off')
+
+                    if (entities['switch.hipad_xpro_kepernyo'].state === 'on')
+                      classes.push('entities entity-state-on');
+                    else
+                      classes.push('entities entity-state-off');
+
+                    return classes.join(' ');
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      style: *browser_mod_1080
+                      content:
+                        !include lovelace/tablet.yaml
+
+              - name: Fűtés
+                entity: climate.honeywell_home_termosztat
+                tap_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      style: *browser_mod
+                      content:
+                        type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        cards:
+                          - !include lovelace/futes.yaml
+                          - !include lovelace/grafikon.yaml
+                state_action:
+                  action: call-service
+                  service: floorplan.class_set
+                  service_data: entities entity-state-${entity.attributes.hvac_action}
+          - type: custom:mod-card
+            card_mod:
+              style: |
+                :host {
+                  transform: translate( 0, 0 );
+                  top: calc( var(--header-height) + 10px );
+                  right: 350px;
+                  position: absolute;
+                  width: 175px;
+                }
+            card:
+              type: horizontal-stack
+              cards:
+                - type: custom:decluttering-card
+                  template: person_template
+                  variables:
+                    - entity_person: person.hunyadvari_zoltan
+                    - background_url: /local/person/zoolesz.png
+                    - icon_person: mdi:face-man
+                    - entity_wifi: sensor.sm_a536b_wifi_connection
+                    - find_service: notify.mobile_app_sm_a536b
+                    - entity_battery: sensor.sm_a536b_battery_level
+                    - entity_device: device_tracker.sm_a536b
+                - type: custom:decluttering-card
+                  template: person_template
+                  variables:
+                    - entity_person: person.szakacs_katalin
+                    - background_url: /local/person/kata.png
+                    - icon_person: mdi:face-woman
+                    - entity_wifi: sensor.sm_a336b_wifi_connection
+                    - find_service: notify.mobile_app_sm_a336b
+                    - entity_battery: sensor.sm_a336b_battery_level
+                    - entity_device: device_tracker.sm_a336b
+          - type: custom:mod-card
+            card_mod:
+              style: |
+                :host {
+                  transform: translate( 0, 0 );
+                  top: 310px;
+                  right: 655px;
+                  position: absolute;
+                  width: 75px;
+                }
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:mushroom-template-card
+                  card_mod: &background_none
+                    style: |
+                      ha-card {
+                        background: none;
+                        box-shadow: none;
+                      }
+                  primary: ''
+                  secondary: ''
+                  icon: mdi:information-outline
+                  layout: vertical
+                  tap_action:
+                    action: fire-dom-event
+                    browser_mod:
+                      service: browser_mod.popup
+                      data:
+                        style: *browser_mod_1080
+                        content:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            grid-template-columns: 25% 25% 25% 25%
+                            grid-template-rows:  auto
+                            grid-template-areas: |
+                              "HA Debian Network Tablet"
+                              "Grafikon Grafikon Grafikon Grafikon"
+                          cards:
+                            !include lovelace/system2.yaml
+                - type: custom:mushroom-template-card
+                  card_mod: *background_none
+                  primary: ''
+                  secondary: ''
+                  icon: mdi:robot-vacuum
+                  layout: vertical
+                  tap_action:
+                    action: fire-dom-event
+                    browser_mod:
+                      service: browser_mod.popup
+                      data:
+                        style: *browser_mod
+                        content:
+                          type: vertical-stack
+                          cards:
+                            !include lovelace/vacuum.yaml
+                - type: custom:mushroom-template-card
+                  card_mod: *background_none
+                  primary: ''
+                  secondary: ''
+                  icon: mdi:leaf
+                  icon_color: |
+                    {% if states(entity) == 'problem' %}
+                      red
+                    {% else %}
+                      green
+                    {% endif %}
+                  layout: vertical
+                  entity: plant.new_zealand_spinach
+                  tap_action:
+                    action: fire-dom-event
+                    browser_mod:
+                      service: browser_mod.popup
+                      data:
+                        style: *browser_mod
+                        content:
+                          type: vertical-stack
+                          cards:
+                            !include lovelace/novenyek.yaml
+                - type: custom:mushroom-template-card
+                  card_mod: *background_none
+                  primary: ''
+                  secondary: ''
+                  icon: mdi:pine-tree
+                  layout: vertical
+                  tap_action:
+                    action: fire-dom-event
+                    browser_mod:
+                      service: browser_mod.popup
+                      data:
+                        style: *browser_mod_1080
+                        content:
+                          type: custom:layout-card
+                          layout_type: custom:grid-layout
+                          layout:
+                            grid-template-columns: 25% 25% 25% 25%
+                            grid-template-rows:  auto
+                            grid-template-areas: |
+                              "Kapcsolo-1 Kapcsolo-2 Feny Speed"
+                              "Szin-1 Szin-1 Szin-2 Szin-2"
+                              "Mode-1 Mode-1 Mode-2 Mode-2"
+                              "Time Time Time Time"
+                          cards:
+                            !include lovelace/karacsony.yaml
+                - type: custom:mushroom-template-card
+                  card_mod: 
+                    style: |
+                      ha-card {
+                        box-shadow: none;
+                        background: none;              
+                      }            
+                      ha-state-icon:after {
+                        {% if states('sensor.devices_with_low_battery') | int > 0 %}
+                          content: "{{ states('sensor.devices_with_low_battery') }}";
+                        {% endif %}
+                        background: rgb(var(--rgb-red));
+                        color: var(--card-background-color);
+                        position: absolute;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-weight: bolder;
+                        border-radius: 50%;
+                        top: -5px;
+                        right: -5px;
+                        width: 18px;
+                        height: 18px;
+                        font-size: 8px;
+                      }
+                  primary: ''
+                  secondary: ''
+                  icon: mdi:battery-alert
+                  icon_color: |
+                    {% if states(entity) | int > 0 %}
+                      red
+                    {% endif %}
+                  entity: sensor.devices_with_low_battery
+                  layout: vertical
+                  tap_action:
+                    action: fire-dom-event
+                    browser_mod:
+                      service: browser_mod.popup
+                      data:
+                        style: *browser_mod
+                        content:
+                            !include lovelace/battery.yaml
+                  hold_action:
+                    action: fire-dom-event
+                    browser_mod:
+                      service: browser_mod.popup
+                      data:
+                        style: *browser_mod
+                        content:
+                          type: custom:mushroom-number-card
+                          tap_action: none
+                          hold_action: none
+                          doubletap_action: none
+                          entity: input_number.battery_threshold
+                  double_tap_action: none
       - !include  lovelace/sidebar.yaml

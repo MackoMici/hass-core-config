@@ -76,26 +76,24 @@ views:
   - path: karacsony
     icon: mdi:pine-tree
     badges: []
-    type: custom:vertical-layout
+    type: custom:grid-layout
+    layout:
+      grid-template-columns: 50% 50%
+      grid-template-row: auto
+      grid-template-areas: |
+        "Kapcsolo-1 Kapcsolo-2"
+        "Feny Speed"
+        "Szin-1 Szin-1"
+        "Szin-2 Szin-2"
+        "Mode-1 Mode-1"
+        "Mode-2 Mode-2"
+        "Time Time"
     cards:
       !include lovelace/karacsony.yaml
   - path: informacio
     icon: mdi:information-outline
     badges: []
-    type: custom:grid-layout
-    layout:
-      grid-template-columns: auto
-      grid-template-rows: auto
-      grid-template-areas: |
-        "HA-title"
-        "HA"
-        "Debian-title"
-        "Debian-1"
-        "Debian-2"
-        "Network-title"
-        "Network-1"
-        "Network-2"
-        "Network-3"
+    type: custom:vertical-layout
     cards:
       !include lovelace/system.yaml
   - path: schedule

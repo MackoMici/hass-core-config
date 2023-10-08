@@ -4,13 +4,16 @@ default_config:
 # Example configuration.yaml entry
 
 #logger:
-#  default: error
+#  default: info
 #  logs:
     # log level for HA core
 #    homeassistant.core: warning
 
     # log level for all python scripts
 #    homeassistant.components.python_script: warning
+
+#    custom_components.multiscrape: debug
+
 
 http:
   ssl_certificate: !secret ssl_cert
@@ -33,7 +36,7 @@ lovelace:
   resources:
     - url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js
       type: module
-    - url: /hacsfiles/button-card/button-card.js
+    - url: /hacsfiles/bar-card/bar-card.js
       type: module
     - url: /hacsfiles/ha-floorplan/floorplan.js
       type: module
@@ -46,8 +49,6 @@ lovelace:
     - url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
       type: module
     - url: /hacsfiles/mini-media-player/mini-media-player-bundle.js
-      type: module
-    - url: /hacsfiles/thermal_comfort_icons/thermal_comfort_icons.js
       type: module
     - url: /hacsfiles/vacuum-card/vacuum-card.js
       type: module
@@ -79,6 +80,12 @@ lovelace:
       type: module
     - url: /hacsfiles/config-template-card/config-template-card.js
       type: module
+    - url: /hacsfiles/lovelace-valetudo-map-card/valetudo-map-card.js
+      type: module
+    - url: /hacsfiles/stack-in-card/stack-in-card.js
+      type: module
+    - url: /hacsfiles/swipe-card/swipe-card.js
+      type: module
     - url: https://fonts.googleapis.com/css2?family=Oxygen&family=Ubuntu:wght@300&display=swap
       type: css
   dashboards:
@@ -97,26 +104,21 @@ lovelace:
 
 homeassistant:
   packages: !include_dir_named include
+  customize: !include customize.yaml
   allowlist_external_dirs:
     - "/home/zoolesz/.homeassistant"
 
-google_assistant:
-  project_id: home-assistant-2023-73138
-  service_account: !include service_account.json
-  report_state: true
-  exposed_domains:
-    - switch
-    - light
+#google_assistant:
+#  project_id: home-assistant-2023-73138
+#  service_account: !include service_account.json
+#  report_state: true
+#  exposed_domains:
+#    - switch
+#    - light
 
 #python_script:
 
 gree_ext:
-
-vacuum:
-  - platform: viomise
-    host: !secret xiaomi_vacuum_host
-    token: !secret xiaomi_vacuum_token
-    name: Viomi SE
 
 sonoff:
   username: !secret sonoff_username

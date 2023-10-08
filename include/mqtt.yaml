@@ -1,0 +1,40 @@
+mqtt:
+  binary_sensor:
+    - name: HA Tablet MQTT Connected
+      unique_id: tab_mqtt_connected
+      payload_on: true
+      payload_off: false
+      expire_after: 300
+      state_topic: tablet/deviceInfo
+      device_class: connectivity
+      icon: mdi:check-network
+      value_template: '{{ value_json.mqttConnected }}'
+    - name: HA Tablet On Motion
+      state_topic: tablet/event/onMotion
+      device_class: motion
+      off_delay: 10
+      value_template: "{% if value_json.event == 'onMotion' %}on{% else %}off{% endif %}"
+      payload_on: "on"
+      payload_off: "off"
+
+  sensor:
+    - name: HA Tablet Last App Start
+      unique_id: tab_last_app_start
+      state_topic: tablet/deviceInfo
+      device_class: timestamp
+      icon: mdi:restart
+      value_template: '{{ value_json.appStartTime }}'
+    - name: HA Tablet Battery Temperature
+      unique_id: tab_battery_temperature
+      state_topic: tablet/deviceInfo
+      device_class: temperature
+      icon: mdi:thermometer
+      unit_of_measurement: '°C'
+      value_template: '{{ value_json.batteryTemperature }}'
+    - name: HA Tablet App Used Memory
+      unique_id: hometab_app_used_memory
+      state_topic: tablet/deviceInfo
+      unit_of_measurement: '%'
+      icon: mdi:application
+      value_template: '{{ 100 - (value_json.appFreeMemory / 
+                          value_json.appTotalMemory * 100) | int(default=0) }}'

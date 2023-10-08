@@ -1,5 +1,5 @@
 - type: custom:mushroom-vacuum-card
-  entity: vacuum.viomi_se
+  entity: vacuum.valetudo_viomise
   icon_animation: true
   commands:
     - start_pause
@@ -26,21 +26,14 @@
   alignment: justify
   chips:
     - type: template
-      entity: vacuum.viomi_se
       <<: *none
-      content: "Szűrő: {{ state_attr(entity, 'filter_left') }} óra"
+      content: "Szűrő: {{ (states.sensor.valetudo_viomise_main_filter.state | int / 60) | int }} óra"
     - type: template
-      entity: vacuum.viomi_se
       <<: *none
-      content: "Oldalsó kefe: {{ state_attr(entity, 'side_brush_left') }} óra"
+      content: "Oldalsó kefe: {{ (states.sensor.valetudo_viomise_right_brush.state | int / 60) | int }} óra"
     - type: template
-      entity: vacuum.viomi_se
       <<: *none
-      content: "Fő kefe: {{ state_attr(entity, 'main_brush_left') }} óra"
-    - type: template
-      entity: vacuum.viomi_se
-      <<: *none
-      content: "Felmosó: {{ state_attr(entity, 'mop_left') }} óra"
+      content:  "Fő kefe: {{ (states.sensor.valetudo_viomise_main_brush.state | int / 60) | int }} óra"
 - type: grid
   columns: 4
   square: false

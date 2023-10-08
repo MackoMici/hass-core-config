@@ -1,67 +1,123 @@
-gauge_template:
+mushroom_bar_template:
+  default:
+    - template: bar_card_right_tempalte
   card:
-    type: gauge
+    type: custom:stack-in-card
     card_mod: &background_none
       style: |
         ha-card {
           background: none;
           box-shadow: none;
         }
+    cards:
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
+        layout:
+          grid-template-columns: 42px auto
+          margin: -4px -4px -8px -4px;
+        cards:
+          - type: custom:decluttering-card
+            template: mushroom_system_template
+            variables:
+             - entity: '[[entity]]'
+          - type: custom:decluttering-card
+            template: '[[template]]'
+            variables:
+             - entity: '[[entity]]'
+             - name: '[[name]]'
+
+mushroom_system_template:
+  card:
+    type: custom:mushroom-template-card
+    <<: &none
+      - tap_action: none
+      - hold_action: none
+      - double_tapaction: none
+    card_mod: *background_none
     entity: '[[entity]]'
+    icon: "{{ state_attr(config.entity, 'icon') }}"
+    icon_color: '#2196f3'
+
+bar_card_right_tempalte:
+  card:
+    type: custom:bar-card
+    <<: *none
+    entity: '[[entity]]'
+    height: 42px
+    entity_row: true
     name: '[[name]]'
-    segments:
-      - from: 100
-        color: '#FF453A'
-      - from: 95
-        color: '#FE5335'
-      - from: 90
-        color: '#FE6230'
-      - from: 85
-        color: '#FE702B'
-      - from: 80
-        color: '#FE7F26'
-      - from: 75
-        color: '#FE8E21'
-      - from: 70
-        color: '#FE9C1C'
-      - from: 65
-        color: '#FEAB17'
-      - from: 60
-        color: '#FEB912'
-      - from: 55
-        color: '#FEC80D'
-      - from: 50
-        color: '#FED709'
-      - from: 45
-        color: '#EBD10F'
-      - from: 40
-        color: '#D8CC15'
-      - from: 35
-        color: '#C6C61B'
-      - from: 30
-        color: '#B3C121'
-      - from: 25
-        color: '#A1BB28'
-      - from: 20
-        color: '#8EB62E'
-      - from: 15
-        color: '#7BB034'
-      - from: 10
-        color: '#69AB3A'
-      - from: 5
-        color: '#56A540'
-      - from: 0
-        color: '#44A047'
+    positions:
+      icon: off
+      indicator: off
+    card_mod:
+      style: |
+        ha-card {
+          padding: 12px;
+          margin-left: 12px;
+        }
+        bar-card-value {
+          margin: 12px;
+          font-size: 12px;
+          font-weight: bolder;
+        }
+        bar-card-name {
+          margin: 12px;
+          font-size: 12px;
+          font-weight: bolder;
+        }
+        bar-card-backgroundbar {
+          opacity: 0.2;
+          filter: brightness(1);
+          background: linear-gradient(to right, #44A047, #56A540, #69AB3A, #7BB034, #8EB62E, #A1BB28, #B3C121, #C6C61B, #D8CC15, #EBD10F, #FED709,  #FEC80D, #FEB912, #FEAB17, #FE9C1C, #FE8E21, #FE7F26, #FE702B, #FE6230, #FE5335, #FF453A);
+        }
+        bar-card-currentbar	 {
+          background: linear-gradient(to right, #44A047, #56A540, #69AB3A, #7BB034, #8EB62E, #A1BB28, #B3C121, #C6C61B, #D8CC15, #EBD10F, #FED709,  #FEC80D, #FEB912, #FEAB17, #FE9C1C, #FE8E21, #FE7F26, #FE702B, #FE6230, #FE5335, #FF453A);
+          clip-path: polygon(0 0, var(--bar-percent) 0, var(--bar-percent) 100%, 0 100%);
+        }
+
+bar_card_left_tempalte:
+  card:
+    type: custom:bar-card
+    <<: *none
+    entity: '[[entity]]'
+    height: 42px
+    entity_row: true
+    name: '[[name]]'
+    positions:
+      icon: off
+      indicator: off
+    card_mod:
+      style: |
+        ha-card {
+          padding: 12px;
+          margin-left: 12px;
+        }
+        bar-card-value {
+          margin: 12px;
+          font-size: 12px;
+          font-weight: bolder;
+        }
+        bar-card-name {
+          margin: 12px;
+          font-size: 12px;
+          font-weight: bolder;
+        }
+        bar-card-backgroundbar {
+          opacity: 0.2;
+          filter: brightness(1);
+          background: linear-gradient(to left, #44A047, #56A540, #69AB3A, #7BB034, #8EB62E, #A1BB28, #B3C121, #C6C61B, #D8CC15, #EBD10F, #FED709,  #FEC80D, #FEB912, #FEAB17, #FE9C1C, #FE8E21, #FE7F26, #FE702B, #FE6230, #FE5335, #FF453A);
+        }
+        bar-card-currentbar	 {
+          background: linear-gradient(to left, #44A047, #56A540, #69AB3A, #7BB034, #8EB62E, #A1BB28, #B3C121, #C6C61B, #D8CC15, #EBD10F, #FED709,  #FEC80D, #FEB912, #FEAB17, #FE9C1C, #FE8E21, #FE7F26, #FE702B, #FE6230, #FE5335, #FF453A);
+          clip-path: polygon(0 0, var(--bar-percent) 0, var(--bar-percent) 100%, 0 100%);
+        }
 
 mushroom_update_template:
   card:
     type: custom:mushroom-template-card
     entity: '[[entity]]'
     card_mod: *background_none
-    <<: &none
-      - tap_action: none
-      - hold_action: none
-      - double_tapaction: none
+    <<: *none
     primary: '[[primary]]'
     icon: '[[icon]]'
     icon_color: '#2196f3'
@@ -171,15 +227,37 @@ mushroom_klima_template:
     icon: '[[icon]]'
     icon_color: |
       {% if not is_state(entity, 'off') %}
-        {% if is_state_attr(entity, '[[attr]]', '[[value]]') %}
+        {% if ('[[attr]]' == 'fan_mode') and ((is_state_attr(entity, 'preset_mode', 'boost')) or (is_state('switch.gree_klima_quiet', 'on'))) %}
+        {% elif is_state_attr(entity, '[[attr]]', '[[value]]') %}
           orange
         {% endif %}
       {% endif %}
 
+mushroom_klima_hvac_template:
+  default: 
+    - entity: climate.gree_klima
+    - service: climate.set_hvac_mode
+  card:
+    type: custom:mushroom-template-card
+    card_mod: *background_none
+    entity: '[[entity]]'
+    layout: vertical
+    secondary: '[[secondary]]'
+    tap_action:
+      action: call-service
+      service: '[[service]]'
+      data:
+        hvac_mode: '[[value]]'
+      target:
+        entity_id: '[[entity]]'
+    <<: *none2
+    icon: '[[icon]]'
+    icon_color: |
+      {% if is_state(entity, '[[value]]') %}
+          orange
+      {% endif %}
+
 mushroom_entity_futes_template:
-  default:
-    - color: '#2196f3'
-    - layout: horizontal
   card:
     type: custom:mushroom-entity-card
     entity: '[[entity]]'
@@ -187,8 +265,8 @@ mushroom_entity_futes_template:
     primary_info: state
     secondary_info: name
     name: '[[name]]'
-    icon_color: '[[color]]'
-    layout: '[[layout]]'
+    icon_color: '#2196f3'
+    layout: horizontal
     <<: *none
 
 mushroom_button_futes_template:
@@ -211,7 +289,19 @@ mushroom_button_futes_template:
     primary: "{{ state_attr(config.entity, 'friendly_name') }}"
     secondary: '[[secondary]]'
 
+mushroom_number_template:
+  default:
+    - display_mode: slider
+  card:
+    type: custom:mushroom-number-card
+    <<: *none
+    entity: '[[entity]]'
+    card_mod: *background_none
+    display_mode: '[[display_mode]]'
+
 mushroom_light_template:
+  default:
+    - layout: horizontal
   card:
     type: custom:mushroom-light-card
     card_mod:
@@ -244,6 +334,7 @@ mushroom_light_template:
     show_color_control: true
     show_color_temp_control: true
     collapsible_controls: true
+    layout: '[[layout]]'
     <<: *none2
 
 mushroom_switch_light_template:
@@ -257,7 +348,6 @@ mushroom_switch_light_template:
 mushroom_home_template:
   card:
     type: custom:mushroom-template-card
-    primary: ''
     secondary: '[[secondary]]'
     icon: '[[icon]]'
     icon_color: '[[color]]'
@@ -286,13 +376,14 @@ weather_template:
     name:
     card_mod: *background_none
     icons: true
+    forecast_type: hourly
     language: hu
     num_segments: |
       {% set segments = 24 - now().hour %}
       {{ segments if segments >= 10 else 24 }}
     label_spacing: |
       {% set segments = 24 - now().hour %}
-      {{ 4 if (segments > 19) or (segments < 10) else 2 }}
+      {{ 4 if (segments > 14) or (segments < 10) else 2 }}
     <<: *none2
     tap_action: '[[tap_action]]'
     show_wind: '[[show_wind]]'
@@ -333,169 +424,183 @@ datetime_template:
       text-shadow: 0px 10px 10px var(--divider-color)
       z-index: '[[z-index]]'
 
-sidebar_person_template:
+person_template:
   card:
-    type: custom:button-card
+    type: custom:mushroom-person-card
     entity: '[[entity_person]]'
-    aspect_ratio: 1/1
-    label: |
-      [[[
-        return 'Battery: ' + states['[[entity_battery]]'].state + '%';
-      ]]]
-    state_display: |
-      [[[
-        if (entity.state == "home")
-          return "Otthon";
-        else
-          return "Távol";
-      ]]]
-    styles:
-      card:
-        - background-image: url("[[background_url]]")
-        - background-size: 100% 100%
-      state:
-        - font-weight: bold
-        - background-color: rgba(0, 0, 0, 0.4)
-        - color: var(--text-primary-color)
-        - transform: initial
-        - width: 100%
-        - align-self: start
-        - line-height: 30px
-      label:
-        - font-weight: bold
-        - background-color: rgba(0, 0, 0, 0.4)
-        - color: var(--text-primary-color)
-        - transform: initial
-        - width: 100%
-        - align-self: end
-        - line-height: 30px
-    show_icon: false
-    show_name: false
-    show_state: true
-    show_label: true
+    icon_type: entity-picture
+    primary_info: none
+    secondary_info: none
+    layout: vertical
+    fill_container: false
+    card_mod:
+      style:
+        mushroom-shape-avatar$: |
+          .container:before {
+            content: "";
+            height: 100%;
+            width: 100%;
+            background: radial-gradient(rgb(var(--rgb-white)) 60%, transparent calc(60% + 1px)), conic-gradient(rgb(var(--rgb-orange)) {{ states['[[entity_battery]]'].state }}% 0%, transparent 0% 100%);
+            border-radius: var(--icon-border-radius);
+            position: absolute;
+            -webkit-mask-image: radial-gradient(circle calc(var(--icon-size) / 2 - 2px) at 50% 50%, transparent 100%, black 0);
+          }
+        .: |
+          ha-card {
+            background: none;
+            box-shadow: none;
+          }
+    <<: *none2
     tap_action:
       action: fire-dom-event
       browser_mod:
         service: browser_mod.popup
         data:
           style: |
-            --popup-min-width: 700px;
+            --popup-min-width: 800px;
             --popup-border-width: var(--ha-card-border-width, 0px);
             --popup-border-radius: var(--ha-card-border-radius, 12px);
             --popup-padding-x: 0px;
             --popup-padding-y: -2px;
             --popup-margin: -24px;
+            --popup-background-color: var(--card-background-color);
           content:
-            type: custom:vertical-stack-in-card
+            type: custom:layout-card
+            layout_type: custom:grid-layout
+            layout:
+              grid-template-columns: 25% auto
+              grid-template-rows: auto
+              grid-template-areas: |
+                "person map"
+                "wifi map"
+                "bluetooth map"
+                "find map"
             cards:
               - type: custom:mushroom-person-card
+                card_mod: *background_none
                 entity: '[[entity_person]]'
-                icon: '[[icon_person]]'
                 secondary_info: last-changed
-              - type: grid
-                square: false
-                columns: 3
-                cards:
-                  - type: custom:mushroom-template-card
-                    entity: '[[entity_wifi]]'
-                    <<: *none
-                    layout: vertical
-                    icon: |
-                      {% set signal = {'level': states['[[entity_wifi]]' | map('lower') | join | regex_replace(find='_connection', replace='_signal_strength')].state | int | abs } %}
-                      {% if signal.level > 90 %}
-                        mdi:wifi-strength-outline
-                      {% elif signal.level > 80 %} 
-                        mdi:wifi-strength-1
-                      {% elif signal.level > 70 %}
-                        mdi:wifi-strength-2
-                      {% elif signal.level > 60 %}
-                        mdi:wifi-strength-3
-                      {% elif signal.level > 1 %}
-                        mdi:wifi-strength-4
-                      {% else %}
-                        mdi:wifi-strength-off
-                      {% endif %}
-                    icon_color: "{% if is_state(entity, 'MiciMacko 5GHz') %}
-                                   blue
-                                 {% elif not is_state(entity, '<not connected>') %}
-                                   green
-                                 {% endif %}"
-                    primary: "{% if not is_state(entity, '<not connected>') %}
-                                {{ states(entity) }}
-                              {% else %}
-                                Not Connected
-                              {% endif %}"
-                    secondary: |
-                      {% set signal = {'level': states['[[entity_wifi]]' | map('lower') | join | regex_replace(find='_connection', replace='_signal_strength')].state | int } %}
-                      {% if signal.level  != -1 %}
-                        {{ signal.level }} dBm
-                      {% endif %}
-                  - type: custom:mushroom-template-card
-                    tap_action: none
-                    double_tap_action: none
-                    hold_action:
-                      action: call-service
-                      service: '[[find_service]]'
-                      data:
-                        message: Ringing phone...
-                        title: Find Phone
-                        data:
-                          ttl: 0
-                          importance: high
-                          priority: high
-                          tag: Find
-                          channel: alarm_stream
-                    layout: vertical
-                    icon: mdi:target
-                    icon_color: red
-                    primary: Find Phone
-                  - type: custom:mushroom-template-card
-                    entity: '[[entity_battery]]'
-                    <<: *none
-                    layout: vertical
-                    icon: |
-                      {% set battery = {'state': states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state } %}
-                      {% if battery.state  == "charging" %}
-                        mdi:battery-charging;
-                      {% else %}
-                        {{ state_attr(entity, 'icon') }}
-                      {% endif %}
-                    primary: "{{ states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state }}"
-                    secondary: "{{ states.[[entity_battery]].state }} %"
-                    card_mod:
-                      style:
-                        mushroom-shape-icon$: |
-                          ha-icon {
-                            {% set battery = {'state': states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state } %}
-                            {% if battery.state  == "charging" %}
-                              --icon-animation: charge 3s linear infinite;
-                              --card-mod-icon: mdi:battery-charging;
-                            {% endif %}
-                          }
-                          @keyframes charge {
-                            0%, 80% { clip-path: inset(0 0 0 0); }
-                            10% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 84%, 34% 84%, 34% 100%, 100% 100%, 100% 0%); }
-                            20% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 74%, 34% 74%, 34% 100%, 100% 100%, 100% 0%); }
-                            30% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 64%, 34% 64%, 34% 100%, 100% 100%, 100% 0%); }
-                            40% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 54%, 34% 54%, 34% 100%, 100% 100%, 100% 0%); }
-                            50% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 44%, 34% 44%, 34% 100%, 100% 100%, 100% 0%); }
-                            60% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 34%, 34% 34%, 34% 100%, 100% 100%, 100% 0%); }
-                            70% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 24%, 34% 24%, 34% 100%, 100% 100%, 100% 0%); }
-                          }
-                    icon_color: "{% set battery = { 
-                                   'level': states[entity].state | int,
-                                   'state': states[entity | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state
-                                 } %}
-                                 {% if battery.state  == 'charging' %}
-                                   blue
-                                 {% elif battery.level > 80 %}
-                                   green
-                                 {% elif battery.level <= 80 and battery.level >= 25 %}
-                                   orange
-                                 {% else %}
-                                   red
-                                 {% endif %}"
+                layout: vertical
+                icon_type: entity-picture
+                view_layout:
+                  grid-area: person
+                <<: *none
+              - type: custom:mushroom-template-card
+                card_mod: *background_none
+                entity: '[[entity_wifi]]'
+                <<: *none
+                layout: vertical
+                icon: |
+                  {% set signal = {'level': states['[[entity_wifi]]' | map('lower') | join | regex_replace(find='_connection', replace='_signal_strength')].state | int | abs } %}
+                  {% if signal.level > 90 %}
+                    mdi:wifi-strength-outline
+                  {% elif signal.level > 80 %} 
+                    mdi:wifi-strength-1
+                  {% elif signal.level > 70 %}
+                    mdi:wifi-strength-2
+                  {% elif signal.level > 60 %}
+                    mdi:wifi-strength-3
+                  {% elif signal.level > 1 %}
+                    mdi:wifi-strength-4
+                  {% else %}
+                    mdi:wifi-strength-off
+                  {% endif %}
+                icon_color: "{% if is_state(entity, 'MiciMacko 5GHz') %}
+                               blue
+                             {% elif not is_state(entity, '<not connected>') %}
+                               green
+                             {% endif %}"
+                primary: "{% if not is_state(entity, '<not connected>') %}
+                            {{ states(entity) }}
+                          {% else %}
+                            Not Connected
+                          {% endif %}"
+                secondary: |
+                  {% set signal = {'level': states['[[entity_wifi]]' | map('lower') | join | regex_replace(find='_connection', replace='_signal_strength')].state | int } %}
+                  {% if signal.level  != -1 %}
+                    {{ signal.level }} dBm
+                  {% endif %}
+                view_layout:
+                  grid-area: wifi
+              - type: custom:mushroom-template-card
+                card_mod: *background_none
+                tap_action: none
+                double_tap_action: none
+                hold_action:
+                  action: call-service
+                  service: '[[find_service]]'
+                  data:
+                    message: Ringing phone...
+                    title: Find Phone
+                    data:
+                      ttl: 0
+                      importance: high
+                      priority: high
+                      tag: Find
+                      channel: alarm_stream
+                layout: vertical
+                icon: mdi:target
+                icon_color: red
+                primary: Find Phone
+                view_layout:
+                  grid-area: find
+              - type: custom:mushroom-template-card
+                entity: '[[entity_battery]]'
+                <<: *none
+                layout: vertical
+                icon: |
+                  {% set battery = {'state': states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state } %}
+                  {% if battery.state  == "charging" %}
+                    mdi:battery-charging;
+                  {% else %}
+                    {{ state_attr(entity, 'icon') }}
+                  {% endif %}
+                primary: "{{ states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state }}"
+                secondary: "{{ states.[[entity_battery]].state }} %"
+                card_mod:
+                  style:
+                    mushroom-shape-icon$: |
+                      ha-icon {
+                        {% set battery = {'state': states['[[entity_battery]]' | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state } %}
+                        {% if battery.state  == "charging" %}
+                          --icon-animation: charge 3s linear infinite;
+                          --card-mod-icon: mdi:battery-charging;
+                        {% endif %}
+                      }
+                      @keyframes charge {
+                        0%, 80% { clip-path: inset(0 0 0 0); }
+                        10% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 84%, 34% 84%, 34% 100%, 100% 100%, 100% 0%); }
+                        20% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 74%, 34% 74%, 34% 100%, 100% 100%, 100% 0%); }
+                        30% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 64%, 34% 64%, 34% 100%, 100% 100%, 100% 0%); }
+                        40% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 54%, 34% 54%, 34% 100%, 100% 100%, 100% 0%); }
+                        50% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 44%, 34% 44%, 34% 100%, 100% 100%, 100% 0%); }
+                        60% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 34%, 34% 34%, 34% 100%, 100% 100%, 100% 0%); }
+                        70% { clip-path: polygon(0% 0%, 0% 100%, 34% 100%, 34% 24%, 67% 24%, 67% 24%, 34% 24%, 34% 100%, 100% 100%, 100% 0%); }
+                      }
+                    .: |
+                      ha-card {
+                        background: none;
+                        box-shadow: none;
+                      }
+                icon_color: "{% set battery = { 
+                               'level': states[entity].state | int,
+                               'state': states[entity | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state
+                             } %}
+                             {% if battery.state  == 'charging' %}
+                               blue
+                             {% elif battery.level > 80 %}
+                               green
+                             {% elif battery.level <= 80 and battery.level >= 25 %}
+                               orange
+                             {% else %}
+                               red
+                             {% endif %}"
+                view_layout:
+                  grid-area: bluetooth
               - type: map
                 default_zoom: 16
                 entities: 
                   - '[[entity_device]]'
+                view_layout:
+                  grid-area: map
+

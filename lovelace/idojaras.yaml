@@ -1,7 +1,7 @@
 - type: custom:clock-weather-card
   view_layout:
     grid-area: clock
-  entity: weather.forecast_home_hourly
+  entity: weather.forecast_home
   sun_entity: sun.sun
   weather_icon_type: fill
   locale: hu
@@ -34,7 +34,7 @@
     grid-area: hourly
   template: weather_template
   variables:
-    - entity: weather.forecast_home_hourly
+    - entity: weather.forecast_home
 - type: custom:clock-weather-card
   view_layout:
     grid-area: daily

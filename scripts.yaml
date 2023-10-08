@@ -3,58 +3,63 @@ reggeli_informacio:
   sequence:
   - service: tts.microsoft_say
     data:
-      entity_id: media_player.u1006_media_player
-      message: ' {% set honap = { 1: ''Január'', 2: ''Február'', 3: ''Március'', 4:
-        ''Április'', 5: ''Május'', 6: ''Június'', 7: ''Július'', 8: ''Augusztus'',
-        9: ''Szeptember'', 10: ''Október'', 11: ''November'', 12: ''December'', }
-        %} {% set napok = { 0: ''Ma'', 1: ''Holnap'', 2: ''Holnapután'', } %} A mai
-        dátum {{ now().year | string }} {{ honap[now().month] }} {{ now().day | string
-        }} . A pontos idő {{ now().strftime(''%-H'') }} óra {{ now().strftime(''%-M'')
-        }} perc. A mai névnap {{ state_attr(''calendar.magyar_nevnapok'', ''message'')
-        }}. {% if ((states.calendar.macko_mici_gmail_com.attributes.start_time | as_datetime
-        | as_local).date() - (now() | as_local).date()).days | int < 3 -%} Zoltán
-        naptárjában a következő naptári esemény: {{ napok[((states.calendar.macko_mici_gmail_com.attributes.start_time
-        | as_datetime | as_local).date() - (now() | as_local).date()).days | int]
-        }}, {{ state_attr(''calendar.macko_mici_gmail_com'', ''message'') }}. {% endif
-        %} {% if ((states.calendar.szakacskata_gmail_com.attributes.start_time | as_datetime
-        | as_local).date() - (now() | as_local).date()).days | int < 3 -%} Kata naptárjában
-        a következő naptári esemény: {% for i in range(0, 5) %} {%- if is_state(''sensor.ical_szakacs_katalin_event_''
-        + i | string, ''unavailable'') -%} A naptár elérhetetlen. {%- elif ((as_timestamp(state_attr(''sensor.ical_szakacs_katalin_event_''
-        + i | string, ''start'')) | as_datetime | as_local).date() - (now() | as_local).date()).days
-        | int < 3 -%} {{ napok[((as_timestamp(state_attr(''sensor.ical_szakacs_katalin_event_''
-        + i | string, ''start'')) | as_datetime | as_local).date() - (now() | as_local).date()).days
-        | int] }} {% if is_state_attr(''sensor.ical_szakacs_katalin_event_'' + i |
-        string, ''all_day'', true) -%} egész nap {% else -%} {{ as_timestamp(state_attr(''sensor.ical_szakacs_katalin_event_''
-        + i | string, ''start'')) | timestamp_custom(''%H:%M'') }} {% endif -%} {{
-        state_attr(''sensor.ical_szakacs_katalin_event_'' + i | string, ''summary'')
-        }}. {% endif %} {% endfor%} {% endif %} {% if ((states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
+      entity_id: media_player.hipad_xpro
+      message: "{% set honap = \n  { 1: 'Január', \n    2: 'Február', \n    3: 'Március',
+        \n    4: 'Április', \n    5: 'Május', \n    6: 'Június', \n    7: 'Július',
+        \n    8: 'Augusztus', \n    9: 'Szeptember', \n    10: 'Október', \n    11:
+        'November', \n    12: 'December', \n  }\n%}\n{% set napok = \n  { 0: 'Ma',\n
+        \   1: 'Holnap',\n    2: 'Holnapután',\n  }\n%}\nA mai dátum {{ now().year
+        | string }} {{ honap[now().month] }} {{ now().day | string }}.\nA pontos idő
+        {{ now().strftime('%-H') }} óra {{ now().strftime('%-M') }} perc.\nA mai névnap
+        {{ state_attr('calendar.magyar_nevnapok', 'message') }}.\n{% if ((states.calendar.macko_mici_gmail_com.attributes.start_time
         | as_datetime | as_local).date() - (now() | as_local).date()).days | int <
-        3 and is_state(''calendar.zoltan_hunyadvari_gmail_com'', ''off'') and is_state_attr(''calendar.zoltan_hunyadvari_gmail_com'',
-        ''all_day'', false) -%} A következő munkanap: {{ napok[((states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
+        3 -%}\n  Zoltán naptárjában a következő naptári esemény: {{ napok[((states.calendar.macko_mici_gmail_com.attributes.start_time
+        | as_datetime | as_local).date() - (now() | as_local).date()).days | int]
+        }}, {{ state_attr('calendar.macko_mici_gmail_com', 'message') }}.\n{% endif
+        %}\n{% if ((states.calendar.szakacskata_gmail_com.attributes.start_time |
+        as_datetime | as_local).date() - (now() | as_local).date()).days | int < 3
+        -%}\n  Kata naptárjában a következő naptári esemény: \n  {% for i in range(0,
+        5) %}\n    {% if is_state('sensor.ical_szakacs_katalin_event_' + i | string,
+        'unavailable') %}\n      A naptár elérhetetlen.\n    {% elif ((as_timestamp(state_attr('sensor.ical_szakacs_katalin_event_'
+        + i | string, 'start')) | as_datetime | as_local).date() - (now() | as_local).date()).days
+        | int < 3 %}\n      {{ napok[((as_timestamp(state_attr('sensor.ical_szakacs_katalin_event_'
+        + i | string, 'start')) | as_datetime | as_local).date() - (now() | as_local).date()).days
+        | int] }}\n      {% if is_state_attr('sensor.ical_szakacs_katalin_event_'
+        + i | string, 'all_day', true) %}\n        egész nap \n      {% else %}\n
+        \       {{ as_timestamp(state_attr('sensor.ical_szakacs_katalin_event_' +
+        i | string, 'start')) | timestamp_custom('%H:%M') }}\n      {% endif %}\n
+        \     {{ state_attr('sensor.ical_szakacs_katalin_event_' + i | string, 'summary')
+        }}.\n    {% endif %}\n  {% endfor%}\n{% endif %}\n{% if ((states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
+        | as_datetime | as_local).date() - (now() | as_local).date()).days | int <
+        3 and is_state('calendar.zoltan_hunyadvari_gmail_com', 'off') and is_state_attr('calendar.zoltan_hunyadvari_gmail_com',
+        'all_day', false) %}\n  A következő munkanap: {{ napok[((states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
         | as_datetime | as_local).date() - (now() | as_local).date()).days | int]
         }}, {{ (states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
-        | as_datetime | as_local).time() }}. {% endif %} {% set odakinn=states(''sensor.kulteri_homerseklet'')
-        %} {% if not is_state(''weather.pirate_weather_daily'', ''unavailable'') %}
-        {% set odakinn=state_attr(''weather.pirate_weather_daily'', ''temperature'')
-        %} {% set idok = { ''clear-night'': ''Tiszta este'', ''cloudy'': ''Felhős
-        idő'', ''exceptional'': ''Extrém idő'', ''fog'': ''Köd'', ''hail'': ''Jégeső'',
-        ''lightning'': ''Vihar'', ''lightning-rainy'': ''Viharos eső'', ''partlycloudy'':
-        ''Részben felhős idő'', ''pouring'': ''Szakadó eső'', ''rainy'': ''Esős idő'',
-        ''snowy'': ''Havazás'', ''snowy-rainy'': ''Havas eső'', ''sunny'': ''Napos
-        idő'', ''windy'': ''Szeles idő'', ''windy-variant'': ''Változóan szeles idő'',
-        } %} {{ idok[states.weather.pirate_weather_daily.attributes.forecast[0].condition]
-        }} várható {{ [ ''ma'', ''mára'', ''a mai napra'', ''az előrejelzés szerint'',
-        ''az időjós békám szerint''] | random }}, {{ states.weather.pirate_weather_daily.attributes.forecast[0].templow
-        }} és {{ states.weather.pirate_weather_daily.attributes.forecast[0].temperature
-        }} fok közötti hőmérséklettel. {% if state_attr(''weather.pirate_weather_daily'',
-        ''wind_speed'') | int > 10 %} A szélsebesség {{ state_attr(''weather.pirate_weather_daily'',
-        ''wind_speed'') }}  kilométer per óra. {% endif %} {% if states.weather.pirate_weather_daily.attributes.forecast[0].precipitation
-        | float(0) == 0 %} A mai egy csapadékmentes nap lesz. {% else %} Körülbelül
-        {{ states.weather.pirate_weather_daily.attributes.forecast[0].precipitation
-        | float(0) }} milliméter csapadék várható. {% endif %} {% else %} Az időjárás
-        előrejelző szolgáltatás sajnos nem elérhető. {% endif %} {{ [''Most épp'',
-        ''Jelenleg'', ''Pillanatnyilag''] | random }} {{ odakinn }}  fok  {{ [''van'',
-        ''a kinti hőmérséklet'', ''van odakinn''] | random }}.'
+        | as_datetime | as_local).time() }}.\n{% endif %}\n\n{% if not is_state('sensor.idokep_elorejelzes',
+        'unavailable') %}\n  Országos időjárás jelentés: \n  {{ state_attr('sensor.idokep_elorejelzes',
+        'details') }}\n{% endif %}\n{% set odakinn = states('sensor.kulteri_homerseklet')
+        %}\n{% if not is_state('weather.forecast_home', 'unavailable') %}\n\n  {%
+        set odakinn = state_attr('weather.forecast_home', 'temperature') %}\n\n  {%
+        set idok = \n    { 'clear-night': 'Tiszta este',\n      'cloudy': 'Felhős
+        idő',\n      'exceptional': 'Extrém idő',\n      'fog': 'Köd',\n      'hail':
+        'Jégeső',\n      'lightning': 'Vihar',\n      'lightning-rainy': 'Viharos
+        eső',\n      'partlycloudy': 'Részben felhős idő',\n      'pouring': 'Szakadó
+        eső',\n      'rainy': 'Esős idő',\n      'snowy': 'Havazás',\n      'snowy-rainy':
+        'Havas eső',\n      'sunny': 'Napos idő',\n      'windy': 'Szeles idő',\n
+        \     'windy-variant': 'Változóan szeles idő',\n    }\n  %}\n  Helyi időjárás:\n
+        \ {{ idok[states.weather.forecast_home.state] }} várható {{ [ 'ma', 'mára',
+        'a mai napra', 'az előrejelzés szerint', 'az időjós békám szerint'] | random
+        }}, {{ states.weather.forecast_home.attributes.forecast[0].templow }} és {{
+        states.weather.forecast_home.attributes.forecast[0].temperature }} fok közötti
+        hőmérséklettel.\n\n  {% if state_attr('weather.forecast_home', 'wind_speed')
+        | int > 10 %}\n    A szélsebesség {{ state_attr('weather.forecast_home', 'wind_speed')
+        }} kilométer per óra.\n  {% endif %}\n\n  {% if states.weather.forecast_home.attributes.forecast[0].precipitation
+        | float(0) == 0 %}\n    A mai egy csapadékmentes nap lesz.\n  {% else %}\n
+        \   Körülbelül {{ states.weather.forecast_home.attributes.forecast[0].precipitation
+        | float(0) }} milliméter csapadék várható.\n  {% endif %}\n{% else %}\n  Az
+        időjárás előrejelző szolgáltatás sajnos nem elérhető.\n{% endif %}\n{{ ['Most
+        épp', 'Jelenleg', 'Pillanatnyilag'] | random }} {{ odakinn }} fok  {{ ['van',
+        'a kinti hőmérséklet', 'van odakinn'] | random }}."
   mode: single
   icon: mdi:weather-sunset-up
 valaki_hazajott:

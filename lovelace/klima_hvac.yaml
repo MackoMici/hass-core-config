@@ -1,0 +1,32 @@
+type: horizontal-stack
+cards:
+  - type: custom:decluttering-card
+    template: mushroom_klima_hvac_template
+    variables:
+      - secondary: Auto
+      - icon: mdi:autorenew
+      - value: auto
+  - type: custom:decluttering-card
+    template: mushroom_klima_hvac_template
+    variables:
+      - secondary: Hűtés
+      - icon: mdi:snowflake
+      - value: cool
+  - type: custom:decluttering-card
+    template: mushroom_klima_hvac_template
+    variables:
+      - secondary: Fűtés
+      - icon: mdi:fire
+      - value: heat
+  - type: custom:decluttering-card
+    template: mushroom_klima_hvac_template
+    variables:
+      - secondary: Párátlanítás
+      - icon: mdi:water-percent
+      - value: dry
+  - type: custom:decluttering-card
+    template: mushroom_klima_hvac_template
+    variables:
+      - secondary: Ventillátor
+      - icon: mdi:fan
+      - value: fan_only

@@ -10,13 +10,13 @@ chips:
     content_info: none
     name: Alarm
   - type: weather
-    entity: weather.forecast_home_hourly
+    entity: weather.forecast_home
     show_conditions: true
     show_temperature: true
     <<: &none
       tap_action: none
       hold_action: none
-      double_tap_action: none 
+      double_tap_action: none
   - type: conditional
     conditions:
       - entity: media_player.samsung_q80_series_65
@@ -62,6 +62,10 @@ chips:
         browser_mod:
           service: browser_mod.popup
           data:
+            style: &browser_mod
+            |
+              --popup-border-width: var(--ha-card-border-width);
+              --popup-border-radius: var(--ha-card-border-radius);
             content:
               type: custom:auto-entities
               filter:
@@ -71,8 +75,16 @@ chips:
                     state: 'on'
                     options:
                       type: custom:mushroom-entity-card
+                      card_mod: &background_none
+                        style: |
+                          ha-card {
+                            background: none;
+                            box-shadow: none;
+                          }
                       secondary_info: last-changed
                       <<: *none
+                exclude:
+                  - entity_id: binary_sensor.ablakok
               show_empty: false
               card:
                 type: custom:layout-card
@@ -96,56 +108,20 @@ chips:
         browser_mod:
           service: browser_mod.popup
           data:
+            style: *browser_mod
             content:
-              type: custom:auto-entities
-              filter:
-                include:
-                  - attributes:
-                      device_class: battery
-                    state: "< 30"
-                    options:
-                      type: custom:mushroom-template-card
-                      primary: '{{ states(entity) }}%'
-                      secondary: '{{ state_attr(entity, ''friendly_name'') | title }}'
-                      icon: |
-                        {% set battery_level = (states(entity) | int / 10) |
-                        round(0) | int * 10 %} {% if battery_level == 100 %}
-                          mdi:battery
-                        {% elif battery_level > 0 %}
-                          mdi:battery-{{ battery_level }}
-                        {% else %}
-                          mdi:battery-outline
-                        {% endif %}
-                      icon_color: |
-                        {% set battery_level = states(entity) | int %}
-                        {% if battery_level < 10 %}
-                          red
-                        {% elif battery_level < 20 %}
-                          deep-orange
-                        {% elif battery_level < 30 %}
-                          orange
-                        {% else %}
-                          amber
-                        {% endif %} 
-                      layout: horizontal
-                      <<: *none
-                      badge_icon: |
-                        {% set battery_level = states(entity) | int %}
-                        {% if battery_level < 10 %} 
-                          mdi:exclamation-thick
-                        {% endif %}
-                      badge_color: red
-                exclude:
-                  - attributes:
-                      icon: "mdi:*"
-              show_empty: false
-              card:
-                type: custom:layout-card
-                cards: []
-                layout_type: masonry
-              sort:
-                method: friendly_name                  
-      <<: *none2
+              !include battery.yaml
+      hold_action:
+        action: fire-dom-event
+        browser_mod:
+          service: browser_mod.popup
+          data:
+            style: *browser_mod
+            content:
+              type: custom:mushroom-number-card
+              <<: *none
+              entity: input_number.battery_threshold
+      double_tap_action: none
       entity: sensor.devices_with_low_battery
   - type: conditional
     conditions:

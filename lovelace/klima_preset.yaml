@@ -1,0 +1,26 @@
+type: horizontal-stack
+cards:
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - service: climate.set_preset_mode
+      - primary: Eco
+      - icon: mdi:currency-usd
+      - attr: preset_mode
+      - value: eco
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - service: climate.set_preset_mode
+      - primary: Sleep
+      - icon: mdi:sleep
+      - attr: preset_mode
+      - value: sleep
+  - type: custom:decluttering-card
+    template: mushroom_klima_template
+    variables:
+      - service: climate.set_preset_mode
+      - primary: None
+      - icon: mdi:power-off
+      - attr: preset_mode
+      - value: none
