@@ -126,3 +126,7 @@
 * Reggeli információk, időjárás jelentés naptár események
 * Robot porszívó adott helység takarítás
 * Fényfűzérhez színek és módok váltásához
+
+## Leírás - update 2023-10-09
+
+* <a href="https://github.com/MackoMici/hass-core-config/blob/main/readme-docs/Floorplan_felulet.md">Floorplan felület kialakítás</a>
