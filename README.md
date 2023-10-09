@@ -2,8 +2,8 @@
 
 [Home Assistant Core](https://www.home-assistant.io/installation/#compare-installation-methods) fut egy Intel(R) Core (TM) i5-7500 CPU @ 3.40 GHz Debian Serveren. Egy fali tablet [Chuwi HiPad XPro](https://www.chuwi.com/product/items/chuwi-hipad-xpro.html) felel a megjelenítésért, amin [Fully Kiosk Browser](https://www.fully-kiosk.com/#get-kiosk-apps) fut. Valamint okostelefonokra optimalizált felület is van.
 
-![lovelace](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_kezdolap.png)
-| <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_kezdolap.png" width=30%> | <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_futes.png" width=30%> | <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_klima.png" width=30%> |
+![lovelace](/readme-img/tablet_kezdolap.png)
+| <img src="/readme-img/mobil_kezdolap.png" width=30%> | <img src="/readme-img/mobil_futes.png" width=30%> | <img src="/readme-img/mobil_klima.png" width=30%> |
 |:---:|:---:|:---:|
 
 ## Kinézet - update 2023-10-08
@@ -15,19 +15,19 @@
 * Ezúttal a falakra lett feltéve a hőmérséklet és páratartalom érték CSS segítségével elérve a szép összhatást.
 
 
-#### Oldalsáv
+#### Oldalsáv  - update 2023-10-09
 
 * A pontos idő és dátum megjelenítés
 * Adott napi időjárás [Hourly Weather Card](https://github.com/decompil3d/lovelace-hourly-weather)
 * Valamint a közelgő események megjelenítése [Atomic Calendar Revive](https://github.com/totaldebug/atomic-calendar-revive)
 
-| <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_tv.png" width=30%><br>TV | <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_vacuum.png" width=30%><br>Robot porszívó | <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_noveny.png" width=30%><br>Növény |
+| <img src="/readme-img/mobil_tv.png" width=30%><br>TV | <img src="/readme-img/mobil_vacuum.png" width=30%><br>Robot porszívó | <img src="/readme-img/mobil_noveny.png" width=30%><br>Növény |
 |:---:|:---:|:---:|
-| <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_parasito.png" width=30%><br>Párásító | <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_light.png" width=30%><br>Kapcsolók | <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_idojaras.png" width=20%><br>Időjárás |
-| <img src="https://github.com/MackoMici/hass-core-config/blob/main/readme-img/mobil_system.png" width=10%><br>Rendszer
-| [![battery](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_battery.png)](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_battery.png)<br>**Battery** | [![klima](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_klima.png)](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_klima.png)<br>**Klima** | [![noveny](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_noveny.png)](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_noveny.png)<br>**Nővény** |
-| [![parasito](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_parasito.png)](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/rendszer.png)<br>**Párásító** | [![vacuum](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_vacuum.png)](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_vacuum.png)<br>**Vacuum**| [![tablet](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_tablet.png)](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_tablet.png)<br>**Tablet** |
-| [![user](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_user.png)](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_user.png)<br>**User**| [![system](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_system.gif)](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_system.gif)<br>**System** | [![Light](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_light.gif)](https://github.com/MackoMici/hass-core-config/blob/main/readme-img/tablet_light.gif)<br>**Világítás** |
+| <img src="/readme-img/mobil_parasito.png" width=30%><br>Párásító | <img src="/readme-img/mobil_light.png" width=30%><br>Kapcsolók | <img src="/readme-img/mobil_idojaras.png" width=20%><br>Időjárás |
+| <img src="/readme-img/mobil_system.png" width=10%><br>Rendszer
+| [![battery](/readme-img/tablet_battery.png)](/readme-img/tablet_battery.png)<br>**Battery** | [![klima](/readme-img/tablet_klima.png)](/readme-img/tablet_klima.png)<br>**Klima** | [![noveny](/readme-img/tablet_noveny.png)](/readme-img/tablet_noveny.png)<br>**Nővény** |
+| [![parasito](/readme-img/tablet_parasito.png)](/readme-img/rendszer.png)<br>**Párásító** | [![vacuum](/readme-img/tablet_vacuum.png)](/readme-img/tablet_vacuum.png)<br>**Vacuum**| [![tablet](/readme-img/tablet_tablet.png)](/readme-img/tablet_tablet.png)<br>**Tablet** |
+| [![user](/readme-img/tablet_user.png)](/readme-img/tablet_user.png)<br>**User**| [![system](/readme-img/tablet_system.gif)](/readme-img/tablet_system.gif)<br>**System** | [![Light](/readme-img/tablet_light.gif)](/readme-img/tablet_light.gif)<br>**Világítás** |
 
 #### Kinézet - update 2023-10-08
 
@@ -129,4 +129,4 @@
 
 ## Leírás - update 2023-10-09
 
-* <a href="https://github.com/MackoMici/hass-core-config/blob/main/readme-docs/Floorplan_felulet.md">Floorplan felület kialakítás</a>
+* <a href="/readme-docs/Floorplan_felulet.md">Floorplan felület kialakítás</a>
