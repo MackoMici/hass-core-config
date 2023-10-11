@@ -1,6 +1,8 @@
 decluttering_templates: !include decluttering_templates.yaml
 
 type: vertical-stack
+view_layout:
+  grid-area: sidebar
 cards:
   - type: picture-elements
     style: |
@@ -85,5 +87,3 @@ cards:
     refreshInterval: 3600
     showMultiDay: true
     showMultiDayEventParts: true
-view_layout:
-  grid-area: sidebar

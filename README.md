@@ -6,7 +6,7 @@
 | <img src="/readme-img/mobil_kezdolap.png" width=30%> | <img src="/readme-img/mobil_futes.png" width=30%> | <img src="/readme-img/mobil_klima.png" width=30%> |
 |:---:|:---:|:---:|
 
-## Kinézet - update 2023-10-08
+## Kinézet
 
 * [Dashboard (Lovelace)](https://www.home-assistant.io/lovelace/) tabletre és telefonokra optimalizálva a megjelenítés.
 * [HA Floorplan](https://github.com/ExperienceLovelace/ha-floorplan)-t használok a 3D-s alaprajz megjelenítéséhez, melyen minden a házban található eszközt lehet vezérelni. [BitBorn](https://www.youtube.com/watch?v=MCNxgb0mrSA) videója apalján készült az új felület immár több kisebb png fájllal a világítás vezérlés miatt.
@@ -15,7 +15,7 @@
 * Ezúttal a falakra lett feltéve a hőmérséklet és páratartalom érték CSS segítségével elérve a szép összhatást.
 
 
-#### Oldalsáv  - update 2023-10-09
+#### Oldalsáv
 
 * A pontos idő és dátum megjelenítés
 * Adott napi időjárás [Hourly Weather Card](https://github.com/decompil3d/lovelace-hourly-weather)
@@ -29,11 +29,11 @@
 | [![parasito](/readme-img/tablet_parasito.png)](/readme-img/rendszer.png)<br>**Párásító** | [![vacuum](/readme-img/tablet_vacuum.png)](/readme-img/tablet_vacuum.png)<br>**Vacuum**| [![tablet](/readme-img/tablet_tablet.png)](/readme-img/tablet_tablet.png)<br>**Tablet** |
 | [![user](/readme-img/tablet_user.png)](/readme-img/tablet_user.png)<br>**User**| [![system](/readme-img/tablet_system.gif)](/readme-img/tablet_system.gif)<br>**System** | [![Light](/readme-img/tablet_light.gif)](/readme-img/tablet_light.gif)<br>**Világítás** |
 
-#### Kinézet - update 2023-10-08
+#### Kinézet
 
 [Waves Theme](https://github.com/tgcowell/waves)
 
-## Eszközök - update 2023-10-08
+## Eszközök
 
 | Gyártó | Termék | Integráció |
 |---|---|---|
@@ -59,7 +59,7 @@
 | CHUWI | [HiPad XPro](https://www.chuwi.com/product/items/chuwi-hipad-xpro.html) | [fully kiosk browser](https://www.home-assistant.io/integrations/fully_kiosk), [mqtt](https://www.home-assistant.io/integrations/mqtt/), [mobil app](https://www.home-assistant.io/integrations/mobile_app) |
 | IKEA | [TRADFRI E14](https://www.ikea.com/hu/hu/p/tradfri-led-izzo-e14-470-lumen-okos-eszkoez-vezetek-nelkueli-szabalyozo-feher-spektrum-csillar-20486784/) | [zha](https://www.home-assistant.io/integrations/zha) |
 
-## Integrációk - update 2023-10-08
+## Integrációk
 
 | Integrációk |
 |---|
@@ -104,7 +104,7 @@
 | [Valetudo Map Card](https://github.com/Hypfer/lovelace-valetudo-map-card) |
 | [Mini Media Player](https://github.com/kalkih/mini-media-player) |
 
-## Automatizációk - update 2023-10-08
+## Automatizációk
 
 * Ablak nyitás klíma kikapcsolás
 * Ajtó nyitás tablen mozgás érzékelő bekapcsolás
@@ -121,7 +121,7 @@
 * Reggeli információ engedélyezés
 * Reggeli információ felolvasás
 
-## Szkriptek - update 2023-10-08
+## Szkriptek
 
 * Reggeli információk, időjárás jelentés naptár események
 * Robot porszívó adott helység takarítás

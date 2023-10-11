@@ -113,6 +113,48 @@ template:
         unit_of_measurement: '%'
         state_class: measurement
 
+      - name: "Devices with Low Battery"
+        unit_of_measurement: devices
+        state: >
+          {{ states.sensor
+            | selectattr('attributes.device_class', 'defined')
+            | selectattr('attributes.device_class', 'eq', 'battery')
+            | rejectattr('entity_id', 'search', 'battery_level')
+            | map(attribute = 'state')
+            | map('int', -1)
+            | select('lessthan', states('input_number.battery_threshold') | int)
+            | list
+            | count }}
+        icon: >
+          {% if is_state('sensor.devices_with_low_battery', 0) %}
+            mdi:battery-check
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+
+      - name: "Növény probléma"
+        icon: mdi:flower
+        availability: >
+          {{ states('plant.new_zealand_spinach') not in ['unavailable', 'unknown'] }}
+        state: >
+          {% set problem = 0 | int %}
+          {% if not is_state_attr('plant.new_zealand_spinach', 'moisture_status', 'ok') %}
+            {% set problem = problem + 1 | int %}
+          {% endif %}
+          {% if not is_state_attr('plant.new_zealand_spinach', 'temperature_status', 'ok') %}
+            {% set problem = problem + 1 | int %}
+          {% endif %}
+          {% if not is_state_attr('plant.new_zealand_spinach', 'conductivity_status', 'ok') %}
+            {% set problem = problem + 1 | int %}
+          {% endif %}
+          {% if not is_state_attr('plant.new_zealand_spinach', 'illuminance_status', 'ok') %}
+            {% set problem = problem + 1 | int %}
+          {% endif %}
+          {% if not is_state_attr('plant.new_zealand_spinach', 'humidity_status', 'ok') %}
+            {% set problem = problem + 1 | int %}
+          {% endif %}
+          {{ problem | int }}
+
       - name: "Week Day"
         state: >
           {%- set days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'] %}
@@ -138,6 +180,18 @@ template:
           {% else %}
             not_home
           {% endif %}
+
+      - name: "MetNo Temperature"
+        unit_of_measurement: '°C'
+        state_class: 'measurement'
+        state: >
+          {{ state_attr('weather.forecast_home', 'temperature') }}
+
+      - name: "MetNo Humidity"
+        unit_of_measurement: '%'
+        state_class: 'measurement'
+        state: >
+          {{ state_attr('weather.forecast_home', 'humidity') }} 
   
   - trigger:
       - platform: time_pattern

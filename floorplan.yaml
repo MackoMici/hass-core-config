@@ -10,27 +10,6 @@ views:
         "sidebar floorplan"
     badges: []
     cards:
-      - type: custom:popup-card
-        entity: light.kamra_main
-        card:
-          type: custom:decluttering-card
-          template: mushroom_light_template
-          variables:
-            - entity: light.kamra_main
-      - type: custom:popup-card
-        entity: light.wc_main
-        card:
-          type: custom:decluttering-card
-          template: mushroom_light_template
-          variables:              
-            - entity: light.wc_main
-      - type: custom:popup-card
-        entity: light.nappali_asztali_lampa
-        card:
-          type: custom:decluttering-card
-          template: mushroom_light_template
-          variables:              
-            - entity: light.nappali_asztali_lampa
       - type: horizontal-stack
         view_layout:
           grid-arena: floorplan
@@ -250,7 +229,6 @@ views:
                       style: *browser_mod_1080
                       content:
                         !include lovelace/tablet.yaml
-
               - name: Fűtés
                 entity: climate.honeywell_home_termosztat
                 tap_action:
@@ -360,7 +338,30 @@ views:
                           cards:
                             !include lovelace/vacuum.yaml
                 - type: custom:mushroom-template-card
-                  card_mod: *background_none
+                  card_mod: 
+                    style: |
+                      ha-card {
+                        box-shadow: none;
+                        background: none;              
+                      }            
+                      ha-state-icon:after {
+                        {% if states('plant.new_zealand_spinach')  == "problem" %}
+                          content: "{{ states('sensor.noveny_problema') }}";
+                        {% endif %}
+                        background: rgb(var(--rgb-red));
+                        color: var(--card-background-color);
+                        position: absolute;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-weight: bolder;
+                        border-radius: 50%;
+                        top: -5px;
+                        right: -5px;
+                        width: 18px;
+                        height: 18px;
+                        font-size: 8px;
+                      }
                   primary: ''
                   secondary: ''
                   icon: mdi:leaf
@@ -462,4 +463,25 @@ views:
                           doubletap_action: none
                           entity: input_number.battery_threshold
                   double_tap_action: none
+      - type: custom:popup-card
+        entity: light.kamra_main
+        card:
+          type: custom:decluttering-card
+          template: mushroom_light_template
+          variables:
+            - entity: light.kamra_main
+      - type: custom:popup-card
+        entity: light.wc_main
+        card:
+          type: custom:decluttering-card
+          template: mushroom_light_template
+          variables:              
+            - entity: light.wc_main
+      - type: custom:popup-card
+        entity: light.nappali_asztali_lampa
+        card:
+          type: custom:decluttering-card
+          template: mushroom_light_template
+          variables:              
+            - entity: light.nappali_asztali_lampa
       - !include  lovelace/sidebar.yaml

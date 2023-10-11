@@ -5,7 +5,7 @@
   sun_entity: sun.sun
   weather_icon_type: fill
   locale: hu
-  date_pattern: y. MMMM d.
+  date_pattern: y. LLLL d.
   hide_forecast_section: true
   card_mod: &background_none
     style: |
