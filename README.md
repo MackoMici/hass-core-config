@@ -1,4 +1,4 @@
-# Home Assistant Konfiguráció - update 2023-10-08
+# Home Assistant Konfiguráció
 
 [Home Assistant Core](https://www.home-assistant.io/installation/#compare-installation-methods) fut egy Intel(R) Core (TM) i5-7500 CPU @ 3.40 GHz Debian Serveren. Egy fali tablet [Chuwi HiPad XPro](https://www.chuwi.com/product/items/chuwi-hipad-xpro.html) felel a megjelenítésért, amin [Fully Kiosk Browser](https://www.fully-kiosk.com/#get-kiosk-apps) fut. Valamint okostelefonokra optimalizált felület is van.
 
@@ -127,6 +127,7 @@
 * Robot porszívó adott helység takarítás
 * Fényfűzérhez színek és módok váltásához
 
-## Leírás - update 2023-10-09
+## Leírás
 
 * <a href="/readme-docs/Floorplan_felulet.md">Floorplan felület kialakítás</a>
+* <a href="/readme-docs/Mobil_felulet.md">Mobil felület kialakítás</a>
