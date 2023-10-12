@@ -243,6 +243,17 @@ views:
                         cards:
                           - !include lovelace/futes.yaml
                           - !include lovelace/grafikon.yaml
+                hold_action:
+                  action: fire-dom-event
+                  browser_mod:
+                    service: browser_mod.popup
+                    data:
+                      style: *browser_mod
+                      content:
+                        type: custom:layout-card
+                        layout_type: custom:grid-layout
+                        cards:
+                          - !include lovelace/schedule.yaml
                 state_action:
                   action: call-service
                   service: floorplan.class_set
