@@ -133,7 +133,7 @@ template:
           {% endif %}
 
       - name: "Növény probléma"
-        icon: mdi:flower
+        icon: mdi:spa
         availability: >
           {{ states('plant.new_zealand_spinach') not in ['unavailable', 'unknown'] }}
         state: >
