@@ -5,3 +5,4 @@ A fűtés vezérlés mivel túl bonyolult lett volna már az automatizmusom szá
 Az oldalhoz tartozó kód az alábbi linken érhető el: ebben nincs benne a beállítás csak a felületet jeleníti meg: <a href="/lovelace/schedule.yaml">Schedule felület</a>
 
 | <img src="/readme-img/munkanap_1.png" width=100%> | <img src="/readme-img/munkanap_2.png" width=100%> | <img src="/readme-img/munkanap_3.png" width=100%> |
+|:---:|:---:|:---:|
