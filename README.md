@@ -131,3 +131,4 @@
 
 * <a href="/readme-docs/Floorplan_felulet.md">Floorplan felület kialakítás</a>
 * <a href="/readme-docs/Mobil_felulet.md">Mobil felület kialakítás</a>
+* <a href="/readme-docs/Futes_vezerles.md">Fűtés vezérlés kialakítás</a>
