@@ -29,14 +29,14 @@ reggeli_informacio:
         \       {{ as_timestamp(state_attr('sensor.ical_szakacs_katalin_event_' +
         i | string, 'start')) | timestamp_custom('%H:%M') }}\n      {% endif %}\n
         \     {{ state_attr('sensor.ical_szakacs_katalin_event_' + i | string, 'summary')
-        }}.\n    {% endif %}\n  {% endfor%}\n{% endif %}\n{% if ((states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
+        }}.\n    {% endif %}\n  {% endfor %}\n{% endif %}\n{% if ((states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
         | as_datetime | as_local).date() - (now() | as_local).date()).days | int <
         3 and is_state('calendar.zoltan_hunyadvari_gmail_com', 'off') and is_state_attr('calendar.zoltan_hunyadvari_gmail_com',
         'all_day', false) %}\n  A következő munkanap: {{ napok[((states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
         | as_datetime | as_local).date() - (now() | as_local).date()).days | int]
         }}, {{ (states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
         | as_datetime | as_local).time() }}.\n{% endif %}\n\n{% if not is_state('sensor.idokep_elorejelzes',
-        'unavailable') %}\n  Országos időjárás jelentés: \n  {{ state_attr('sensor.idokep_elorejelzes',
+        'unavailable') %}\n  Országos időjárás előrejelzés: \n  {{ state_attr('sensor.idokep_elorejelzes',
         'details') }}\n{% endif %}\n{% set odakinn = states('sensor.kulteri_homerseklet')
         %}\n{% if not is_state('weather.forecast_home', 'unavailable') %}\n\n  {%
         set odakinn = state_attr('weather.forecast_home', 'temperature') %}\n\n  {%
