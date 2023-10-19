@@ -85,7 +85,7 @@
     - type: custom:decluttering-card
       template: mushroom_switch_light_template
       variables:
-        - entity: switch.sonoff_tablet_konnektor
+        - entity: switch.gosund_ep2_tablet_konnektor
     - type: custom:decluttering-card
       template: mushroom_switch_light_template
       variables:

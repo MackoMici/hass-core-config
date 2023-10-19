@@ -222,7 +222,7 @@
     path: MackoMici/tablet_charging.yaml
     input:
       tablet_battery: sensor.hipad_xpro_elem_akku
-      tablet_switch: switch.sonoff_tablet_konnektor
+      tablet_switch: switch.gosund_ep2_tablet_konnektor
       tablet_screen: switch.hipad_xpro_kepernyo
       turn_on: 20
 - id: '1696638709773'
