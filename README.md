@@ -46,6 +46,7 @@
 | Xiaomi | [Mi Smart Home növényszenzor](https://xiaomishop.hu/mi_smart_home_novenyszenzor) | [xiaomi gateway 3](https://github.com/AlexxIT/XiaomiGateway3) |
 | Sonoff | [Basic R3](https://sonoff.tech/product-document/diy-smart-switches-doc/basicr3-doc/) | [sonoff lan](https://github.com/AlexxIT/SonoffLAN) |
 | Sonoff | [Mini R2](https://sonoff.tech/product/diy-smart-switches/minir2/) | [sonoff lan](https://github.com/AlexxIT/SonoffLAN) |
+| Sonoff | [ZbMini Extreme](https://sonoff.tech/product/diy-smart-switches/zbmini-l2/) | [zha](https://www.home-assistant.io/integrations/zha) |
 | Sonoff | [TX 1C](https://sonoff.tech/product/smart-wall-switches/tx-series/) | [sonoff lan](https://github.com/AlexxIT/SonoffLAN) |
 | Sonoff | [S26 R2](https://sonoff.tech/product/smart-plugs/s26r2/) | [sonoff lan](https://github.com/AlexxIT/SonoffLAN) |
 | Sonoff | [DW2-Wifi](https://sonoff.tech/product/gateway-and-sensors/dw2-wifi/) | [sonoff lan](https://github.com/AlexxIT/SonoffLAN)

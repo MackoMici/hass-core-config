@@ -12,6 +12,10 @@
       template: mushroom_switch_light_template
       variables:
         - entity: switch.sonoff_furdoszoba
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_zbminil2_ebedlo
 - type: horizontal-stack
   cards:
     - type: custom:mushroom-light-card

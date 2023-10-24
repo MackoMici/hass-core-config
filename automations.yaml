@@ -3,17 +3,18 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: switch.hipad_xpro_kepernyo
+    entity_id: light.ebedlo_main
     to: 'on'
-  - platform: state
-    entity_id: light.tablet_screen
-    to: 'on'
+    for: 00:10:00
   condition:
   - condition: state
     entity_id: group.family_all
     state: home
   - condition: state
     entity_id: light.tablet_screen
+    state: 'on'
+  - condition: state
+    entity_id: switch.hipad_xpro_kepernyo
     state: 'on'
   - condition: state
     entity_id: input_boolean.reggeli_info
@@ -43,10 +44,12 @@
         static_map: true
         show_scale: true
         map_style: voyager
+  - delay:
+      seconds: 5
   - service: script.reggeli_informacio
     data: {}
   - delay:
-      seconds: 90
+      seconds: 80
   - service: input_boolean.turn_off
     target:
       entity_id: input_boolean.reggeli_info
@@ -116,8 +119,8 @@
       outdoor_absolutehumidity_sensor: sensor.kulteri_absolutehumidity
       reference_humidity_sensor: sensor.belteri_paratartalom
       absolutehumidity_sensor: sensor.furdoszoba_absolutehumidity
-      rising_threshold: 15
-      falling_threshold: 13
+      rising_threshold: 10
+      falling_threshold: 6
 - id: '1676475309119'
   alias: Fürdőszoba fűtés
   description: ''
