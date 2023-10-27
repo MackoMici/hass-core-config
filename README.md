@@ -121,6 +121,7 @@
 * Párásító világítás kikapcsolás
 * Reggeli információ engedélyezés
 * Reggeli információ felolvasás
+* Tablet bekapcsolás reggeli információ felolvasáshoz
 
 ## Szkriptek
 

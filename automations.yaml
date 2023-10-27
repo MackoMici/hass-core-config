@@ -3,9 +3,11 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: light.ebedlo_main
+    entity_id: switch.hipad_xpro_kepernyo
     to: 'on'
-    for: 00:10:00
+  - platform: state
+    entity_id: light.tablet_screen
+    to: 'on'
   condition:
   - condition: state
     entity_id: group.family_all
@@ -119,8 +121,8 @@
       outdoor_absolutehumidity_sensor: sensor.kulteri_absolutehumidity
       reference_humidity_sensor: sensor.belteri_paratartalom
       absolutehumidity_sensor: sensor.furdoszoba_absolutehumidity
-      rising_threshold: 10
-      falling_threshold: 6
+      rising_threshold: 8
+      falling_threshold: 5
 - id: '1676475309119'
   alias: Fürdőszoba fűtés
   description: ''
@@ -159,15 +161,6 @@
       security: alarm_control_panel.gateway_alarm
       family: group.family_all
       doorsensor: binary_sensor.sonoff_bejarati_ajto
-- id: '1690287367883'
-  alias: Wc frissítő vezérlés
-  description: ''
-  use_blueprint:
-    path: MackoMici/toilet_freshener.yaml
-    input:
-      doorsensor_entity: binary_sensor.wc_contact
-      light_switch: light.wc_main
-      freshener_switch: switch.sonoff_illatosito
 - id: '1692591387982'
   alias: Kamra világítás vezérlés
   description: ''
@@ -238,3 +231,22 @@
       camera: camera.tablet
       family: group.family_wifi
       doorsensor: binary_sensor.kamra_contact
+- id: '1698388023673'
+  alias: Tablet képernyő bekapcsolás reggel
+  description: ''
+  use_blueprint:
+    path: MackoMici/tablet_screen_on.yaml
+    input:
+      ebedlo_switch: switch.sonoff_zbminil2_ebedlo
+      reggeli_info: input_boolean.reggeli_info
+      tablet_screen: switch.hipad_xpro_kepernyo
+- id: '1698389877534'
+  alias: Wc frissítő vezérlés
+  description: ''
+  use_blueprint:
+    path: MackoMici/toilet_freshener.yaml
+    input:
+      doorsensor_entity: binary_sensor.wc_contact
+      timer: timer.wc
+      freshener_switch: switch.sonoff_illatosito
+      light_switch: light.wc_main
