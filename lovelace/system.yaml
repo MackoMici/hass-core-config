@@ -8,7 +8,7 @@
     style: |
       ha-card {
         background: none;
-        box-shadow: none;
+        border: none;
       }
   subtitle: Uptime - {{ states('sensor.home_assistant_uptime') }}
 - type: horizontal-stack
@@ -24,7 +24,7 @@
         action: url
         url_path: https://www.home-assistant.io/latest-release-notes/
       icon: mdi:home-assistant
-      icon_color: '#2196f3'
+      icon_color: var(--rgb-blue-color)
       secondary: |
         {% if states(entity) == states('sensor.home_assistant_website') %}
           Naprakész - {{ states(entity) }}

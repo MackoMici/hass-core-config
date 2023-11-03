@@ -83,7 +83,7 @@ clean_house:
   use_blueprint:
     path: MackoMici/Xiaomi_Clean_Zone.yaml
     input:
-      vacuum: vacuum.viomi_se
+      vacuum: vacuum.viomise
       room_zone: '[ {%- if is_state(''input_boolean.nappali_takaritas'', ''on'') -%}
         [-2.1, -4.9, 2.2, 0.3], {%- endif -%} {%- if is_state(''input_boolean.ebedlo_takaritas'',
         ''on'') -%} [2.2, -4.0, 5.3, 0.3], {%- endif -%} {%- if is_state(''input_boolean.konyha_takaritas'',

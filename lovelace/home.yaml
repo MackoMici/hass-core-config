@@ -23,7 +23,6 @@ cards:
       style: |
         ha-card {
           background: none;
-          box-shadow: none;
         }
   - type: custom:decluttering-card
     template: weather_template
@@ -63,40 +62,40 @@ cards:
         variables: 
            - secondary: Világítás
            - icon: mdi:lightbulb
-           - color: amber
+           - color: var(--rgb-amber-color)
            - nav: kapcsolo
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:
           - secondary: Fűtés
           - icon: mdi:radiator
-          - color: blue
+          - color: var(--rgb-blue-color)
           - nav: futes
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:
           - secondary: Klíma
           - icon: mdi:air-conditioner
-          - color: green
+          - color: var(--rgb-green-color)
           - nav: klima_mobil
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:
           - secondary: Párásítás
           - icon: mdi:air-humidifier
-          - color: red
+          - color: var(--rgb-red-color)
           - nav: parasitas
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:
           - secondary: Takarítás
           - icon: mdi:robot-vacuum
-          - color: cyan
+          - color: var(--rgb-cyan-color)
           - nav: porszivo
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:
           - secondary: System
           - icon: mdi:lan
-          - color: orange
+          - color: var(--rgb-orange-color)
           - nav: informacio

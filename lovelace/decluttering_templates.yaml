@@ -7,7 +7,7 @@ mushroom_bar_template:
       style: |
         ha-card {
           background: none;
-          box-shadow: none;
+          border: none;
         }
     cards:
       - type: custom:layout-card
@@ -36,7 +36,7 @@ mushroom_system_template:
     card_mod: *background_none
     entity: '[[entity]]'
     icon: "{{ state_attr(config.entity, 'icon') }}"
-    icon_color: '#2196f3'
+    icon_color: var(--rgb-blue-color)
 
 bar_card_right_tempalte:
   card:
@@ -52,6 +52,7 @@ bar_card_right_tempalte:
     card_mod:
       style: |
         ha-card {
+          border: none;
           padding: 12px;
           margin-left: 12px;
         }
@@ -89,6 +90,7 @@ bar_card_left_tempalte:
     card_mod:
       style: |
         ha-card {
+          border: none;
           padding: 12px;
           margin-left: 12px;
         }
@@ -120,7 +122,7 @@ mushroom_update_template:
     <<: *none
     primary: '[[primary]]'
     icon: '[[icon]]'
-    icon_color: '#2196f3'
+    icon_color: var(--rgb-blue-color)
     secondary: "{% if state_attr(entity, 'installed_version') == state_attr(entity, 'latest_version') %}
                   Naprakész
                 {% else %}
@@ -130,7 +132,7 @@ mushroom_update_template:
 mushroom_karacsony_template:
   default:
     - primary: ''
-    - icon_color: blue
+    - icon_color: var(--rgb-blue-color)
     - icon: mdi:circle
     - entity: light.feny_fuzer
   card:
@@ -162,7 +164,7 @@ mushroom_vacuum_template:
     icon: '[[icon]]'
     icon_color: &icon_color
       "{% if is_state(entity, 'on') %}
-         orange
+         var(--rgb-orange-color)
        {% endif %}"
     primary: '[[primary]]'
     secondary: "{% set clean = { 'ago': (as_timestamp(now()) - as_timestamp(states[entity | join | regex_replace('boolean', 'datetime')].state)) / 60 / 60 } %}
@@ -229,7 +231,7 @@ mushroom_klima_template:
       {% if not is_state(entity, 'off') %}
         {% if ('[[attr]]' == 'fan_mode') and ((is_state_attr(entity, 'preset_mode', 'boost')) or (is_state('switch.gree_klima_quiet', 'on'))) %}
         {% elif is_state_attr(entity, '[[attr]]', '[[value]]') %}
-          orange
+          var(--rgb-orange-color)
         {% endif %}
       {% endif %}
 
@@ -254,7 +256,7 @@ mushroom_klima_hvac_template:
     icon: '[[icon]]'
     icon_color: |
       {% if is_state(entity, '[[value]]') %}
-          orange
+          var(--rgb-orange-color)
       {% endif %}
 
 mushroom_entity_futes_template:
@@ -265,7 +267,7 @@ mushroom_entity_futes_template:
     primary_info: state
     secondary_info: name
     name: '[[name]]'
-    icon_color: '#2196f3'
+    icon_color: var(--rgb-blue-color)
     layout: horizontal
     <<: *none
 
@@ -327,7 +329,7 @@ mushroom_light_template:
         .: |
           ha-card {
             background: none;
-            box-shadow: none;
+            border: none;
           }
     entity: '[[entity]]'
     show_brightness_control: true
@@ -449,6 +451,7 @@ person_template:
           ha-card {
             background: none;
             box-shadow: none;
+            border: none;
           }
     <<: *none2
     tap_action:
@@ -506,9 +509,9 @@ person_template:
                     mdi:wifi-strength-off
                   {% endif %}
                 icon_color: "{% if is_state(entity, 'MiciMacko 5GHz') %}
-                               blue
+                               var(--rgb-blue-color)
                              {% elif not is_state(entity, '<not connected>') %}
-                               green
+                               var(--rgb-green-color)
                              {% endif %}"
                 primary: "{% if not is_state(entity, '<not connected>') %}
                             {{ states(entity) }}
@@ -540,7 +543,7 @@ person_template:
                       channel: alarm_stream
                 layout: vertical
                 icon: mdi:target
-                icon_color: red
+                icon_color: var(--rgb-red-color)
                 primary: Find Phone
                 view_layout:
                   grid-area: find
@@ -587,13 +590,13 @@ person_template:
                                'state': states[entity | map('lower') | join | regex_replace(find='_battery_level', replace='_battery_state')].state
                              } %}
                              {% if battery.state  == 'charging' %}
-                               blue
+                               var(--rgb-blue-color)
                              {% elif battery.level > 80 %}
-                               green
+                               var(--rgb-green-color)
                              {% elif battery.level <= 80 and battery.level >= 25 %}
-                               orange
+                               var(--rgb-orange-color)
                              {% else %}
-                               red
+                               var(--rgb-red-color)
                              {% endif %}"
                 view_layout:
                   grid-area: bluetooth

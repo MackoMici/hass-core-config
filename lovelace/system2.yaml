@@ -10,7 +10,7 @@
         style: |
           ha-card {
             background: none;
-            box-shadow: none;
+            border: none;
           }
       <<: &none
         - tap_action: none
@@ -22,7 +22,7 @@
       <<: *none
       primary: Core
       icon: mdi:home-assistant
-      icon_color: '#2196f3'
+      icon_color: var(--rgb-blue-color)
       secondary: |
         {% if states(entity) == states('sensor.home_assistant_website') %}
           Naprakész - {{ states(entity) }}

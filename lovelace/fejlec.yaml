@@ -1,15 +1,17 @@
 type: custom:mushroom-chips-card
-style: |
-  ha-card {
-    --chip-box-shadow: none;
-    --chip-background: none;
-  }
 chips:
   - type: alarm-control-panel
+    card_mod: &background_none
+      style: |
+        ha-card {
+          background: none;
+          border: none;
+        }
     entity: alarm_control_panel.gateway_alarm
     content_info: none
     name: Alarm
   - type: weather
+    card_mod: *background_none
     entity: weather.forecast_home
     show_conditions: true
     show_temperature: true
@@ -23,6 +25,7 @@ chips:
         state: 'on'
     chip:
       type: template
+      card_mod: *background_none
       icon: mdi:television
       content: '{{ state_attr(entity, "source") }}'
       tap_action:
@@ -32,18 +35,19 @@ chips:
         hold_action: none
         double_tap_action: none
       entity: media_player.samsung_q80_series_65
-      icon_color: grey
+      icon_color: var(--rgb-grey-color)
   - type: conditional
     conditions:
       - entity: light.vilagitas
         state: 'on'
     chip:
       type: template
+      card_mod: *background_none
       icon: mdi:lightbulb
       content: |
         {{ expand(states.light.vilagitas) | selectattr( 'state', 'eq', 'on') | list | count }} ég
       entity: light.vilagitas
-      icon_color: yellow
+      icon_color: var(--rgb-yellow-color)
       tap_action:
         action: navigate
         navigation_path: kapcsolo
@@ -54,7 +58,8 @@ chips:
         state: 'on'
     chip:
       type: template
-      icon_color: blue
+      card_mod: *background_none
+      icon_color: var(--rgb-blue-color)
       icon: mdi:window-open
       content: '{{ expand(states.binary_sensor.ablakok) | selectattr( "state", "eq", "on") | list | count }} nyitva'
       tap_action:
@@ -75,12 +80,7 @@ chips:
                     state: 'on'
                     options:
                       type: custom:mushroom-entity-card
-                      card_mod: &background_none
-                        style: |
-                          ha-card {
-                            background: none;
-                            box-shadow: none;
-                          }
+                      card_mod: *background_none
                       secondary_info: last-changed
                       <<: *none
                 exclude:
@@ -100,7 +100,8 @@ chips:
         state_not: '0'
     chip:
       type: template
-      icon_color: red
+      card_mod: *background_none
+      icon_color: var(--rgb-red-color)
       icon: mdi:battery-alert
       content: '{{ states(entity) }}'
       tap_action:
@@ -129,6 +130,7 @@ chips:
         state: problem
     chip:
       type: template
+      card_mod: *background_none
       icon: mdi:flower
       content: '{{ states(entity) }}'
       tap_action:
@@ -136,4 +138,4 @@ chips:
         navigation_path: novenyek
       <<: *none2
       entity: sensor.noveny_problema
-      icon_color: green
+      icon_color: var(--rgb-green-color)

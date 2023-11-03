@@ -1,5 +1,5 @@
 - type: custom:mushroom-vacuum-card
-  entity: vacuum.valetudo_viomise
+  entity: vacuum.viomise
   icon_animation: true
   commands:
     - start_pause
@@ -14,26 +14,28 @@
     style: |
       ha-card {
         background: none;
-        box-shadow: none;
+        border: none;
       }
 - type: custom:mushroom-chips-card
   style: |
     ha-card {
-      --chip-box-shadow: none;
       --chip-background: none;
       --chip-padding: 0px;
     }
   alignment: justify
   chips:
     - type: template
+      card_mod: *background_none
       <<: *none
-      content: "Szűrő: {{ (states.sensor.valetudo_viomise_main_filter.state | int / 60) | int }} óra"
+      content: "Szűrő: {{ (states.sensor.viomise_main_filter.state | int / 60) | int }} óra"
     - type: template
+      card_mod: *background_none
       <<: *none
-      content: "Oldalsó kefe: {{ (states.sensor.valetudo_viomise_right_brush.state | int / 60) | int }} óra"
+      content: "Oldalsó kefe: {{ (states.sensor.viomise_right_brush.state | int / 60) | int }} óra"
     - type: template
+      card_mod: *background_none
       <<: *none
-      content:  "Fő kefe: {{ (states.sensor.valetudo_viomise_main_brush.state | int / 60) | int }} óra"
+      content:  "Fő kefe: {{ (states.sensor.viomise_main_brush.state | int / 60) | int }} óra"
 - type: grid
   columns: 4
   square: false
@@ -86,5 +88,5 @@
         - entity: script.clean_house
         - service: script.clean_house
         - icon: mdi:play
-        - icon_color: orange
+        - icon_color: var(--rgb-orange-color)
         - primary: Takarítás

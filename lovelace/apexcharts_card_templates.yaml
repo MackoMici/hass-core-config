@@ -12,7 +12,7 @@ default_chart:
       width: 2
     grid:
       show: true
-      borderColor: '#ffffff30'
+      borderColor: rgba(var(--rgb-white-color), 0.19)
       strokeDashArray: 4
       position: back
   experimental:
@@ -22,7 +22,10 @@ default_chart:
     show_states: true
     colorize_states: true
     disable_actions: true
-  color_list: ['#2196f3', '#e91e63', '#4caf4f']
+  color_list: 
+    - rgb(33, 150, 243)
+    - rgb(255, 97, 116)
+    - rgb(141, 253, 166)
   all_series_config:
     extend_to: false
     curve: smooth
@@ -45,7 +48,10 @@ system_chart:
   header:
     show: true
     show_states: false
-  color_list: ['#2196f3', '#e91e63', '#ffc662']
+  color_list: 
+    - rgb(33, 150, 243)
+    - rgb(255, 97, 116)
+    - rgb(255, 211, 99)
   all_series_config:
     show:
       legend_value: true

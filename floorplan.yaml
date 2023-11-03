@@ -20,7 +20,7 @@ views:
                   max-width: 100%;
                   margin: 0 auto;
                   background: none;
-                  box-shadow: none;
+                  border: none;
               }
             config:
               image: /local/floorplan/House_2023_optimized.svg
@@ -312,6 +312,7 @@ views:
                       ha-card {
                         background: none;
                         box-shadow: none;
+                        border: none;
                       }
                   primary: ''
                   secondary: ''
@@ -355,13 +356,14 @@ views:
                     style: |
                       ha-card {
                         box-shadow: none;
-                        background: none;              
+                        background: none;  
+                        border: none;            
                       }            
                       ha-state-icon:after {
                         {% if states('plant.new_zealand_spinach')  == "problem" %}
                           content: "{{ states('sensor.noveny_problema') }}";
                         {% endif %}
-                        background: rgb(var(--rgb-red));
+                        background: rgb(var(--rgb-red-color));
                         color: var(--card-background-color);
                         position: absolute;
                         display: flex;
@@ -380,9 +382,9 @@ views:
                   icon: mdi:leaf
                   icon_color: |
                     {% if states(entity) == 'problem' %}
-                      red
+                      var(--rgb-red-color)
                     {% else %}
-                      green
+                      var(--rgb-green-color)
                     {% endif %}
                   layout: vertical
                   entity: plant.new_zealand_spinach
@@ -426,13 +428,14 @@ views:
                     style: |
                       ha-card {
                         box-shadow: none;
-                        background: none;              
+                        background: none;      
+                        border: none;        
                       }            
                       ha-state-icon:after {
                         {% if states('sensor.devices_with_low_battery') | int > 0 %}
                           content: "{{ states('sensor.devices_with_low_battery') }}";
                         {% endif %}
-                        background: rgb(var(--rgb-red));
+                        background: rgb(var(--rgb-red-color));
                         color: var(--card-background-color);
                         position: absolute;
                         display: flex;
@@ -451,7 +454,7 @@ views:
                   icon: mdi:battery-alert
                   icon_color: |
                     {% if states(entity) | int > 0 %}
-                      red
+                      var(--rgb-red-color)
                     {% endif %}
                   entity: sensor.devices_with_low_battery
                   layout: vertical

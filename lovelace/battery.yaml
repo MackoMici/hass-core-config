@@ -25,7 +25,7 @@ card:
             style: |
               ha-card {
                 background: none;
-                box-shadow: none;
+                border: none;
               }
           primary: |
             {% if states(entity) == "unavailable" %}
@@ -49,11 +49,11 @@ card:
             {% endif %}
           icon_color: |
             {% if (states(entity) == "unavailable") or (states(entity) | int < 10) %}
-              red
+              var(--rgb-red-color)
             {% elif states(entity) | int < 20 %}
-              deep-orange
+              var(--rgb-deep-orange-color)
             {% else %}
-              amber
+              var(--rgb-amber-color)
             {% endif %}
           layout: horizontal
           tap_action: none
@@ -63,6 +63,6 @@ card:
             {% if (states(entity) == "unavailable") or (states(entity) | int < 15) %}
               mdi:exclamation-thick
             {% endif %}
-          badge_color: red
+          badge_color: var(--rgb-red-color)
     exclude:
       - entity_id: "*_battery_level"

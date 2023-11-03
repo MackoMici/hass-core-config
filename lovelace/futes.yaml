@@ -13,7 +13,7 @@ cards:
         .: |
           ha-card {
             background: none;
-            box-shadow: none;
+            border: none;
           }
     primary: |
       A kazán jelenleg
@@ -42,9 +42,9 @@ cards:
     icon_color: |
       {% set hvac = { 'info': states[entity].attributes.hvac_action } %}
       {% if hvac.info == "heating" %}
-        orange
+        var(--rgb-orange-color)
       {% elif hvac.info == "idle" %}
-        blue
+        var(--rgb-blue-color)
       {% else %}
       {% endif %}
     tap_action:

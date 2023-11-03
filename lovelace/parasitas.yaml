@@ -5,7 +5,7 @@ cards:
       style: |
         ha-card {
           background: none;
-          box-shadow: none;
+          border: none;
         }
     cards:
       - type: custom:mushroom-fan-card
@@ -50,7 +50,7 @@ cards:
             .: |
                 ha-card {
                   background: none;
-                  box-shadow: none;
+                  border: none;
                 }
         entity: light.aroma_diffuser_nightlight
         show_color_control: true

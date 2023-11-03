@@ -34,7 +34,7 @@ cards:
       style: |
         ha-card {
           background: none;
-          box-shadow: none;
+          border: none;
         }
         mushroom-shape-icon {
           {% if is_state(config.entity, 'auto') %}
@@ -64,12 +64,12 @@ cards:
           75% { transform: rotate(-50deg); }
         }
         @keyframes heat {
-          0%, 100% { --icon-color: rgba(var(--rgb-red), 1); }
-          10%, 90% { --icon-color: rgba(var(--rgb-red), 0.8); }
-          20%, 80% { --icon-color: rgba(var(--rgb-red), 0.6); }
-          30%, 70% { --icon-color: rgba(var(--rgb-red), 0.4); }
-          40%, 60% { --icon-color: rgba(var(--rgb-red), 0.2); }
-          50% { --icon-color: rgba(var(--rgb-red), 0); }
+          0%, 100% { --icon-color: rgba(var(--rgb-red-color), 1); }
+          10%, 90% { --icon-color: rgba(var(--rgb-red-color), 0.8); }
+          20%, 80% { --icon-color: rgba(var(--rgb-red-color), 0.6); }
+          30%, 70% { --icon-color: rgba(var(--rgb-red-color), 0.4); }
+          40%, 60% { --icon-color: rgba(var(--rgb-red-color), 0.2); }
+          50% { --icon-color: rgba(var(--rgb-red-color), 0); }
         }
         @keyframes dry {
           0%, 100% { --icon-symbol-size: 21px; }

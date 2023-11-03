@@ -25,6 +25,7 @@
     value_template: '{{ (now().weekday() in (0,1,2,3,4) and now().hour >= 6 and now().hour
       <= 7) or (now().weekday() in (5,6) and now().hour >= 7 and now().hour <= 8)
       }}'
+    enabled: false
   action:
   - service: number.set_value
     data:
@@ -208,7 +209,7 @@
   use_blueprint:
     path: MackoMici/lights_off.yaml
     input:
-      family: group.family_wifi
+      family: group.family_gps
       lights: light.vilagitas
       notify_device: 24f3d1348620662fedaf75c1d0977196
 - id: '1695652594042'
@@ -221,16 +222,6 @@
       tablet_switch: switch.gosund_ep2_tablet_konnektor
       tablet_screen: switch.hipad_xpro_kepernyo
       turn_on: 20
-- id: '1696638709773'
-  alias: Ajtó nyitásra tablet mozgás érzékelő bekapcsolás
-  description: ''
-  use_blueprint:
-    path: MackoMici/tablet_motion.yaml
-    input:
-      motion_switch: switch.hipad_xpro_mozgaserzekeles
-      camera: camera.tablet
-      family: group.family_wifi
-      doorsensor: binary_sensor.kamra_contact
 - id: '1698388023673'
   alias: Tablet képernyő bekapcsolás reggel
   description: ''
@@ -250,3 +241,13 @@
       timer: timer.wc
       freshener_switch: switch.sonoff_illatosito
       light_switch: light.wc_main
+- id: '1698766222855'
+  alias: Ajtó nyitásra tablet mozgás érzékelő bekapcsolás
+  description: ''
+  use_blueprint:
+    path: MackoMici/tablet_motion.yaml
+    input:
+      motion_switch: switch.hipad_xpro_mozgaserzekeles
+      camera: camera.tablet
+      family: group.family_all
+      doorsensor: binary_sensor.sonoff_bejarati_ajto

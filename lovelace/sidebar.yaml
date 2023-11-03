@@ -8,7 +8,7 @@ cards:
     style: |
       ha-card {
         background: none;
-        box-shadow: none;
+        border: none;
       }
     image: /local/background/time.png
     elements:
@@ -16,7 +16,7 @@ cards:
         template: datetime_template
         variables:
           - entity: sensor.time
-          - color: '#EAC117'
+          - color: var(--rgb-amber-color)
           - filter: opacity(60%)
           - font-size: 8vw
           - top: 50%
@@ -68,7 +68,7 @@ cards:
   - type: custom:atomic-calendar-revive
     style: |
       ha-card {
-        box-shadow: none;
+        border: none;
         background: none;
         margin-top: -20px;
       }

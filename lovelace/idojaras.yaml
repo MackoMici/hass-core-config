@@ -11,7 +11,7 @@
     style: |
       ha-card {
         background: none;
-        box-shadow: none;
+        border: none;
       }  
   <<: &none
     tap_action: none
