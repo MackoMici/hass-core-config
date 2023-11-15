@@ -35,34 +35,34 @@ svg path {
 #areas .light-on {
   stroke-width: 4px;
   stroke-opacity: 1;
-  stroke: #66a779;
+  stroke: rgb(156, 255, 166);
 }
 
 g path:active, g use:active, .light-on:active, g#entities > g:active path:not(.touch-area) {
-  stroke: #2980b9 !important;
+  stroke: rgb(33, 150, 243) !important;
   stroke-width: 4px;
   stroke-opacity: 0.7;
 }
 
 g#entities path {
-  stroke: #e8e9f3;
+  stroke: rgb(240, 243, 255);
   stroke-width: 1px;
   stroke-opacity: 1;
   fill: none;
 }
 g#entities .light-on {
-  stroke: #2980b9;
+  stroke: rgb(33, 150, 243);
 }
 
 g#entities .entities.entity-state-off {
-  stroke: #e8e9f3;
+  stroke: rgb(240, 243, 255);
   stroke-width: 2px;
 }
 
 g#entities .entities.entity-state-idle{
   animation: fade-in 2s infinite alternate;
-  fill: #35f1d82e;
-  stroke: #35f1d887;
+  fill: rgba(166, 77, 255, 0.18);
+  stroke: rgba(166, 77, 255, 0.53);
   stroke-width: 3px;
   stroke-opacity: 1;
   filter: unset;
@@ -76,21 +76,21 @@ g#entities .entities.entity-state-fan_only,
 g#entities .entities.entity-state-heating,
 g#entities .entities.entity-state-heat {
   animation: fade-in 2s infinite alternate;
-  fill: #2980b92e;
-  stroke: #2980b987;
+  fill: rgba(33, 150, 243, 0.18);
+  stroke: rgba(33, 150, 243, 0.53);
   stroke-width: 3px;
   stroke-opacity: 1;
   filter: unset;
 }
 
 g#entities .entities.entity-state-unavailable {
-  stroke: #ff000087;
+  stroke: rgba(255, 97, 116, 0.53);
   stroke-width: 2px;
 }
 
 g#entities .motion.door-on {
-  fill: #ff78002e;
-  stroke: #ff780087;
+  fill: rgba(229, 145, 9, 0.18);
+  stroke: rgba(229, 145, 9, 0.53);
   stroke-width: 3px;
   stroke-opacity: 1;
   filter: unset;
@@ -98,8 +98,8 @@ g#entities .motion.door-on {
 }
 
 g#entities .motion.window-on {
-  fill: #ffc4002e;
-  stroke: #ffc40087;
+  fill: rgba(255, 211, 99, 0.18);
+  stroke: rgba(255, 211, 99, 0.53);
   stroke-width: 3px;
   stroke-opacity: 1;
   filter: unset;
@@ -107,8 +107,8 @@ g#entities .motion.window-on {
 }
 
 g#entities .charging.charge-state-on {
-  fill: #50ff002e;
-  stroke: #50ff0087;
+  fill: rgba(205, 220, 57, 0.18);
+  stroke: rgba(205, 220, 57, 0.53);
   stroke-width: 3px;
   stroke-opacity: 1;
   filter: unset;
@@ -116,9 +116,9 @@ g#entities .charging.charge-state-on {
 }
 
 g#sensors text {
-  fill: #ffffff26;
+  fill: rgba(240, 243, 255, 0.15);
   position: fixed;
-  text-shadow: 2px 2px #191919;
+  text-shadow: 2px 2px rgb(0, 0, 0);
 }
 
 g#nappali text {

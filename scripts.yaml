@@ -425,3 +425,25 @@ feny_fuzer_4h:
       entity_id: remote.broadlink_remote
   mode: single
   icon: mdi:numeric-4
+uzenet_kuldes_zolinak:
+  alias: Üzenet küldés Zolinak
+  sequence:
+  - service: notify.mobile_app_sm_a536b
+    data:
+      message: '{{message}}'
+      title: '{{title}}'
+  icon: mdi:cellphone-message
+  mode: single
+  fields:
+    title:
+      selector:
+        text:
+      name: Title
+      description: Az üzenet címe
+      required: true
+    message:
+      selector:
+        text:
+      name: Message
+      description: Az üzenet szövege
+      required: true

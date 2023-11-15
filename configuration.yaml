@@ -3,16 +3,16 @@ default_config:
 
 # Example configuration.yaml entry
 
-#logger:
-#  default: info
-#  logs:
+logger:
+  default: info
+  logs:
     # log level for HA core
 #    homeassistant.core: warning
 
     # log level for all python scripts
 #    homeassistant.components.python_script: warning
 
-#    custom_components.multiscrape: debug
+    custom_components.multiscrape: debug
 
 
 http:
@@ -134,6 +134,11 @@ tts:
     type: TamasNeural
     region: westeurope
     rate: -10
+
+stt:
+  - platform: google_cloud_stt
+    key_file: service_account.json
+    model: command_and_search
 
 frontend:
   themes: !include_dir_merge_named themes

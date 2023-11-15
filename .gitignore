@@ -15,7 +15,7 @@ blueprints/*
 custom_components/*
 deps/*
 image/*
-themes/*
+!themes/*
 tts/*
 www/camera/*
 www/community/*

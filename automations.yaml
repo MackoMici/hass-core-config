@@ -152,16 +152,6 @@
       calendar: calendar.unnepnapok_magyarorszag
       doorsensor_entity: binary_sensor.sonoff_bejarati_ajto
       light_switch: switch.sonoff_eloszoba
-- id: '1684847787385'
-  alias: Otthoni riasztás
-  description: ''
-  use_blueprint:
-    path: MackoMici/home_security.yaml
-    input:
-      notify_device: 24f3d1348620662fedaf75c1d0977196
-      security: alarm_control_panel.gateway_alarm
-      family: group.family_all
-      doorsensor: binary_sensor.sonoff_bejarati_ajto
 - id: '1692591387982'
   alias: Kamra világítás vezérlés
   description: ''
@@ -193,25 +183,6 @@
     target:
       entity_id: input_boolean.reggeli_info
   mode: single
-- id: '1695389801621'
-  alias: Tanusítvány lejárat figyelés
-  description: ''
-  use_blueprint:
-    path: MackoMici/ssl_expiration.yaml
-    input:
-      certificate_input: sensor.ssl_cert_expiry
-      days_input: 21
-      notify_device: 24f3d1348620662fedaf75c1d0977196
-      time_input: '15:00:00'
-- id: '1695642885702'
-  alias: Világítás kikapcsolás
-  description: ''
-  use_blueprint:
-    path: MackoMici/lights_off.yaml
-    input:
-      family: group.family_gps
-      lights: light.vilagitas
-      notify_device: 24f3d1348620662fedaf75c1d0977196
 - id: '1695652594042'
   alias: Tablet Charging
   description: ''
@@ -251,3 +222,53 @@
       camera: camera.tablet
       family: group.family_all
       doorsensor: binary_sensor.sonoff_bejarati_ajto
+- id: '1699947818450'
+  alias: Világítás kikapcsolás
+  description: ''
+  use_blueprint:
+    path: MackoMici/lights_off.yaml
+    input:
+      family: group.family_all
+      lights: light.vilagitas
+      actions:
+      - service: script.uzenet_kuldes_zolinak
+        data:
+          title: Világítás
+          message: Nem érhető el!
+- id: '1699948193610'
+  alias: Tanusítvány lejárat figyelés
+  description: ''
+  use_blueprint:
+    path: MackoMici/ssl_expiration.yaml
+    input:
+      certificate_input: sensor.ssl_cert_expiry
+      days_input: 21
+      actions:
+      - service: script.uzenet_kuldes_zolinak
+        data:
+          title: SSL tanúsítvány
+          message: Az SSL tanúsítvány {{ expire_days_var }} nap múlva jár le.
+- id: '1699948737243'
+  alias: Otthoni riasztás
+  description: ''
+  use_blueprint:
+    path: MackoMici/home_security.yaml
+    input:
+      doorsensor: binary_sensor.sonoff_bejarati_ajto
+      family: group.family_all
+      security: alarm_control_panel.gateway_alarm
+      actions_on:
+      - service: script.uzenet_kuldes_zolinak
+        data:
+          title: Riasztó
+          message: Bekapcsolva
+      actions_off:
+      - service: script.uzenet_kuldes_zolinak
+        data:
+          title: Riasztó
+          message: Kikapcsolva
+      actions_alarm:
+      - service: script.uzenet_kuldes_zolinak
+        data:
+          title: Riasztás
+          message: Valaki bejutott a lakásba!
