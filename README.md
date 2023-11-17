@@ -135,3 +135,4 @@
 * <a href="/readme-docs/Mobil_felulet.md">Mobil felület kialakítás</a>
 * <a href="/readme-docs/Futes_vezerles.md">Fűtés vezérlés kialakítás</a>
 * <a href="/readme-docs/Idojaras_tts.md">Időjárás felolvasás</a>
+* <a href="/readme-docs/Tuya_local.md">Tuya Local saját konfig készítés</a>
