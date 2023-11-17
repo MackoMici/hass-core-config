@@ -4,7 +4,7 @@ Wifi-s Tuya eszközök többnyire gondot okoznak, mivel 3 integráció van de ne
 Nézzük hát a [Local Tuya](https://github.com/rospogrigio/localtuya) integrációt, itt is be tudtam állítani kapcsolónak, de sajna a világítás része nem jött össze gondolom nem tudom jól eltalálni a kért DP-ket.
 ![local_tuya](/readme-img/local_tuya.png)
 
-Végül jött a [Tuya Local](https://github.com/make-all/tuya-local) integráció ami mivel saját fájlokat is lehet hozzáadni így egész jó csak ki kell találni itt is mit és hogyan kell csinálni, de már alapból is felismer sok eszközt csak nem biztos, hogy 100%-ig jó nekünk. Alább látható a képen, hogy 4 konfigoráció is részben vagy egészben megfelel a mi led szalagunknak
+Végül jött a [Tuya Local](https://github.com/make-all/tuya-local) integráció ami mivel saját fájlokat is lehet hozzáadni így egész jó csak ki kell találni itt is mit és hogyan kell csinálni, de már alapból is felismer sok eszközt csak nem biztos, hogy 100%-ig jó nekünk. Alább látható a képen, hogy 4 konfigoráció is részben vagy egészben megfelel a mi led szalagunknak.
 ![tuya_local_add](/readme-img/tuya_local_add.png)
 
 Érdemes mindent kipróbálni hátha van teljes egyezés.
@@ -28,7 +28,7 @@ primary_entity:
       type: boolean
       name: switch
 ```
-Nézzük honnét vannak az új adatok.[IoT Tuya](https://iot.tuya.com/) oldalt nyissuk meg jelentkezzünk be és ott először a _Cloud/Development_ részt nyissuk meg és azon belül az _Open Project_.
+Nézzük honnét vannak az új adatok. [IoT Tuya](https://iot.tuya.com/) oldalt nyissuk meg jelentkezzünk be és ott először a _Cloud/Development_ részt nyissuk meg és azon belül az _Open Project_.
 ![development](/readme-img/development.png)
 
 Itt válaszuk a _Devices_ részt azon belül az _All Devices_
@@ -133,7 +133,7 @@ secondary_entities:
             value: "Film"
             # color: lightblue, static
 ```
-Végül néhány plusz infó az általam használt led szalagnál a **dinamikus** és **zene** módoknál lehet előre beállítani színeket és tempót esetleg érzékenységet, és a honlapon kapsz egy _Event Details_t ami az adott beállításoknak fele meg, de ha állítasz rajta akkor már változni fog ez az érték, ezért is van néhol kommentelve hogy milyen beállításnak felel meg az érték. A teljes kód itt látható:
+Végül néhány plusz infó az általam használt led szalagnál a **dinamikus** és **zene** módoknál lehet előre beállítani színeket és tempót esetleg érzékenységet, és a honlapon kapsz egy _Event Details_t ami az adott beállításoknak fele meg, de ha állítasz rajta akkor már változni fog ez az érték, ezért is van néhol kommentelve, hogy milyen beállításnak felel meg az érték. Ha kész és minden működik már csak be kell adni a fejlesztőnek a kérelmet a github-on és belekerül a következő kiadásba. Nem biztos, hogy külön fájl lesz minden eszköz, mert vannak nagyon hasonló eszközök és azokat 1 fájlban szokta összeállítani, erre figyeljünk mi is. A teljes kód itt látható:
 
 ```
 name: Blitzwolf BW-LT31 LED Strip
