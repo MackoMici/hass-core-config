@@ -1,7 +1,5 @@
 default_chart:
   graph_span: 1d
-  span:
-    start: day
   apex_config:
     chart:
       height: 150px
@@ -15,6 +13,9 @@ default_chart:
       borderColor: rgba(var(--rgb-white-color), 0.19)
       strokeDashArray: 4
       position: back
+    xaxis:
+      tooltip:
+        enabled: false
   experimental:
     color_threshold: true
   header:
@@ -35,11 +36,19 @@ default_chart:
       func: avg
       duration: 10min
 
+day_chart:
+  span:
+    start: day
+
 flora_chart:
+  span:
+    start: day
   header:
     show: false
 
 system_chart:
+  span:
+    start: day
   apex_config:
     legend:
       show: true
@@ -58,3 +67,47 @@ system_chart:
     type: line    
     group_by:
       func: raw
+
+tablet_chart:
+  graph_span: 6 months
+  span:
+    end: month
+  apex_config:
+    tooltip:
+      x:
+        show: true
+        formatter: |
+          EVAL:(timestamp) => {
+            let date = new Date(timestamp).toLocaleString('hu-HU',{year: 'numeric', month:'long'}).toString()
+            return date.charAt(0).toUpperCase() + date.slice(1);
+          }
+    fill:
+      type: gradient
+      gradient:
+        type: vertical
+        shadeIntensity: 0.2
+        opacityFrom: 1
+        opacityTo: 0.7
+        stops:
+          - 0
+          - 70
+          - 100
+    xaxis:
+      crosshairs:
+        show: false
+      axisTicks:
+        show: false
+      labels:
+        formatter: |
+          EVAL:(timestamp) => {
+            let date = new Date(timestamp).toLocaleString('hu-HU',{month:'short'}).toString();
+            return date;
+          }
+  all_series_config:
+    type: column
+    unit: kWh
+    transform: return x / 1000;
+    float_precision: 2
+    group_by:
+      func: max
+      duration: 1 month

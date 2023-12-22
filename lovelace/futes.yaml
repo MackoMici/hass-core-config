@@ -3,18 +3,11 @@ cards:
   - type: custom:mushroom-template-card
     entity: climate.honeywell_home_termosztat
     card_mod:
-      style:
-        mushroom-shape-icon$: |
-          ha-icon {
-            {% if is_state_attr(config.entity, 'hvac_action', 'heating') %}
-              --icon-animation: pulse 2s ease-in-out infinite;
-            {% endif %}
-          }
-        .: |
-          ha-card {
-            background: none;
-            border: none;
-          }
+      style: |
+        ha-card {
+          background: none;
+          border: none;
+        }
     primary: |
       A kazán jelenleg
       {% set hvac = { 'info': states[entity].attributes.hvac_action } %}

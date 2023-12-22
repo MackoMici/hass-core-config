@@ -12,8 +12,7 @@ include:
   - input_boolean.futes
   - input_boolean.tavol
   - sensor.kulteri_homerseklet
-  - binary_sensor.haloszoba_ablak_contact
-  - binary_sensor.nappali_ablak_contact
+  - binary_sensor.futes_ablak
   - climate.honeywell_home_termosztat
 display_options:
   primary_info: default

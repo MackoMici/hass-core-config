@@ -12,7 +12,7 @@ views:
       - !include lovelace/fejlec.yaml
       - !include lovelace/home.yaml
   - path: kapcsolo
-    icon: mdi:gesture-tap-button
+    icon: mdi:light-switch
     badges: []
     type: custom:vertical-layout
     cards:
@@ -36,18 +36,10 @@ views:
   - path: idojaras
     icon: mdi:weather-partly-snowy-rainy
     badges: []
-    type: custom:grid-layout
-    layout:
-      grid-template-columns: auto
-      grid-template-rows: auto
-      grid-template-areas: |
-        "clock"
-        "title"
-        "hourly"
-        "daily"
-        "radar"
+    type: custom:vertical-layout
     cards:
-      !include lovelace/idojaras.yaml
+      - !include lovelace/idojaras.yaml
+      - !include lovelace/radar.yaml
   - path: parasitas
     icon: mdi:air-humidifier
     badges: []
@@ -76,18 +68,7 @@ views:
   - path: karacsony
     icon: mdi:pine-tree
     badges: []
-    type: custom:grid-layout
-    layout:
-      grid-template-columns: 50% 50%
-      grid-template-row: auto
-      grid-template-areas: |
-        "Kapcsolo-1 Kapcsolo-2"
-        "Feny Speed"
-        "Szin-1 Szin-1"
-        "Szin-2 Szin-2"
-        "Mode-1 Mode-1"
-        "Mode-2 Mode-2"
-        "Time Time"
+    type: custom:vertical-layout
     cards:
       !include lovelace/karacsony.yaml
   - path: informacio

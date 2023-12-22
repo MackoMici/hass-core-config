@@ -51,6 +51,12 @@
       entity: sensor.home_assistant_log_size
       card_mod: *background_none
       <<: *none
+- type: horizontal-stack
+  cards:
+    - type: custom:mushroom-entity-card
+      entity: sensor.zigbee_adatbazis_meret
+      card_mod: *background_none
+      <<: *none
 - type: custom:mushroom-title-card
   title: Debian Server
   card_mod: *background_none
@@ -169,3 +175,11 @@
       entity: binary_sensor.ha_tablet_mqtt_connected
       card_mod: *background_none
       <<: *none
+- type: custom:apexcharts-card
+  card_mod: *background_none
+  config_templates: 
+    - default_chart
+    - tablet_chart
+  series:
+    - entity: sensor.tablet_fogyasztas
+      name: Tablet fogyasztás

@@ -129,28 +129,24 @@ mushroom_update_template:
                   Legújabb verzió - {{ state_attr(entity, 'latest_version') }}
                 {% endif %}"
 
-mushroom_karacsony_template:
-  default:
-    - primary: ''
-    - icon_color: var(--rgb-blue-color)
-    - icon: mdi:circle
-    - entity: light.feny_fuzer
-  card:
-    type: custom:mushroom-template-card
-    entity: '[[entity]]'
-    card_mod: *background_none
-    icon: '[[icon]]'
-    icon_color: "{% if is_state(entity, 'on') %}
-                   [[icon_color]]
-                 {% endif %}"
-    layout: vertical
-    primary: '[[primary]]'
-    tap_action:
-      action: call-service
-      service: '[[service]]'
-    <<: &none2
-      hold_action: none
-      double_tap_action: none
+#mushroom_karacsony_template:
+#  card:
+#    type: custom:mushroom-chips-card
+#    card_mod: &chip_mod
+#      style: |
+#        ha-card {
+#          --chip-box-shadow: none;
+#          --chip-background: none;
+#          top: 16px;
+#          width: -webkit-fill-available;
+#          right: 12px;
+#          position: absolute;
+#        } 
+#        .chip-container {
+#          right: 0px;
+#          position: absolute;
+#        }
+#    chips: '[[chips]]'
 
 mushroom_vacuum_template:
   card:
@@ -160,7 +156,9 @@ mushroom_vacuum_template:
     layout: vertical
     tap_action:
       action: toggle
-    <<: *none2
+    <<: &none2
+      hold_action: none
+      doubletap_action: none
     icon: '[[icon]]'
     icon_color: &icon_color
       "{% if is_state(entity, 'on') %}
@@ -188,7 +186,7 @@ mushroom_humidity_timer_template:
         entity_id: select.aroma_diffuser_timer
     <<: *none2
 
-mushroom_humidity_chip_template:
+mushroom_chips_template:
   card:
     type: custom:mushroom-chips-card
     card_mod:
@@ -200,7 +198,7 @@ mushroom_humidity_chip_template:
           width: -webkit-fill-available;
           right: 12px;
           position: absolute;
-        } 
+        }
         .chip-container {
           right: 0px;
           position: absolute;
@@ -302,48 +300,24 @@ mushroom_number_template:
     display_mode: '[[display_mode]]'
 
 mushroom_light_template:
-  default:
-    - layout: horizontal
   card:
     type: custom:mushroom-light-card
-    card_mod:
-      style:
-        mushroom-shape-icon$: |
-          ha-icon {
-            {% if is_state(config.entity, 'on') %}
-              {% set light_level = ((state_attr(config.entity, "brightness") / 255) * 10) | round(0) * 10 %}
-              --icon-animation: illumination 2s infinite;
-              {% if light_level == 100 %}
-                --card-mod-icon: mdi:lightbulb-on
-              {% elif light_level > 0 %}
-                --card-mod-icon:  mdi:lightbulb-on-{{ light_level }}
-              {% else %}
-                --card-mod-icon: mdi:lightbulb-on-outline
-              {% endif %};
-            {% endif %}
-          }
-          @keyframes illumination {
-            0%, 100% { clip-path: inset(0 0 0 0); }
-            80% { clip-path: polygon(0% 99%, 20% 55%, 22% 37%, 39% 20%, 61% 21%, 77% 35%, 79% 57%, 99% 100%); }
-          }
-        .: |
-          ha-card {
-            background: none;
-            border: none;
-          }
+    card_mod: *background_none
     entity: '[[entity]]'
     show_brightness_control: true
     show_color_control: true
     show_color_temp_control: true
     collapsible_controls: true
-    layout: '[[layout]]'
+    use_light_color: true
     <<: *none2
 
 mushroom_switch_light_template:
+  default:
+    layout: vertical
   card:
     type: custom:mushroom-light-card
     entity: '[[entity]]'
-    layout: vertical
+    layout: '[[layout]]'
     <<: *none2
     card_mod: *background_none
 
@@ -370,6 +344,7 @@ mushroom_home_template:
 weather_template:
   default:
     tap_action: none
+    hold_action: none
     show_wind: speed
     show_precipitation_amounts: true
   card:
@@ -386,7 +361,8 @@ weather_template:
     label_spacing: |
       {% set segments = 24 - now().hour %}
       {{ 4 if (segments > 14) or (segments < 10) else 2 }}
-    <<: *none2
+    double_tapaction: none
+    hold_action: '[[hold_action]]'
     tap_action: '[[tap_action]]'
     show_wind: '[[show_wind]]'
     show_precipitation_amounts: '[[show_precipitation_amounts]]'

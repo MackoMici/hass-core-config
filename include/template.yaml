@@ -1,4 +1,16 @@
 template:
+  - binary_sensor:
+      - name: Fűtés ablak
+        device_class: window
+        state: >-
+          {% set open = expand(states.binary_sensor.ablakok)
+            | rejectattr('entity_id', 'search', 'halo')
+            | rejectattr('entity_id', 'search', 'furdo')
+            | selectattr('state', 'eq', 'on')
+            | list
+            | count %}
+          {{ 'on' if open > 0 else 'off' }}
+
   - sensor:
       - name: "Bejárati Ajtó Battery"
         unit_of_measurement: "%"

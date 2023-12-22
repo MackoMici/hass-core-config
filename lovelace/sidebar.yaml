@@ -45,23 +45,27 @@ cards:
           browser_mod:
             service: browser_mod.popup
             data:
-              style: |
+              style: &browser_mod1080
+                |
                 --popup-min-width: 1080px;
                 --popup-border-width: var(--ha-card-border-width);
                 --popup-border-radius: var(--ha-card-border-radius);
               content:
                 type: custom:layout-card
                 layout_type: custom:grid-layout 
-                layout:
-                  grid-template-columns: 65% auto
-                  grid-template-rows: 160px 185px 150px 106px
-                  grid-template-areas: |
-                    "clock radar"
-                    "title radar"
-                    "daily radar"
-                    "hourly radar"
                 cards:
-                  !include idojaras.yaml
+                  - !include idojaras.yaml
+      - hold_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              style: *browser_mod1080
+              content:
+                type: custom:layout-card
+                layout_type: custom:grid-layout
+                cards:
+                  - !include radar.yaml
       - entity: weather.forecast_home
       - show_wind: 'false'
       - show_precipitation_amounts: false

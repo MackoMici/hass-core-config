@@ -1,219 +1,99 @@
-- type: custom:mushroom-light-card
-  view_layout:
-    grid-area: Kapcsolo-1
-  entity: light.feny_fuzer
-  layout: vertical
-  card_mod: &background_none
+- type: custom:decluttering-card
+  template: mushroom_switch_light_template
+  variables:
+    - entity: switch.karacsonyfa_fenyek
+    - layout: horizontal
+- type: custom:stack-in-card
+  card_mod:
     style: |
       ha-card {
         background: none;
         border: none;
       }
-  <<: &none2
-    hold_action: none
-    double_tap_action: none
-- type: custom:decluttering-card
-  view_layout:
-    grid-area: Kapcsolo-2
-  template: mushroom_switch_light_template
-  variables:
-    - entity: switch.karacsonyfa_izzo
-- type: vertical-stack
-  view_layout:
-    grid-area: Feny
-  cards:
-    - type: custom:mushroom-template-card
-      layout: vertical
-      secondary: Fényerősség vagy Érzékenység
-      card_mod: *background_none
-      <<: &none
-        tap_action: none
-        hold_action: none
-        double_tap_action: none
-    - type: horizontal-stack
-      cards:
-        - type: custom:decluttering-card
-          template: mushroom_karacsony_template
-          variables:
-            - icon: mdi:minus
-            - service: script.feny_fuzer_brightness_reduction
-        - type: custom:decluttering-card
-          template: mushroom_karacsony_template
-          variables:
-            - icon: mdi:plus
-            - service: script.feny_fuzer_brightness_increase
-- type: vertical-stack
-  view_layout:
-    grid-area: Speed
-  cards:
-    - type: custom:mushroom-template-card
-      layout: vertical
-      secondary: Sebesség
-      card_mod: *background_none
-      <<: *none
-    - type: horizontal-stack
-      cards:
-        - type: custom:decluttering-card
-          template: mushroom_karacsony_template
-          variables:
-            - icon: mdi:minus
-            - service: script.feny_fuzer_speed_down
-        - type: custom:decluttering-card
-          template: mushroom_karacsony_template
-          variables:
-            - icon: mdi:plus
-            - service: script.feny_fuzer_speed_up
-- type: horizontal-stack
-  view_layout:
-    grid-area: Szin-1
   cards:
     - type: custom:decluttering-card
-      template: mushroom_karacsony_template
+      template: mushroom_light_template
       variables:
-        - icon_color: var(--rgb-white-color)
-        - service: script.feny_fuzer_color_white
+        - entity: light.karacsonyi_fenyek_extra
     - type: custom:decluttering-card
-      template: mushroom_karacsony_template
+      template: mushroom_chips_template
       variables:
-        - icon_color: var(--rgb-yellow-color)
-        - service: script.feny_fuzer_color_yellow
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-light-pink-color)
-        - service: script.feny_fuzer_color_lightpink
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-red-color)
-        - service: script.feny_fuzer_color_red
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-green-color)
-        - service: script.feny_fuzer_color_green
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-blue-color)
-        - service: script.feny_fuzer_color_blue
-- type: horizontal-stack
-  view_layout:
-    grid-area: Szin-2
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-light-yellow-color)
-        - service: script.feny_fuzer_color_lightyellow
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-pink-color)
-        - service: script.feny_fuzer_color_pink
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-purple-color)
-        - service: script.feny_fuzer_color_purple
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-light-green-color)
-        - service: script.feny_fuzer_color_lightgreen
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-dark-green-color)
-        - service: script.feny_fuzer_color_darkgreen
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon_color: var(--rgb-light-blue-color)
-        - service: script.feny_fuzer_color_lightblue
-- type: horizontal-stack
-  view_layout:
-    grid-area: Mode-1
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:weather-night
-        - primary: Éjszakai
-        - service: script.feny_fuzer_night
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:star-shooting
-        - primary: Csillagfényes
-        - service: script.feny_fuzer_starry
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:party-popper
-        - primary: Party
-        - service: script.feny_fuzer_party
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:movie-roll
-        - primary: Mozi
-        - service: script.feny_fuzer_movie
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:view-module
-        - primary: Egyéb
-        - service: script.feny_fuzer_mode
-- type: horizontal-stack
-  view_layout:
-    grid-area: Mode-2
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:music
-        - primary: Classic
-        - service: script.feny_fuzer_music_classic
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:music
-        - primary: Soft
-        - service: script.feny_fuzer_music_soft
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:music
-        - primary: Disco
-        - service: script.feny_fuzer_music_disco
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:music
-        - primary: Dynamic
-        - service: script.feny_fuzer_music_dynamic
-- type: horizontal-stack
-  view_layout:
-    grid-area: Time
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:numeric-1
-        - service: script.feny_fuzer_1h
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:numeric-2
-        - service: script.feny_fuzer_2h
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:numeric-3
-        - service: script.feny_fuzer_3h
-    - type: custom:decluttering-card
-      template: mushroom_karacsony_template
-      variables:
-        - icon: mdi:numeric-4
-        - service: script.feny_fuzer_4h
+        - chips:
+            - type: conditional
+              conditions:
+                - entity: light.karacsonyi_fenyek_extra
+                  state: 'on'
+              chip:
+                type: action
+                icon: mdi:music
+                tap_action:
+                  action: call-service
+                  service: light.turn_on
+                  data:
+                    effect: Music
+                  target:
+                    entity_id: light.karacsonyi_fenyek_extra
+                hold_action: none
+                double_tap_action: none
+            - type: conditional
+              conditions:
+                - entity: light.karacsonyi_fenyek_extra
+                  state: 'on'
+              chip:
+                type: action
+                icon: mdi:creation
+                tap_action:
+                  action: call-service
+                  service: light.turn_on
+                  data:
+                    effect: Dynamic
+                  target:
+                    entity_id: light.karacsonyi_fenyek_extra
+                hold_action: none
+                double_tap_action: none
+            - type: conditional
+              conditions:
+                - entity: light.karacsonyi_fenyek_extra
+                  state: 'on'
+              chip:
+                type: action
+                icon: mdi:auto-mode
+                tap_action:
+                  action: call-service
+                  service: light.turn_on
+                  data:
+                    effect: Scene
+                  target:
+                    entity_id: light.karacsonyi_fenyek_extra
+                hold_action: none
+                double_tap_action: none
+- type: conditional
+  conditions:
+    - entity: light.karacsonyi_fenyek_extra
+      state: 'on'
+  card:
+    type: custom:mushroom-number-card
+    entity: number.karacsonyi_fenyek_extra_strip_points
+    display_mode: slider
+- type: custom:state-switch
+  entity: template
+  template: |
+    {% if is_state('light.karacsonyi_fenyek_extra', 'on') %}
+      {% if is_state_attr('light.karacsonyi_fenyek_extra', 'effect', 'Music') %}
+        Music
+      {% elif is_state_attr('light.karacsonyi_fenyek_extra', 'effect', 'Scene') %}
+        Scene
+      {% elif is_state_attr('light.karacsonyi_fenyek_extra', 'effect', 'Dynamic') %}
+        Dynamic
+      {% endif %}
+    {% endif %}
+  states:
+    Music:
+      type: custom:mushroom-select-card
+      entity: select.karacsonyi_fenyek_extra_music
+    Scene:
+      type: custom:mushroom-select-card
+      entity: select.karacsonyi_fenyek_extra_scene
+    Dynamic:
+      type: custom:mushroom-select-card
+      entity: select.karacsonyi_fenyek_extra_dynamic

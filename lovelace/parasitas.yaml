@@ -18,7 +18,7 @@ cards:
         collapsible_controls: true
         secondary_info: none
       - type: custom:decluttering-card
-        template: mushroom_humidity_chip_template
+        template: mushroom_chips_template
         variables:
           - chips:
               - type: conditional
@@ -40,25 +40,12 @@ cards:
   - type: custom:stack-in-card
     card_mod: *background_none
     cards:
-      - type: custom:mushroom-light-card
-        card_mod:
-          style:
-            mushroom-shape-icon$: |
-              .shape {
-                  --shape-color: rgb{{ state_attr(config.entity, 'rgb_color') }};
-              }
-            .: |
-                ha-card {
-                  background: none;
-                  border: none;
-                }
-        entity: light.aroma_diffuser_nightlight
-        show_color_control: true
-        collapsible_controls: true
-        secondary_info: none
-        <<: *none2
       - type: custom:decluttering-card
-        template: mushroom_humidity_chip_template
+        template: mushroom_light_template
+        variables:
+          - entity: light.aroma_diffuser_nightlight
+      - type: custom:decluttering-card
+        template: mushroom_chips_template
         variables:
           - chips:
               - type: conditional
@@ -101,7 +88,9 @@ cards:
           - countdown: "Off"
   - type: custom:apexcharts-card
     card_mod: *background_none
-    config_templates: default_chart
+    config_templates:
+      - default_chart
+      - day_chart
     series:
       - entity: sensor.belteri_paratartalom
         name: Beltéri

@@ -1,0 +1,5 @@
+type: custom:weather-radar-card
+zoom_level: 8
+static_map: true
+show_scale: true
+map_style: voyager

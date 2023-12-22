@@ -16,9 +16,9 @@ Jöhet a saját konfiguráció készítés, keressünk első körben egy olyan y
 
 Ez alapján kezdjük el az új fájl készítést, ha a fent megadott könyvtárba csináljuk a fájlunkat akár kis is tudjuk próbálni csak figyeljünk rá, hogyha közben frissül a Tuya Local akkor el fog veszni a fájl, legyen róla biztonsági másolat.
 ```
-name: Blitzwolf BW-LT31 LED Strip
+name: LED Strip
 products:
-  - id: 66072501f4cfa2fe2887
+  - id: khu3zzkkjemj6oat
     name: Blitzwolf BW-LT31 LED Strip
 primary_entity:
   entity: light
@@ -34,10 +34,10 @@ Nézzük honnét vannak az új adatok. [IoT Tuya](https://iot.tuya.com/) oldalt 
 Itt válaszuk a _Devices_ részt azon belül az _All Devices_
 ![device](/readme-img/device.png)
 
-Meg is van a _Device Id_ ezt a fájl elejére be is rakhatjuk mert az eszköz hozzáadásánál kelleni fog. Ez az oldal maradjon is nyitva, mert még visszatérünk ide, a _Cloud/API Explorer_ oldalt nyissuk meg onnét is kelleni fog 1-2 adat.
+Ez az oldal maradjon is nyitva, mert még visszatérünk ide, a _Cloud/API Explorer_ oldalt nyissuk meg onnét is kelleni fog 1-2 adat.
 ![api_explorer](/readme-img/api_explorer.png)
 
-A bal felső sarokban keressük ki a _Smart Home Basic Service_ opciót és válaszuk ki, majd az alatta megjelenő listában a _Smart Home Device Management_ nyissuk ki és válasszuk a _Get Device Details_ opciót, utána adjuk meg a **Device Id**-t és mehet a _Submit Request_, ha minden jól ment akkor egy csomó infót szerzünk az eszközről, bár csak 1 fontos lesz a **local_key** ezt jegyezzük fel, mert eszköz hozzáadáshoz kellni fog.
+A bal felső sarokban keressük ki a _Smart Home Basic Service_ opciót és válaszuk ki, majd az alatta megjelenő listában a _Smart Home Device Management_ nyissuk ki és válasszuk a _Get Device Details_ opciót, utána adjuk meg a **Device Id**-t és mehet a _Submit Request_, ha minden jól ment akkor egy csomó infót szerzünk az eszközről, 2 fontos lesz a **local_key** ezt jegyezzük fel, mert eszköz hozzáadáshoz kellni fog, valamint a **product_id** ez kell a fájl elején megadni.
 ![local_key](/readme-img/local_key.png)
 
 Maradva ezen az oldalon _Smart Home Device Control_-t nyissuk ki és ott a _Get Device Specification_-t választva megint jöhet a  **Device Id** és a _Submit_.
@@ -136,9 +136,9 @@ secondary_entities:
 Végül néhány plusz infó az általam használt led szalagnál a **dinamikus** és **zene** módoknál lehet előre beállítani színeket és tempót esetleg érzékenységet, és a honlapon kapsz egy _Event Details_t ami az adott beállításoknak fele meg, de ha állítasz rajta akkor már változni fog ez az érték, ezért is van néhol kommentelve, hogy milyen beállításnak felel meg az érték. Ha kész és minden működik már csak be kell adni a fejlesztőnek a kérelmet a github-on és belekerül a következő kiadásba. Nem biztos, hogy külön fájl lesz minden eszköz, mert vannak nagyon hasonló eszközök és azokat 1 fájlban szokta összeállítani, erre figyeljünk mi is. A teljes kód itt látható:
 
 ```
-name: Blitzwolf BW-LT31 LED Strip
+name: LED Strip
 products:
-  - id: 66072501f4cfa2fe2887
+  - id: khu3zzkkjemj6oat
     name: Blitzwolf BW-LT31 LED Strip
 primary_entity:
   entity: light

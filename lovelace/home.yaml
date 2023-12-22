@@ -60,8 +60,8 @@ cards:
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables: 
-           - secondary: Világítás
-           - icon: mdi:lightbulb
+           - secondary: Kapcsolók
+           - icon: mdi:light-switch
            - color: var(--rgb-amber-color)
            - nav: kapcsolo
       - type: custom:decluttering-card
@@ -81,7 +81,7 @@ cards:
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:
-          - secondary: Párásítás
+          - secondary: Párásító
           - icon: mdi:air-humidifier
           - color: var(--rgb-red-color)
           - nav: parasitas

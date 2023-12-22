@@ -5,14 +5,17 @@ default_config:
 
 logger:
   default: info
-  logs:
+#  logs:
     # log level for HA core
 #    homeassistant.core: warning
 
     # log level for all python scripts
 #    homeassistant.components.python_script: warning
 
-    custom_components.multiscrape: debug
+#    custom_components.multiscrape: debug
+
+#    homeassistant.components.zha: debug
+#    zigpy: debug
 
 
 http:
@@ -108,14 +111,6 @@ homeassistant:
   allowlist_external_dirs:
     - "/home/zoolesz/.homeassistant"
 
-#google_assistant:
-#  project_id: home-assistant-2023-73138
-#  service_account: !include service_account.json
-#  report_state: true
-#  exposed_domains:
-#    - switch
-#    - light
-
 #python_script:
 
 gree_ext:
@@ -142,6 +137,13 @@ stt:
 
 frontend:
   themes: !include_dir_merge_named themes
+
+#zha:
+#  zigpy_config:
+#    ota:
+#      otau_directory: /home/zoolesz/.homeassistant/zigpy_ota/
+
+#zha_toolkit:
 
 automation: !include automations.yaml
 script: !include scripts.yaml

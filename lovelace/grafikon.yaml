@@ -1,5 +1,7 @@
 type: custom:apexcharts-card
-config_templates: default_chart
+config_templates:
+ - default_chart
+ - day_chart
 card_mod:
   style: |
     ha-card {

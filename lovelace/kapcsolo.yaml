@@ -11,36 +11,38 @@
     - type: custom:decluttering-card
       template: mushroom_switch_light_template
       variables:
-        - entity: switch.sonoff_furdoszoba
-    - type: custom:decluttering-card
-      template: mushroom_switch_light_template
-      variables:
         - entity: switch.sonoff_zbminil2_ebedlo
 - type: horizontal-stack
   cards:
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_furdoszoba
     - type: custom:mushroom-light-card
       entity: switch.sonoff_furdo_szelloztetes
       layout: vertical
       card_mod:
-        style: 
-          mushroom-shape-icon$: |
-              ha-icon {
-                {% if is_state(config.entity, 'on') %}
-                  --icon-animation: spin 1s linear infinite;
-                {% endif %}
-              }
-          .: &background_none
-            | 
-            ha-card {
-              background: none;
-              border: none;
-            }
+        style: |
+          mushroom-shape-icon {
+            {% if is_state(config.entity, 'on') %}
+              animation: spin 1s linear infinite;
+            {% endif %}
+            display: flex;
+          }
+          ha-card {
+            background: none;
+            border: none;
+          }
       hold_action: none
       double_tap_action: none
     - type: custom:mushroom-template-card
       entity: switch.sonoff_furdoszoba_futes
       card_mod:
-        style: *background_none
+        style: |
+          ha-card {
+            background: none;
+            border: none;
+          }
       primary: Fürdőszoba fűtés
       icon: mdi:heating-coil
       icon_color: '{{ is_state(entity, "on") | iif("var(--rgb-orange-color)", "") }}'
@@ -65,17 +67,6 @@
         {% else %}
           Ki
         {% endif %}
-- type: horizontal-stack
-  cards:
-    - type: custom:decluttering-card
-      template: mushroom_light_template
-      variables:              
-        - entity: light.wc_main
-        - layout: vertical
-    - type: custom:decluttering-card
-      template: mushroom_switch_light_template
-      variables:
-        - entity: switch.sonoff_illatosito
 - type: custom:decluttering-card
   template: mushroom_light_template
   variables:
@@ -84,6 +75,10 @@
   template: mushroom_light_template
   variables:              
     - entity: light.nappali_asztali_lampa
+- type: custom:decluttering-card
+  template: mushroom_light_template
+  variables:              
+    - entity: light.wc_main
 - type: horizontal-stack
   cards:
     - type: custom:decluttering-card
@@ -94,3 +89,7 @@
       template: mushroom_switch_light_template
       variables:
         - entity: switch.hipad_xpro_mozgaserzekeles
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_illatosito
