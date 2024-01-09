@@ -69,7 +69,7 @@ system_chart:
       func: raw
 
 tablet_chart:
-  graph_span: 6 months
+  graph_span: 6months
   span:
     end: month
   apex_config:
@@ -103,6 +103,11 @@ tablet_chart:
             let date = new Date(timestamp).toLocaleString('hu-HU',{month:'short'}).toString();
             return date;
           }
+    yaxis:
+      show: true
+      decimalsInFloat: 1
+      labels:
+        offsetX: -2
   all_series_config:
     type: column
     unit: kWh

@@ -15,13 +15,14 @@ views:
           grid-arena: floorplan
         cards:
           - type: custom:floorplan-card
-            style: |
-              ha-card {
+            card_mod:
+              style: |
+                ha-card {
                   max-width: 100%;
                   margin: 0 auto;
                   background: none;
                   border: none;
-              }
+                }
             config:
               image: /local/floorplan/House_2023_optimized.svg
               stylesheet: /local/floorplan/House_2023.css

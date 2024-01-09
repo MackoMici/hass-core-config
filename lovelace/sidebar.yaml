@@ -5,11 +5,12 @@ view_layout:
   grid-area: sidebar
 cards:
   - type: picture-elements
-    style: |
-      ha-card {
-        background: none;
-        border: none;
-      }
+    card_mod:
+      style: |
+        ha-card {
+          background: none;
+          border: none;
+        }
     image: /local/background/time.png
     elements:
       - type: custom:decluttering-card
@@ -70,12 +71,13 @@ cards:
       - show_wind: 'false'
       - show_precipitation_amounts: false
   - type: custom:atomic-calendar-revive
-    style: |
-      ha-card {
-        border: none;
-        background: none;
-        margin-top: -20px;
-      }
+    card_mod:
+      style: |
+        ha-card {
+          border: none;
+          background: none;
+          margin-top: -20px;
+        }
     entities:
       - entity: calendar.macko_mici_gmail_com
       - entity: calendar.zoltan_hunyadvari_gmail_com

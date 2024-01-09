@@ -5,3 +5,33 @@ command_line:
       scan_interval: 10800
       device_class: duration
       command: "ssl-cert-check -b -c /etc/letsencrypt/live/8a2a08365c8a.sn.mynetname.net/cert.pem | awk '{ print $NF }'"
+
+  - binary_sensor:
+      name: ESPhome
+      command: 'systemctl is-active esphome@homeassistant.service'
+      payload_on: "active"
+      payload_off: "inactive"
+
+  - binary_sensor:
+      name: FlexGet
+      command: 'systemctl is-active flexget.service'
+      payload_on: "active"
+      payload_off: "inactive"
+
+  - binary_sensor:
+      name: MQTT
+      command: 'systemctl is-active mosquitto.service'
+      payload_on: "active"
+      payload_off: "inactive"
+
+  - binary_sensor:
+      name: Plex
+      command: 'systemctl is-active plexmediaserver.service'
+      payload_on: "active"
+      payload_off: "inactive"
+
+  - binary_sensor:
+      name: rTorrent
+      command: 'systemctl is-active rtorrent.service'
+      payload_on: "active"
+      payload_off: "inactive"
