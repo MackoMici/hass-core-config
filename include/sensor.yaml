@@ -1,17 +1,4 @@
 sensor:
-  - platform: systemmonitor
-    resources:
-      - type: disk_use_percent
-        arg: /
-      - type: disk_use_percent
-        arg: /mnt/hdd1
-      - type: disk_use_percent
-        arg: /mnt/hdd2
-      - type: memory_use_percent
-      - type: processor_use
-      - type: processor_temperature
-      - type: last_boot
-
   - platform: time_date
     display_options:
       - time

@@ -186,6 +186,27 @@ mushroom_chips_template:
         }
     chips: '[[chips]]'
 
+tv_controll_template:
+  default:
+    entity: media_player.samsung_q80_series_65
+    icon: ''
+  card:
+    type: custom:mushroom-template-card
+    primary: ''
+    secondary: ''
+    icon: '[[icon]]'
+    icon_color: var(--rgb-orange-color)
+    layout: horizontal
+    card_mod: *background_none
+    tap_action:
+      action: call-service
+      service: media_player.play_media
+      target:
+        entity_id: '[[entity]]'
+      data:
+        media_content_type: send_key
+        media_content_id: '[[media_content_id]]'
+
 mushroom_klima_template:
   default: 
     - entity: climate.gree_klima
@@ -563,4 +584,3 @@ person_template:
                   - '[[entity_device]]'
                 view_layout:
                   grid-area: map
-

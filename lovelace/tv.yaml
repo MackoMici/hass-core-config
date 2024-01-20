@@ -1,47 +1,110 @@
-type: custom:mini-media-player
-entity: media_player.samsung_q80_series_65
-name: Living Room Samsung Q80 Tv
-icon: mdi:television
-tap_action: none
-hide:
-  source: true
-shortcuts:
-  columns: 3
-  buttons:
-    - type: service
-      name: Plex
-      id: media_player.select_source
-      data:
-        entity_id: media_player.samsung_q80_series_65
-        source: Plex
-    - type: service
-      name: Netflix
-      id: media_player.select_source
-      data:
-        entity_id: media_player.samsung_q80_series_65
-        source: Netflix
-    - type: service
-      name: YouTube
-      id: media_player.select_source
-      data:
-        entity_id: media_player.samsung_q80_series_65
-        source: Youtube
-    - type: service
-      name: HBO Max
-      id: media_player.select_source
-      data:
-        entity_id: media_player.samsung_q80_series_65
-        source: HBO Max
-    - type: service
-      name: SkyShowtime
-      id: media_player.select_source
-      data:
-        entity_id: media_player.samsung_q80_series_65
-        source: SkyShowtime
-    - type: service
-      name: TARR MobilTv
-      id: media_player.select_source
-      data:
-        entity_id: media_player.samsung_q80_series_65
-        source: TARR MobilTv
-artwork: material
+- type: custom:mini-media-player
+  entity: media_player.samsung_q80_series_65
+  name: Living Room Samsung Q80 Tv
+  icon: mdi:television
+  tap_action: none
+  hide:
+    source: true
+  shortcuts:
+    columns: 3
+    buttons:
+      - type: service
+        name: Plex
+        id: media_player.select_source
+        data:
+          entity_id: media_player.samsung_q80_series_65
+          source: Plex
+      - type: service
+        name: Netflix
+        id: media_player.select_source
+        data:
+          entity_id: media_player.samsung_q80_series_65
+          source: Netflix
+      - type: service
+        name: YouTube
+        id: media_player.select_source
+        data:
+          entity_id: media_player.samsung_q80_series_65
+          source: Youtube
+      - type: service
+        name: HBO Max
+        id: media_player.select_source
+        data:
+          entity_id: media_player.samsung_q80_series_65
+          source: HBO Max
+      - type: service
+        name: SkyShowtime
+        id: media_player.select_source
+        data:
+          entity_id: media_player.samsung_q80_series_65
+          source: SkyShowtime
+      - type: service
+        name: TARR MobilTv
+        id: media_player.select_source
+        data:
+          entity_id: media_player.samsung_q80_series_65
+          source: TARR MobilTv
+  artwork: material
+- type: conditional
+  conditions:
+    - entity: media_player.samsung_q80_series_65
+      state_not: 'off'
+  card:
+    type: grid
+    square: false
+    columns: 3
+    cards:
+      - type: custom:mushroom-template-card
+        primary: ''
+        secondary: ''
+        icon: ''
+        layout: horizontal
+        tap_action: none
+        card_mod: &background_none
+          style: |
+            ha-card {
+              background: none;
+              border: none;
+            }
+      - type: custom:decluttering-card
+        template: tv_controll_template
+        variables:
+          - icon: mdi:arrow-up-bold
+          - media_content_id: KEY_UP
+      - type: custom:mushroom-template-card
+        primary: ''
+        secondary: ''
+        icon: ''
+        layout: horizontal
+        tap_action: none
+        card_mod: *background_none
+      - type: custom:decluttering-card
+        template: tv_controll_template
+        variables:
+          - icon: mdi:arrow-left-bold
+          - media_content_id: KEY_LEFT
+      - type: custom:decluttering-card
+        template: tv_controll_template
+        variables:
+          - icon: mdi:hand-okay
+          - media_content_id: KEY_ENTER
+      - type: custom:decluttering-card
+        template: tv_controll_template
+        variables:
+          - icon: mdi:arrow-right-bold
+          - media_content_id: KEY_RIGHT
+      - type: custom:decluttering-card
+        template: tv_controll_template
+        variables:
+          - icon: mdi:arrow-u-left-top-bold
+          - media_content_id: KEY_RETURN
+      - type: custom:decluttering-card
+        template: tv_controll_template
+        variables:
+          - icon: mdi:arrow-down-bold
+          - media_content_id: KEY_DOWN
+      - type: custom:decluttering-card
+        template: tv_controll_template
+        variables:
+          - icon: mdi:exit-to-app
+          - media_content_id: KEY_EXIT

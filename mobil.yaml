@@ -64,7 +64,7 @@ views:
     badges: []
     type: custom:vertical-layout
     cards:
-      - !include lovelace/tv.yaml
+      !include lovelace/tv.yaml
   - path: karacsony
     icon: mdi:pine-tree
     badges: []

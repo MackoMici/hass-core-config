@@ -182,7 +182,9 @@ views:
                     data:
                       style: *browser_mod
                       content:
-                        !include lovelace/tv.yaml
+                        type: vertical-stack
+                        cards:
+                          !include lovelace/tv.yaml
               - name: Klíma
                 entity: climate.gree_klima
                 tap_action:

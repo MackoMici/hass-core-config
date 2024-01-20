@@ -122,8 +122,8 @@
       outdoor_absolutehumidity_sensor: sensor.kulteri_absolutehumidity
       reference_humidity_sensor: sensor.belteri_paratartalom
       absolutehumidity_sensor: sensor.furdoszoba_absolutehumidity
-      rising_threshold: 8
-      falling_threshold: 5
+      rising_threshold: 10
+      falling_threshold: 7
 - id: '1676475309119'
   alias: Fürdőszoba fűtés
   description: ''
