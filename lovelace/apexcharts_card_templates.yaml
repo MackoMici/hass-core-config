@@ -69,7 +69,7 @@ system_chart:
       func: raw
 
 tablet_chart:
-  graph_span: 6months
+  graph_span: 6 months
   span:
     end: month
   apex_config:

@@ -37,55 +37,65 @@ cards:
                     {% if not is_state_attr(entity, 'remaining', 0) %}
                       {{ state_attr(entity, 'remaining') }} perc a leállásig
                     {% endif %}
-  - type: custom:stack-in-card
-    card_mod: *background_none
-    cards:
-      - type: custom:decluttering-card
-        template: mushroom_light_template
-        variables:
-          - entity: light.aroma_diffuser_nightlight
-      - type: custom:decluttering-card
-        template: mushroom_chips_template
-        variables:
-          - chips:
-              - type: conditional
-                conditions:
-                  - entity: light.aroma_diffuser_nightlight
-                    state: 'on'
-                chip:
-                  type: action
-                  icon: mdi:creation
-                  tap_action:
-                    action: call-service
-                    service: light.turn_on
-                    data:
-                      effect: Colorful
-                    target:
-                      entity_id: light.aroma_diffuser_nightlight
-                  hold_action: none
-                  double_tap_action: none
-  - type: horizontal-stack
-    cards:
-      - type: custom:decluttering-card
-        template: mushroom_humidity_timer_template
-        variables:
-          - icon: mdi:numeric-1
-          - countdown: "1 hour"
-      - type: custom:decluttering-card
-        template: mushroom_humidity_timer_template
-        variables:
-          - icon: mdi:numeric-3
-          - countdown: "3 hours"
-      - type: custom:decluttering-card
-        template: mushroom_humidity_timer_template
-        variables:
-          - icon: mdi:numeric-6
-          - countdown: "6 hours"
-      - type: custom:decluttering-card
-        template: mushroom_humidity_timer_template
-        variables:
-          - icon: mdi:timer-off
-          - countdown: "Off"
+  - type: conditional
+    conditions:
+      - entity: fan.aroma_diffuser
+        state_not: 'off'
+    card:
+      type: custom:stack-in-card
+      card_mod: *background_none
+      cards:
+        - type: custom:decluttering-card
+          template: mushroom_light_template
+          variables:
+            - entity: light.aroma_diffuser_nightlight
+        - type: custom:decluttering-card
+          template: mushroom_chips_template
+          variables:
+            - chips:
+                - type: conditional
+                  conditions:
+                    - entity: light.aroma_diffuser_nightlight
+                      state: 'on'
+                  chip:
+                    type: action
+                    icon: mdi:creation
+                    tap_action:
+                      action: call-service
+                      service: light.turn_on
+                      data:
+                        effect: Colorful
+                      target:
+                        entity_id: light.aroma_diffuser_nightlight
+                    hold_action: none
+                    double_tap_action: none
+  - type: conditional
+    conditions:
+      - entity: fan.aroma_diffuser
+        state_not: 'off'
+    card:
+      type: horizontal-stack
+      cards:
+        - type: custom:decluttering-card
+          template: mushroom_humidity_timer_template
+          variables:
+            - icon: mdi:numeric-1
+            - countdown: "1 hour"
+        - type: custom:decluttering-card
+          template: mushroom_humidity_timer_template
+          variables:
+            - icon: mdi:numeric-3
+            - countdown: "3 hours"
+        - type: custom:decluttering-card
+          template: mushroom_humidity_timer_template
+          variables:
+            - icon: mdi:numeric-6
+            - countdown: "6 hours"
+        - type: custom:decluttering-card
+          template: mushroom_humidity_timer_template
+          variables:
+            - icon: mdi:timer-off
+            - countdown: "Off"
   - type: custom:apexcharts-card
     card_mod: *background_none
     config_templates:

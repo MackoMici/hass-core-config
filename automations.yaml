@@ -1,96 +1,3 @@
-- id: '1648256024121'
-  alias: Reggeli információk
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: switch.hipad_xpro_kepernyo
-    to: 'on'
-  - platform: state
-    entity_id: light.tablet_screen
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: group.family_all
-    state: home
-  - condition: state
-    entity_id: light.tablet_screen
-    state: 'on'
-  - condition: state
-    entity_id: switch.hipad_xpro_kepernyo
-    state: 'on'
-  - condition: state
-    entity_id: input_boolean.reggeli_info
-    state: 'on'
-  - condition: template
-    value_template: '{{ (now().weekday() in (0,1,2,3,4) and now().hour >= 6 and now().hour
-      <= 7) or (now().weekday() in (5,6) and now().hour >= 7 and now().hour <= 8)
-      }}'
-    enabled: false
-  action:
-  - service: number.set_value
-    data:
-      value: 90
-    target:
-      entity_id: number.hipad_xpro_kepernyo_kikapcsolasi_idozito
-  - service: browser_mod.popup
-    data:
-      dismissable: false
-      autoclose: false
-      title: Magyarország eső térkép
-      size: fullscreen
-      timeout: 60000
-      browserID:
-      - Tablet
-      content:
-        type: custom:weather-radar-card
-        zoom_level: 8
-        static_map: true
-        show_scale: true
-        map_style: voyager
-  - delay:
-      seconds: 5
-  - service: script.reggeli_informacio
-    data: {}
-  - delay:
-      seconds: 80
-  - service: input_boolean.turn_off
-    target:
-      entity_id: input_boolean.reggeli_info
-    data: {}
-  - service: number.set_value
-    data:
-      value: 10
-    target:
-      entity_id: number.hipad_xpro_kepernyo_kikapcsolasi_idozito
-  mode: single
-  max_exceeded: silent
-- id: '1651074945261'
-  alias: TTS on door opening with persons at home
-  description: ''
-  use_blueprint:
-    path: MackoMici/tts-door-opening.yaml
-    input:
-      door_sensor: binary_sensor.sonoff_bejarati_ajto
-      minutes: 10
-      persons: person.hunyadvari_zoltan, person.szakacs_katalin
-      message-single: 'Isten hozott <person>!
-
-        Szia <person>!
-
-        Üdvüzöllek <person>!
-
-        <person> hazajött!'
-      message-multiple: Üdvüzlet itthon <persons>!
-      persons-concat: ' és '
-      target: media_player.u1006_media_player
-      actions:
-      - delay:
-          hours: 0
-          minutes: 0
-          seconds: 5
-          milliseconds: 0
-      - service: script.valaki_hazajott
-        data: {}
 - id: '1665923714852'
   alias: Párásító világítás kikapcsolás
   description: Ha nincs otthon senki és a párásítót bekapcsoljuk akkor a párásító
@@ -190,18 +97,9 @@
     path: MackoMici/tablet_charging.yaml
     input:
       tablet_battery: sensor.hipad_xpro_elem_akku
-      tablet_switch: switch.gosund_ep2_tablet_konnektor
+      tablet_switch: switch.tablet_konnektor
       tablet_screen: switch.hipad_xpro_kepernyo
       turn_on: 20
-- id: '1698388023673'
-  alias: Tablet képernyő bekapcsolás reggel
-  description: ''
-  use_blueprint:
-    path: MackoMici/tablet_screen_on.yaml
-    input:
-      ebedlo_switch: switch.sonoff_zbminil2_ebedlo
-      reggeli_info: input_boolean.reggeli_info
-      tablet_screen: switch.hipad_xpro_kepernyo
 - id: '1698389877534'
   alias: Wc frissítő vezérlés
   description: ''
@@ -272,3 +170,65 @@
         data:
           title: Riasztás
           message: Valaki bejutott a lakásba!
+- id: '1706098214814'
+  alias: Tablet képernyő bekapcsolás reggel
+  description: ''
+  use_blueprint:
+    path: MackoMici/tablet_screen_on.yaml
+    input:
+      ebedlo_switch: switch.sonoff_zbminil2_ebedlo
+      reggeli_info: input_boolean.reggeli_info
+      tablet_screen: switch.hipad_xpro_kepernyo
+      timer: timer.tablet_bekapcsolas
+      actions:
+      - service: number.set_value
+        data:
+          value: 90
+        target:
+          entity_id: number.hipad_xpro_kepernyo_kikapcsolasi_idozito
+      - service: browser_mod.popup
+        data:
+          dismissable: false
+          autoclose: false
+          title: Magyarország eső térkép
+          size: fullscreen
+          timeout: 60000
+          browserID:
+          - Tablet
+          content:
+            type: custom:weather-radar-card
+            zoom_level: 8
+            static_map: true
+            show_scale: true
+            map_style: voyager
+      - delay:
+          seconds: 5
+      - service: script.reggeli_informacio
+        data: {}
+      - delay:
+          seconds: 80
+      - service: number.set_value
+        data:
+          value: 10
+        target:
+          entity_id: number.hipad_xpro_kepernyo_kikapcsolasi_idozito
+      browser_screen: light.tablet_screen
+- id: '1707477045071'
+  alias: Low battery level detection & notification for all battery sensors
+  description: ''
+  use_blueprint:
+    path: MackoMici/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+    input:
+      time: '10:00:00'
+      exclude:
+        entity_id:
+        - sensor.valetudo_viomise_battery_level
+        - sensor.sm_a336b_battery_level
+        - sensor.sm_a536b_battery_level
+        - sensor.sm_a705fn_battery_level
+      actions:
+      - service: script.uzenet_kuldes_zolinak
+        metadata: {}
+        data:
+          title: Lemerül elemek!
+          message: '{{sensors}}'

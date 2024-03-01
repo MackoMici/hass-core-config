@@ -32,7 +32,40 @@ zone:
     icon: mdi:home
 
 recorder:
-  purge_keep_days: 30
+  include:
+    entities:
+      - device_tracker.sm_a705fn
+      - device_tracker.sm_a336b
+      - device_tracker.sm_a536b
+  exclude:
+    domains:
+      - zone
+      - script
+      - openplantbook
+      - timer
+      - select
+      - alarm_control_panel
+      - remote
+      - device_tracker
+      - button
+    entity_globs:
+      - binary_sensor.sm_*
+      - sensor.sm_*
+      - sensor.*_battery*
+      - sensor.*_ble
+      - sensor.tablet_*
+      - sensor.*_elem_akku
+    entities:
+      - person.tablet
+      - sensor.time
+      - sensor.date
+
+history:
+  include:
+    entity_globs:
+      - sensor.*_teljesitmeny
+      - sensor.*_energy*
+      - sensor.*_power
 
 lovelace:
   mode: yaml
@@ -89,6 +122,8 @@ lovelace:
       type: module
     - url: /hacsfiles/swipe-card/swipe-card.js
       type: module
+    - url: /hacsfiles/honeycomb-menu/honeycomb-menu.js
+      type: module
     - url: https://fonts.googleapis.com/css2?family=Oxygen&family=Ubuntu:wght@300&display=swap
       type: css
   dashboards:
@@ -114,6 +149,8 @@ homeassistant:
 #python_script:
 
 gree_ext:
+
+powercalc:
 
 sonoff:
   username: !secret sonoff_username

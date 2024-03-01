@@ -12,20 +12,20 @@ Graphite:
   token-rgb-primary: 229, 145, 9
   token-color-primary: rgb(var(--token-rgb-primary))
   token-color-accent: var(--token-color-primary)
-  token-color-feedback-info: 138, 208, 248
-  token-color-feedback-warning: 244, 180, 0
-  token-color-feedback-error: 229, 97, 128
-  token-color-feedback-success: 93, 193, 145
+  token-color-feedback-info: rgb(138, 208, 248)
+  token-color-feedback-warning: rgb(244,180,0)
+  token-color-feedback-error: rgb(229, 97, 128)
+  token-color-feedback-success: rgb(93, 193, 145)
   token-color-icon-primary: rgba(228, 228, 231, 1)
-  token-color-icon-secondary: 138 140 153
+  token-color-icon-secondary: rgb(138 140 153)
   token-color-icon-sidebar: rgba(147, 149, 159, 1)
   token-color-icon-sidebar-selected: rgba(174, 176, 183, 1)
   token-color-text-primary: rgba(228, 228, 231, 1)
-  token-color-text-secondary: 138 140 153
+  token-color-text-secondary: rgb(138 140 153)
   token-color-text-disabled: rgba(255, 255, 255, 0.5)
   token-color-text-sidebar-selected: rgba(214, 215, 219, 1)
   token-color-text-sidebar: var(--token-color-text-secondary)
-  token-color-text-label-badge: 198, 203, 210
+  token-color-text-label-badge: rgb(198, 203, 210)
   token-color-background-base: rgba(22, 24, 29, 1)
   token-color-background-secondary: rgba(28, 29, 33, 1)
   token-color-background-sidebar: var(--token-color-background-base)
@@ -109,10 +109,10 @@ Graphite:
   scrollbar-thumb-color: var(--token-color-background-scrollbar-thumb)
 
   # Feedback colors
-  error-color: 234, 114, 135
-  warning-color: 255, 219, 117
-  success-color: 118, 214, 152
-  info-color: 39, 209, 246
+  error-color: rgb(234 114 135)
+  warning-color: rgb(255 219 117)
+  success-color: rgb(118 214 152)
+  info-color: rgb(39, 209, 246)
     
   # Background
   lovelace-background: var(--token-color-background-base)
@@ -157,7 +157,7 @@ Graphite:
   label-badge-grey: var(--token-color-background-label-badge-grey)
 
   # Chip
-  ha-chip-text-color: 255, 255, 255
+  ha-chip-text-color: rgb(255 255 255)
   
   # Dialog
   mdc-dialog-scrim-color: var(--token-color-background-popup-scrim)
@@ -206,9 +206,9 @@ Graphite:
   codemirror-meta: var(--token-color-text-primary)
   codemirror-property: var(--accent-color)
   codemirror-atom: var(--codemirror-property)
-  codemirror-string: 119, 196, 229
-  codemirror-keyword: 140, 169, 255
-  codemirror-number: 255, 91, 29
+  codemirror-string: rgb(119 196 229)
+  codemirror-keyword: rgb(140 169 255)
+  codemirror-number: rgb(255 91 29)
 
   # RGB colors
   rgb-primary-color: var(--token-rgb-primary)
@@ -244,8 +244,8 @@ Graphite:
   # Extentions
 
   # HACS
-  hacs-new-color: 27, 153, 123
-  hacs-error-color: 182, 46, 95
+  hacs-new-color: rgb(27 153 123)
+  hacs-error-color: rgb(182 46 95)
 
   # Mini graph card
   mcg-title-font-weight: 400

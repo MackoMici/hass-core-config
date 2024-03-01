@@ -11,7 +11,7 @@ Végül jött a [Tuya Local](https://github.com/make-all/tuya-local) integráci�
 ![smart_led_strip](/readme-img/smart_led_strip.png)
 HA logban ilyenkor egyébként látni hogy hány %-os az egyezés, nálam a legjobb az 38% volt de már működött a ki/be kapcsolás és a music mód valamint a szín váltás.
 
-Jöhet a saját konfiguráció készítés, keressünk első körben egy olyan yaml fájlt, amivel valamennyire működött a saját eszközünk "/custom_components/tuya_local/devices" mappában kell keresni.
+Jöhet a saját konfiguráció készítés, keressünk első körben egy olyan yaml fájlt, amivel valamennyire működött a saját eszközünk a "/custom_components/tuya_local/devices" mappában kell keresni.
 ![file](/readme-img/file.png)
 
 Ez alapján kezdjük el az új fájl készítést, ha a fent megadott könyvtárba csináljuk a fájlunkat akár kis is tudjuk próbálni csak figyeljünk rá, hogyha közben frissül a Tuya Local akkor el fog veszni a fájl, legyen róla biztonsági másolat.
@@ -81,7 +81,7 @@ Ezek alapján már bővül is a konfigunk és vissza is térhetünk a _Devices_ 
 Valami hasonló oldal fog megjelenni, itt nyomjunk egy _F12_-t és navigáljuk a _network_ fülre, innét tudjuk az _Id_-t számként kiolvasni. A Tuya oldalon a _select_-nél válaszunk ki egy nekünk tetsző sort majd nyomjunk a **Search** gombra, ha minden jó akkor csak a kiválasztott _DP ID_-t fogja megmutatni hogy volt-e művelet az adott időben. Közben a _Network_ rész alatt a _Name_ táblában meg fog jelenni egy _list_ sor amit ki kell választani és a _Payload_ ablakban látni kell a hozzá tartozó _code_-ot, az lesz az _Id_ ami nekünk kell.
 ![consol](/readme-img/consol.png)
 
-Ahhoz, hogy minden jó legyen a konfigba először írjuk fel az össze Id-t és hozzá a neveket, ha ez megvan akkor jöhet a játszadozás. Az én led szalagon tud **dinamikus**, **színes**, **jelenet** és **zene** mód közt váltani, a honlapon pedig a _mode_-t kell a keresőben kiválasztani ott adja vissza az infót, szépen a telefonon a _Tuya app_-ban elkezdjük az egyiket kiválasztani és utána a honlapon a _Search_ gombot nyomogatni kis idő után megjelenik hogy módot váltott ekkor kell az _Event Details_ oszlop első eleme innét tudjuk mit kell az értékekhez írni.
+Ahhoz, hogy minden jó legyen a konfigba először írjuk fel az össze Id-t és hozzá a neveket, ha ez megvan akkor jöhet a játszadozás. Az én led szalagon tud **dinamikus**, **színes**, **jelenet** és **zene** mód közt váltani, a honlapon pedig a _mode_-t kell a keresőben kiválasztani ott adja vissza az infót, szépen a telefonon a _Tuya app_-ban elkezdjük az egyiket kiválasztani és utána a honlapon a _Search_ gombot nyomogatni kis idő után megjelenik, hogy módot váltott ekkor kell az _Event Details_ oszlop első eleme innét tudjuk mit kell az értékekhez írni.
 ![mode](/readme-img/mode.png)
 
 ```    
@@ -99,9 +99,9 @@ Ahhoz, hogy minden jó legyen a konfigba először írjuk fel az össze Id-t és
           value: Music
 ```
 A jelenetek információjához is hasonlóan járunk el mint az előbb, megkeressük az első elemet ami változik egy jelenet kiválasztásakor és utána már csak az app-ban kell váltogatni a jeleneteket és a honlapon pedig frissíteni. A végeredmény valami hasonló kép lesz.
-![consol](/readme-img/consol.png)
+![consol](/readme-img/search.png)
 
-Közben érdemes a konfig fájt folyamatosan írni mivel ezek az infók oda kerülnek bele. alább a fenti képhez tartozó kód részlet, remélem így érthető és ki tudjátok nyerni az infót ti is. Figyelni kell arra, hogy a _Scene_ az már egy második entitás. 
+Közben érdemes a konfig fájt folyamatosan írni mivel ezek az infók oda kerülnek bele. A fenti képhez tartozó kód részlet, remélem így érthető és ki tudjátok nyerni az infót ti is. Figyelni kell arra, hogy a _Scene_ az már egy második entitás. 
 ```
 secondary_entities:
   - entity: select
@@ -133,7 +133,7 @@ secondary_entities:
             value: "Film"
             # color: lightblue, static
 ```
-Végül néhány plusz infó az általam használt led szalagnál a **dinamikus** és **zene** módoknál lehet előre beállítani színeket és tempót esetleg érzékenységet, és a honlapon kapsz egy _Event Details_t ami az adott beállításoknak fele meg, de ha állítasz rajta akkor már változni fog ez az érték, ezért is van néhol kommentelve, hogy milyen beállításnak felel meg az érték. Ha kész és minden működik már csak be kell adni a fejlesztőnek a kérelmet a github-on és belekerül a következő kiadásba. Nem biztos, hogy külön fájl lesz minden eszköz, mert vannak nagyon hasonló eszközök és azokat 1 fájlban szokta összeállítani, erre figyeljünk mi is. A teljes kód itt látható:
+Végül néhány plusz infó az általam használt led szalagnál a **dinamikus** és **zene** módoknál lehet előre beállítani színeket és tempót esetleg érzékenységet, és a honlapon kapsz egy _Event Details_-t ami az adott beállításoknak fele meg, de ha állítasz rajta akkor már változni fog ez az érték, ezért is van néhol kommentelve, hogy milyen beállításnak felel meg az érték. Ha kész és minden működik már csak be kell adni a fejlesztőnek a kérelmet a github-on és belekerül a következő kiadásba. Nem biztos, hogy külön fájl lesz minden eszköz, mert vannak nagyon hasonló eszközök és azokat 1 fájlban szokta összeállítani, erre figyeljünk mi is. A teljes kód itt látható:
 
 ```
 name: LED Strip

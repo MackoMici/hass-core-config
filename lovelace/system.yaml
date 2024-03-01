@@ -175,11 +175,11 @@
       entity: binary_sensor.ha_tablet_mqtt_connected
       card_mod: *background_none
       <<: *none
-- type: custom:apexcharts-card
-  card_mod: *background_none
-  config_templates: 
-    - default_chart
-    - tablet_chart
-  series:
-    - entity: sensor.tablet_fogyasztas
-      name: Tablet fogyasztás
+#- type: custom:apexcharts-card
+#  card_mod: *background_none
+#  config_templates: 
+#    - default_chart
+#    - tablet_chart
+#  series:
+#    - entity: sensor.tablet_fogyasztas
+#      name: Tablet fogyasztás

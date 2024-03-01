@@ -86,7 +86,7 @@
       - type: custom:decluttering-card
         template: tv_controll_template
         variables:
-          - icon: mdi:hand-okay
+          - icon: mdi:checkbox-marked-circle-outline
           - media_content_id: KEY_ENTER
       - type: custom:decluttering-card
         template: tv_controll_template
