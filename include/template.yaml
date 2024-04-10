@@ -218,3 +218,23 @@ template:
       - name: "Napnyugta"
         state: >
           {{ states('sensor.sun_next_setting') }}
+
+  - trigger:
+      - platform: time_pattern
+        hours: /1
+      - platform: homeassistant
+        event: start
+    action:
+      - service: weather.get_forecasts
+        data:
+          type: daily
+        target:
+          entity_id: weather.forecast_home
+        response_variable: daily
+  
+    sensor:
+      - name: Weather Daily
+        unique_id: weather_forecast_daily
+        state: "{{ now().isoformat() }}"
+        attributes:
+          forecast: "{{ daily['weather.forecast_home'].forecast }}"

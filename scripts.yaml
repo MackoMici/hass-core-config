@@ -49,14 +49,14 @@ reggeli_informacio:
         \     'windy-variant': 'Változóan szeles idő',\n    }\n  %}\n  Helyi időjárás:\n
         \ {{ idok[states.weather.forecast_home.state] }} várható {{ [ 'ma', 'mára',
         'a mai napra', 'az előrejelzés szerint', 'az időjós békám szerint'] | random
-        }}, {{ states.weather.forecast_home.attributes.forecast[0].templow | round(0)
-        | replace('-','mínusz ') }} és {{ states.weather.forecast_home.attributes.forecast[0].temperature
+        }}, {{ states.sensor.weather_daily.attributes.forecast[0].templow | round(0)
+        | replace('-','mínusz ') }} és {{ states.sensor.weather_daily.attributes.forecast[0].temperature
         | round(0) | replace('-','mínusz ') }} fok közötti hőmérséklettel.\n\n  {%
         if state_attr('weather.forecast_home', 'wind_speed') | int > 10 %}\n    A
         szélsebesség {{ state_attr('weather.forecast_home', 'wind_speed') }} kilométer
-        per óra.\n  {% endif %}\n\n  {% if states.weather.forecast_home.attributes.forecast[0].precipitation
+        per óra.\n  {% endif %}\n\n  {% if states.sensor.weather_daily.attributes.forecast[0].precipitation
         | float(0) == 0 %}\n    A mai egy csapadékmentes nap lesz.\n  {% else %}\n
-        \   Körülbelül {{ states.weather.forecast_home.attributes.forecast[0].precipitation
+        \   Körülbelül {{ states.sensor.weather_daily.attributes.forecast[0].precipitation
         | float(0) }} milliméter csapadék várható.\n  {% endif %}\n{% else %}\n  Az
         időjárás előrejelző szolgáltatás sajnos nem elérhető.\n{% endif %}\n{{ ['Most
         épp', 'Jelenleg', 'Pillanatnyilag'] | random }} {{ odakinn | replace('-','mínusz

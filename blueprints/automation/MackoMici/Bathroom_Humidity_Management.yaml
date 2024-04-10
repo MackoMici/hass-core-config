@@ -1,55 +1,70 @@
 blueprint:
   name: Bathroom Humidity Management
-  description: Turn a fan on and off based on the difference between a humidity sensor
-    and a baseline
+  description: Fürdőszoba szellőztetés be és kikapcsolás páratartalom érzékelő vagy
+    alapérték közötti különbség alapján, figyelembe véve az abszolút páratartalmakat,
+    valamint éjszakai szüneteltetést.
   domain: automation
   input:
     humidity_sensor:
       name: Humidity Sensor
-      description: A sensor that measures the humidity of the area
+      description: Fürdűszoba páratartalom érzékelő
       selector:
         entity:
-          domain: sensor
+          domain:
+          - sensor
           multiple: false
     absolutehumidity_sensor:
       name: AbsoluteHumidity Sensor
-      description: A sensor that measures the absolute humidity of the area
+      description: Fürdűszoba abszolút páratartalom érzékelő
       selector:
         entity:
-          domain: sensor
+          domain:
+          - sensor
           multiple: false
     reference_humidity:
       name: Reference Humidity
-      description: A percentage point value that indicates the baseline humidity if
-        there is no reference sensor available
+      description: Egy százalékpontos érték, amely az alap páratartalmat jelzi, ha
+        nem áll rendelkezésre referenciaérzékelő.
       default: 55
     reference_humidity_sensor:
       name: Reference Humidity Sensor
-      description: A sensor that indicates the baseline humidity of the location
+      description: Referencia páratartalom érzékelő.
       selector:
         entity:
-          domain: sensor
+          domain:
+          - sensor
           multiple: false
       default: []
     outdoor_absolutehumidity_sensor:
       name: Outdoor Absolutehumidity Sensor
-      description: A sensor that indicates the baseline absolute humidity of the outdoor
+      description: Kültéri abszolút páratartalom érzékelő.
       selector:
         entity:
-          domain: sensor
+          domain:
+          - sensor
           multiple: false
       default: []
     fan_switch:
       name: Fan Switch
-      description: A switch that turns the fan on and off
+      description: A fürdőszoba ventillátor kapcsoló.
       selector:
         entity:
-          domain: switch
+          domain:
+          - switch
+          multiple: false
+    bathroom_window:
+      name: Bathroom Window
+      selector:
+        entity:
+          domain:
+          - binary_sensor
+          device_class:
+          - window
           multiple: false
     rising_threshold:
       name: Rising Threshold
-      description: How many percentage points above the reference humidity the sensor
-        can rise before the fan is turned on
+      description: Hány százalékponttal emelkedhet az érzékelő a referencia páratartalom
+        fölé, mielőtt a ventilátor bekapcsol.
       selector:
         number:
           min: 0.0
@@ -59,8 +74,8 @@ blueprint:
       default: 8
     falling_threshold:
       name: Falling Threshold
-      description: How many percentage points above the reference humidity the sensor
-        must fall to before the fan is turned off
+      description: Hány százalékponttal kell az érzékelőnek a referencia páratartalom
+        fölé csökkennie, mielőtt a ventilátor kikapcsol.
       selector:
         number:
           min: 0.0
@@ -97,25 +112,34 @@ variables:
     | float(0) or reference_humidity | float(0)) }}'
   mode: '{% if switch_state == ''off'' and difference | float(0) > rising_threshold
     | float(0) and outdoor_absolutehumidity | float(0) < absolutehumidity | float(0)
-    %} on {% elif switch_state == ''on'' and difference | float(0) > falling_threshold|float(0)
-    and outdoor_absolutehumidity | float(0) < absolutehumidity | float(0) %} on {%
-    else %} off {% endif %}'
+    %} on {% elif switch_state == ''on'' and difference | float(0) > falling_threshold
+    | float(0) and outdoor_absolutehumidity | float(0) < absolutehumidity | float(0)
+    %} on {% else %} off {% endif %}'
 trigger:
 - platform: time
   at: !input time_stop
-- entity_id: !input humidity_sensor
-  platform: state
-- entity_id: !input reference_humidity_sensor
-  platform: state
+- platform: state
+  entity_id: !input humidity_sensor
+- platform: state
+  entity_id: !input reference_humidity_sensor
+- platform: state
+  entity_id: !input bathroom_window
 action:
 - choose:
   - conditions:
-    - condition: time
-      after: !input time_stop
-      before: !input time_start
-    - condition: state
-      entity_id: !input fan_switch
-      state: 'on'
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: !input fan_switch
+        state: 'on'
+      - condition: or
+        conditions:
+        - condition: time
+          after: !input time_stop
+          before: !input time_start
+        - condition: state
+          entity_id: !input bathroom_window
+          state: 'on'
     sequence:
     - service: switch.turn_off
       entity_id: !input fan_switch
@@ -123,6 +147,9 @@ action:
     - condition: time
       after: !input time_start
       before: !input time_stop
+    - condition: state
+      entity_id: !input bathroom_window
+      state: 'off'
     - condition: template
       value_template: '{{ mode != switch_state }}'
     sequence:

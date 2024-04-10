@@ -16,13 +16,15 @@ blueprint:
       name: Timer
       selector:
         entity:
-          domain: timer
+          domain:
+          - timer
           multiple: false
     inumber:
       name: Number
       selector:
         entity:
-          domain: input_number
+          domain:
+          - input_number
           multiple: false
   source_url: https://gist.github.com/MackoMici/21fba72a2ef0343f793535a01293727c
 variables:
@@ -72,4 +74,4 @@ action:
     - service: timer.cancel
       target:
         entity_id: !input timer
-mode: single
+mode: queued

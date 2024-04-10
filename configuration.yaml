@@ -60,13 +60,6 @@ recorder:
       - sensor.time
       - sensor.date
 
-history:
-  include:
-    entity_globs:
-      - sensor.*_teljesitmeny
-      - sensor.*_energy*
-      - sensor.*_power
-
 lovelace:
   mode: yaml
   resources:

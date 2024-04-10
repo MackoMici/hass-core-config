@@ -76,6 +76,9 @@ views:
                 entities:
                   - binary_sensor.haloszoba_ablak_contact
                   - binary_sensor.nappali_ablak_contact
+                  - binary_sensor.gyerekszoba_ablak_contact
+                  - binary_sensor.konyha_ablak_contact
+                  - binary_sensor.furdoszoba_ablak_contact
                 state_action:
                   action: call-service
                   service: floorplan.class_set

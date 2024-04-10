@@ -85,6 +85,7 @@ chips:
                       <<: *none
                 exclude:
                   - entity_id: binary_sensor.ablakok
+                  - entity_id: binary_sensor.futes_ablak
               show_empty: false
               card:
                 type: custom:layout-card

@@ -36,5 +36,4 @@ mqtt:
       state_topic: tablet/deviceInfo
       unit_of_measurement: '%'
       icon: mdi:application
-      value_template: '{{ 100 - (value_json.appFreeMemory / 
-                          value_json.appTotalMemory * 100) | int(default=0) }}'
+      value_template: '{{ 100 - (value_json.appFreeMemory / value_json.appTotalMemory * 100) | int(default=0) }}'

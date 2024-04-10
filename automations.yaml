@@ -18,19 +18,6 @@
     target:
       entity_id: light.aroma_diffuser_nightlight
   mode: single
-- id: '1673370581948'
-  alias: Bathroom Humidity Management
-  description: ''
-  use_blueprint:
-    path: MackoMici/Bathroom_Humidity_Management.yaml
-    input:
-      humidity_sensor: sensor.furdoszoba_paratartalom
-      fan_switch: switch.sonoff_furdo_szelloztetes
-      outdoor_absolutehumidity_sensor: sensor.kulteri_absolutehumidity
-      reference_humidity_sensor: sensor.belteri_paratartalom
-      absolutehumidity_sensor: sensor.furdoszoba_absolutehumidity
-      rising_threshold: 10
-      falling_threshold: 7
 - id: '1676475309119'
   alias: Fürdőszoba fűtés
   description: ''
@@ -232,3 +219,15 @@
         data:
           title: Lemerül elemek!
           message: '{{sensors}}'
+- id: '1709722553432'
+  alias: Bathroom Humidity Management
+  description: ''
+  use_blueprint:
+    path: MackoMici/Bathroom_Humidity_Management.yaml
+    input:
+      outdoor_absolutehumidity_sensor: sensor.kulteri_absolutehumidity
+      humidity_sensor: sensor.furdoszoba_humidity
+      absolutehumidity_sensor: sensor.furdoszoba_absolutehumidity
+      reference_humidity_sensor: sensor.belteri_paratartalom
+      fan_switch: switch.sonoff_furdo_szelloztetes
+      bathroom_window: binary_sensor.furdoszoba_ablak_contact
