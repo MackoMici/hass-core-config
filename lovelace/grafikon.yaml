@@ -7,6 +7,7 @@ card_mod:
     ha-card {
       background: none;
       border: none;
+      box_shadow: none;
     }
 series:
   - entity: sensor.belteri_homerseklet

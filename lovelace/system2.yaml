@@ -11,6 +11,7 @@
           ha-card {
             background: none;
             border: none;
+            box_shadow: none;
           }
       <<: &none
         - tap_action: none
@@ -20,7 +21,7 @@
       entity: sensor.current_version
       card_mod: *background_none
       <<: *none
-      primary: Core
+      primary: Core Frissítés
       icon: mdi:home-assistant
       icon_color: var(--rgb-blue-color)
       secondary: |
@@ -31,10 +32,19 @@
         {% else %}
           Verzió - {{ states(entity) }}
         {% endif %}
-    - type: custom:mushroom-entity-card
-      entity: sensor.hacs
+    - type: custom:mushroom-template-card
+      entity: sensor.hacs_updates
+      primary: HACS Frissítések
+      icon: hacs:hacs
+      icon_color: var(--rgb-blue-color)
       card_mod: *background_none
       <<: *none
+      secondary: |
+        {% if states(entity) == '0' %}
+          Minden naprakész
+        {% else %}
+          Frissítések száma: {{ states(entity) }}
+        {% endif %}
     - type: custom:mushroom-entity-card
       entity: sensor.home_assistant_v2_db_size
       card_mod: *background_none
@@ -82,20 +92,20 @@
     - type: custom:decluttering-card
       template: mushroom_update_template
       variables:
-        - entity: update.mikrotik_hap_ac_2_routerboard_firmware_update
+        - entity: update.mikrotik_hap_ax_3_routerboard_firmware_update
         - primary: Mikrotik Firmware
         - icon: mdi:router-network
     - type: custom:decluttering-card
       template: mushroom_update_template
       variables:
-        - entity: update.mikrotik_hap_ac_2_routeros_update
+        - entity: update.mikrotik_hap_ax_3_routeros_update
         - primary: Mikrotik RouterOS
         - icon: mdi:router-network
     - type: custom:decluttering-card
       template: mushroom_bar_template
       variables:
-        - entity: sensor.mikrotik_hap_ac_2_hdd_usage
-        - name: Storage 16M
+        - entity: sensor.mikrotik_hap_ax_3_hdd_usage
+        - name: Storage 128M
 - type: vertical-stack
   view_layout:
     grid-area: Tablet
@@ -166,9 +176,9 @@
     header:
       title: Network Stat
     series:
-      - entity: sensor.mikrotik_pppoe_out1_rx
+      - entity: sensor.mikrotik_pppoe_out_telekom_rx
         name: Download
-      - entity: sensor.mikrotik_pppoe_out1_tx
+      - entity: sensor.mikrotik_pppoe_out_telekom_tx
         name: Upload
         invert: true
   - type: custom:apexcharts-card
@@ -179,7 +189,7 @@
       - default_chart
       - system_chart
     series:
-      - entity: sensor.mikrotik_hap_ac_2_cpu_load
+      - entity: sensor.mikrotik_hap_ax_3_cpu_load
         name: CPU
-      - entity: sensor.mikrotik_hap_ac_2_memory_usage
+      - entity: sensor.mikrotik_hap_ax_3_memory_usage
         name: Memory

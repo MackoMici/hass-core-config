@@ -3,13 +3,13 @@ group:
     entities:
       - person.hunyadvari_zoltan
       - person.szakacs_katalin
-      - sensor.hunyadvari_zoltan_wifi
-      - sensor.szakacs_katalin_wifi
+      - device_tracker.hunyadvari_zoltan_wifi
+      - device_tracker.szakacs_katalin_wifi
 
   family_wifi:
     entities:
-      - sensor.hunyadvari_zoltan_wifi
-      - sensor.szakacs_katalin_wifi
+      - device_tracker.hunyadvari_zoltan_wifi
+      - device_tracker.szakacs_katalin_wifi
 
   family_gps:
     entities:

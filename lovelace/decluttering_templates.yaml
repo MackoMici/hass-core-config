@@ -8,6 +8,7 @@ mushroom_bar_template:
         ha-card {
           background: none;
           border: none;
+          box-shadow: none;
         }
     cards:
       - type: custom:layout-card
@@ -53,8 +54,8 @@ bar_card_right_tempalte:
       style: |
         ha-card {
           border: none;
-          padding: 12px;
-          margin-left: 12px;
+          padding: 7px;
+          --bar-card-border-radius: 12px;
         }
         bar-card-value {
           margin: 12px;
@@ -91,8 +92,8 @@ bar_card_left_tempalte:
       style: |
         ha-card {
           border: none;
-          padding: 12px;
-          margin-left: 12px;
+          padding: 7px;
+          --bar-card-border-radius: 12px;
         }
         bar-card-value {
           margin: 12px;
@@ -113,6 +114,14 @@ bar_card_left_tempalte:
           background: linear-gradient(to left, #44A047, #56A540, #69AB3A, #7BB034, #8EB62E, #A1BB28, #B3C121, #C6C61B, #D8CC15, #EBD10F, #FED709,  #FEC80D, #FEB912, #FEAB17, #FE9C1C, #FE8E21, #FE7F26, #FE702B, #FE6230, #FE5335, #FF453A);
           clip-path: polygon(0 0, var(--bar-percent) 0, var(--bar-percent) 100%, 0 100%);
         }
+
+mushroom_program_template:
+  card:
+    type: custom:mushroom-entity-card
+    entity: '[[entity]]'
+    card_mod: *background_none
+    layout: horizontal
+    <<: *none
 
 mushroom_update_template:
   card:
@@ -196,7 +205,6 @@ tv_controll_template:
     secondary: ''
     icon: '[[icon]]'
     icon_color: var(--rgb-orange-color)
-    layout: horizontal
     card_mod: *background_none
     tap_action:
       action: call-service
@@ -404,6 +412,16 @@ datetime_template:
       text-shadow: 0px 10px 10px var(--divider-color)
       z-index: '[[z-index]]'
 
+map_template:
+  default:
+    default_zoom: 14
+  card:
+    type: map
+    default_zoom: '[[default_zoom]]'
+    hours_to_show: 1
+    auto_fit: 1
+    entities: '[[entities]]'
+
 person_template:
   card:
     type: custom:mushroom-person-card
@@ -578,9 +596,12 @@ person_template:
                              {% endif %}"
                 view_layout:
                   grid-area: bluetooth
-              - type: map
-                default_zoom: 16
-                entities: 
-                  - '[[entity_device]]'
+              - type: custom:decluttering-card
+                template: map_template
+                variables:
+                  - default_zoom: 16
+                  - entities: 
+                    - '[[entity_device]]'
+                    - '[[entity_person]]'
                 view_layout:
                   grid-area: map

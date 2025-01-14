@@ -4,6 +4,7 @@ card_mod:
     ha-card {
       background: none;
       border: none;
+      box_shadow: none;
     }
 include:
   - climate.honeywell_home_termosztat

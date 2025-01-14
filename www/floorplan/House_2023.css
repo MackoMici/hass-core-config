@@ -83,7 +83,9 @@ g#entities .entities.entity-state-heat {
   filter: unset;
 }
 
-g#entities .entities.entity-state-unavailable {
+g#entities .entities.entity-state-unavailable,
+g#entities .motion.window-unavailable,
+g#entities .motion.door-unavailable {
   stroke: rgba(255, 97, 116, 0.53);
   stroke-width: 2px;
 }

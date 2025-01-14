@@ -1,0 +1,27 @@
+type: custom:state-switch
+entity: user
+default: default
+states:
+  Hunyadvári Zoltán:
+    type: custom:decluttering-card
+    template: map_template
+    variables:
+      - entities: 
+        - entity: device_tracker.sm_a336b
+        - entity: person.szakacs_katalin
+  Szakács Kata:
+    type: custom:decluttering-card
+    template: map_template
+    variables:
+      - entities: 
+        - entity: device_tracker.sm_a536b
+        - entity: person.hunyadvari_zoltan
+  default:
+    type: custom:decluttering-card
+    template: map_template
+    variables:
+      - entities: 
+        - entity: device_tracker.sm_a536b
+        - entity: person.hunyadvari_zoltan
+        - entity: device_tracker.sm_a336b
+        - entity: person.szakacs_katalin

@@ -35,6 +35,7 @@ cards:
         ha-card {
           background: none;
           border: none;
+          box_shadow: none;
         }
         mushroom-shape-icon {
           {% if is_state(config.entity, 'auto') %}

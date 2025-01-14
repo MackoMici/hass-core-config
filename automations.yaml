@@ -11,12 +11,12 @@
   condition:
   - condition: state
     entity_id: group.family_wifi
-    state: away
+    state: not_home
   action:
-  - service: light.turn_off
-    data: {}
+  - data: {}
     target:
       entity_id: light.aroma_diffuser_nightlight
+    action: light.turn_off
   mode: single
 - id: '1676475309119'
   alias: Fürdőszoba fűtés
@@ -84,7 +84,7 @@
     path: MackoMici/tablet_charging.yaml
     input:
       tablet_battery: sensor.hipad_xpro_elem_akku
-      tablet_switch: switch.tablet_konnektor
+      tablet_switch: switch.smartplug_usb
       tablet_screen: switch.hipad_xpro_kepernyo
       turn_on: 20
 - id: '1698389877534'
@@ -97,6 +97,7 @@
       timer: timer.wc
       freshener_switch: switch.sonoff_illatosito
       light_switch: light.wc_main
+      count: counter.wc_illatosito
 - id: '1698766222855'
   alias: Ajtó nyitásra tablet mozgás érzékelő bekapcsolás
   description: ''
@@ -104,8 +105,8 @@
     path: MackoMici/tablet_motion.yaml
     input:
       motion_switch: switch.hipad_xpro_mozgaserzekeles
-      camera: camera.tablet
-      family: group.family_all
+      camera: camera.hipad_xpro
+      family: group.family_wifi
       doorsensor: binary_sensor.sonoff_bejarati_ajto
 - id: '1699947818450'
   alias: Világítás kikapcsolás
@@ -113,10 +114,10 @@
   use_blueprint:
     path: MackoMici/lights_off.yaml
     input:
-      family: group.family_all
+      family: group.family_wifi
       lights: light.vilagitas
       actions:
-      - service: script.uzenet_kuldes_zolinak
+      - action: script.uzenet_kuldes_zolinak
         data:
           title: Világítás
           message: Nem érhető el!
@@ -129,34 +130,10 @@
       certificate_input: sensor.ssl_cert_expiry
       days_input: 21
       actions:
-      - service: script.uzenet_kuldes_zolinak
+      - action: script.uzenet_kuldes_zolinak
         data:
           title: SSL tanúsítvány
           message: Az SSL tanúsítvány {{ expire_days_var }} nap múlva jár le.
-- id: '1699948737243'
-  alias: Otthoni riasztás
-  description: ''
-  use_blueprint:
-    path: MackoMici/home_security.yaml
-    input:
-      doorsensor: binary_sensor.sonoff_bejarati_ajto
-      family: group.family_all
-      security: alarm_control_panel.gateway_alarm
-      actions_on:
-      - service: script.uzenet_kuldes_zolinak
-        data:
-          title: Riasztó
-          message: Bekapcsolva
-      actions_off:
-      - service: script.uzenet_kuldes_zolinak
-        data:
-          title: Riasztó
-          message: Kikapcsolva
-      actions_alarm:
-      - service: script.uzenet_kuldes_zolinak
-        data:
-          title: Riasztás
-          message: Valaki bejutott a lakásba!
 - id: '1706098214814'
   alias: Tablet képernyő bekapcsolás reggel
   description: ''
@@ -214,7 +191,7 @@
         - sensor.sm_a536b_battery_level
         - sensor.sm_a705fn_battery_level
       actions:
-      - service: script.uzenet_kuldes_zolinak
+      - action: script.uzenet_kuldes_zolinak
         metadata: {}
         data:
           title: Lemerül elemek!
@@ -231,3 +208,86 @@
       reference_humidity_sensor: sensor.belteri_paratartalom
       fan_switch: switch.sonoff_furdo_szelloztetes
       bathroom_window: binary_sensor.furdoszoba_ablak_contact
+- id: '1723303352625'
+  alias: 'Hőmérséklet riasztás üzenet Router '
+  description: ''
+  use_blueprint:
+    path: MackoMici/temp_alarm.yaml
+    input:
+      temp_sensor: sensor.mikrotik_hap_ax_3_cpu_temperature
+      temp_threshold: 70
+      actions:
+      - action: script.uzenet_kuldes_zolinak
+        data:
+          title: Router
+          message: Kezd nagyon meleg lenni!
+- id: '1723356670612'
+  alias: Hőmérséklet riasztás üzenet Szerver
+  description: ''
+  use_blueprint:
+    path: MackoMici/temp_alarm.yaml
+    input:
+      temp_sensor: sensor.processor_temperature
+      temp_threshold: 70
+      actions:
+      - action: script.uzenet_kuldes_zolinak
+        data:
+          title: Szerver
+          message: Kezd nagyon meleg lenni!
+- id: '1723357489109'
+  alias: Hőmérséklet riasztás üzenet Tablet
+  description: ''
+  use_blueprint:
+    path: MackoMici/temp_alarm.yaml
+    input:
+      temp_sensor: sensor.ha_tablet_battery_temperature
+      temp_threshold: 40
+      actions:
+      - action: script.uzenet_kuldes_zolinak
+        data:
+          title: Tablet
+          message: Kezd kicsit meleg lenni!
+- id: '1723450900531'
+  alias: Klíma alvó üzemmódra kapcsolás
+  description: ''
+  trigger:
+  - platform: time
+    at: '22:00:00'
+  condition:
+  - condition: state
+    entity_id: climate.gree_klima
+    state: cool
+  action:
+  - action: climate.set_preset_mode
+    data:
+      preset_mode: sleep
+    target:
+      entity_id: climate.gree_klima
+  mode: single
+- id: '1726452970315'
+  alias: Otthoni riasztás
+  description: ''
+  use_blueprint:
+    path: MackoMici/home_security.yaml
+    input:
+      doorsensor: binary_sensor.sonoff_bejarati_ajto
+      family_wifi: group.family_wifi
+      family: group.family_all
+      security: alarm_control_panel.gateway_alarm
+      actions_on:
+      - action: script.uzenet_kuldes_zolinak
+        data:
+          title: Riasztó
+          message: Bekapcsolva
+      actions_off:
+      - action: script.uzenet_kuldes_zolinak
+        metadata: {}
+        data:
+          title: Riasztó
+          message: Kikapcsolva
+      actions_alarm:
+      - action: script.uzenet_kuldes_zolinak
+        metadata: {}
+        data:
+          title: Riasztó
+          message: Valaki bejutott a lakásba!

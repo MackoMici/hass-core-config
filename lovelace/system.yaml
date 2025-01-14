@@ -9,6 +9,7 @@
       ha-card {
         background: none;
         border: none;
+        box-shadow: none;
       }
   subtitle: Uptime - {{ states('sensor.home_assistant_uptime') }}
 - type: horizontal-stack
@@ -19,7 +20,7 @@
       <<: &none2
         hold_action: none
         double_tap_action: none
-      primary: Core
+      primary: Core frissítés
       tap_action:
         action: url
         url_path: https://www.home-assistant.io/latest-release-notes/
@@ -33,13 +34,22 @@
         {% else %}
           Verzió - {{ states(entity) }}
         {% endif %}
-    - type: custom:mushroom-entity-card
-      entity: sensor.hacs
+    - type: custom:mushroom-template-card
+      entity: sensor.hacs_updates
       card_mod: *background_none
       <<: *none2
+      primary: HACS frissítések
+      icon: hacs:hacs
+      icon_color: var(--rgb-blue-color)
       tap_action:
         action: navigate
-        navigation_path: /hacs
+        navigation_path: /config
+      secondary: |
+        {% if states(entity) == '0' %}
+          Minden naprakész
+        {% else %}
+          Frissítések száma: {{ states(entity) }}
+        {% endif %}
 - type: horizontal-stack
   cards:
     - type: custom:mushroom-entity-card
@@ -57,11 +67,45 @@
       entity: sensor.zigbee_adatbazis_meret
       card_mod: *background_none
       <<: *none
+    - type: custom:mushroom-template-card
+      entity: sensor.ssl_cert_expiry
+      icon: mdi:progress-clock
+      icon_color: var(--rgb-blue-color)
+      primary: SSL tanúsítvány lejárata
+      secondary: '{{ states[entity].state }} nap' 
+      card_mod: *background_none
+      <<: *none
 - type: custom:mushroom-title-card
   title: Debian Server
   card_mod: *background_none
   subtitle: Uptime - {{ states('sensor.debian_server_uptime') }}
   <<: *none
+- type: horizontal-stack
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_program_template
+      variables:
+        - entity: binary_sensor.esphome
+    - type: custom:decluttering-card
+      template: mushroom_program_template
+      variables:
+        - entity: binary_sensor.mqtt
+- type: horizontal-stack
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_program_template
+      variables:
+        - entity: binary_sensor.flexget
+    - type: custom:decluttering-card
+      template: mushroom_program_template
+      variables:
+        - entity: binary_sensor.rtorrent
+- type: horizontal-stack
+  cards:
+    - type: custom:decluttering-card
+      template: mushroom_program_template
+      variables:
+        - entity: binary_sensor.plex
 - type: vertical-stack
   card_mod: *background_none
   cards:
@@ -99,42 +143,46 @@
   subtitle: Uptime - {{ states('sensor.mikrotik_router_uptime') }}
 - type: vertical-stack
   cards:
-    - type: custom:decluttering-card
-      template: mushroom_update_template
-      variables:
-        - entity: update.mikrotik_hap_ac_2_routerboard_firmware_update
-        - primary: Mikrotik Firmware
-        - icon: mdi:router-network
-    - type: custom:decluttering-card
-      template: mushroom_update_template
-      variables:
-        - entity: update.mikrotik_hap_ac_2_routeros_update
-        - primary: Mikrotik RouterOS
-        - icon: mdi:router-network
+    - type: horizontal-stack
+      cards:
+        - type: custom:decluttering-card
+          template: mushroom_update_template
+          variables:
+            - entity: update.mikrotik_hap_ax_3_routerboard_firmware_update
+            - primary: Mikrotik Firmware
+            - icon: mdi:router-network
+        - type: custom:decluttering-card
+          template: mushroom_update_template
+          variables:
+            - entity: update.mikrotik_hap_ax_3_routeros_update
+            - primary: Mikrotik RouterOS
+            - icon: mdi:router-network
     - type: custom:decluttering-card
       template: mushroom_bar_template
       variables:
-        - entity: sensor.mikrotik_hap_ac_2_hdd_usage
-        - name: Storage 16M
+        - entity: sensor.mikrotik_hap_ax_3_hdd_usage
+        - name: Storage 128M
 - type: custom:apexcharts-card
   card_mod: *background_none
   config_templates:
     - default_chart
     - system_chart
   series:
-    - entity: sensor.mikrotik_hap_ac_2_cpu_load
+    - entity: sensor.mikrotik_hap_ax_3_cpu_load
       name: CPU
-    - entity: sensor.mikrotik_hap_ac_2_memory_usage
+    - entity: sensor.mikrotik_hap_ax_3_memory_usage
       name: Memory
+    - entity: sensor.mikrotik_hap_ax_3_cpu_temperature
+      name: Temp
 - type: custom:apexcharts-card
   card_mod: *background_none
   config_templates: 
     - default_chart
     - system_chart
   series:
-    - entity: sensor.mikrotik_pppoe_out1_rx
+    - entity: sensor.mikrotik_pppoe_out_telekom_rx
       name: Download
-    - entity: sensor.mikrotik_pppoe_out1_tx
+    - entity: sensor.mikrotik_pppoe_out_telekom_tx
       name: Upload
       invert: true
 - type: custom:mushroom-title-card
@@ -145,6 +193,17 @@
 - type: vertical-stack
   card_mod: *background_none
   cards:
+    - type: horizontal-stack
+      cards:
+        - type: custom:decluttering-card
+          template: mushroom_program_template
+          variables:
+            - entity: binary_sensor.ha_tablet_mqtt_connected
+        - type: custom:decluttering-card
+          template: mushroom_switch_light_template
+          variables:
+            - entity: switch.hipad_xpro_mozgaserzekeles
+            - layout: horizontal
     - type: custom:decluttering-card
       template: mushroom_bar_template
       variables:
@@ -171,15 +230,3 @@
       variables:
         - entity: sensor.ha_tablet_app_used_memory
         - name: App Memory
-    - type: custom:mushroom-entity-card
-      entity: binary_sensor.ha_tablet_mqtt_connected
-      card_mod: *background_none
-      <<: *none
-#- type: custom:apexcharts-card
-#  card_mod: *background_none
-#  config_templates: 
-#    - default_chart
-#    - tablet_chart
-#  series:
-#    - entity: sensor.tablet_fogyasztas
-#      name: Tablet fogyasztás

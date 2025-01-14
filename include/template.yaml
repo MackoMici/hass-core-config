@@ -56,7 +56,7 @@ template:
       - name: "Mikrotik Router Uptime"
         icon: mdi:history
         state: >
-          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.mikrotik_hap_ac_2_uptime'))) | int // 60 %}
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.mikrotik_hap_ax_3_uptime'))) | int // 60 %}
           {% set hours = mins // 60 %}
           {% set days = mins // 1440 %}
           {% if days > 1 %}
@@ -144,6 +144,16 @@ template:
             mdi:battery-alert
           {% endif %}
 
+      - name: "HACS updates"
+        icon: hacs:hacs
+        state: >
+          {{ states.update
+            | selectattr('entity_id', 'search', 'update')
+            | selectattr('attributes.title', 'none')
+            | selectattr('state', 'eq', 'on')
+            | list
+            | count }}
+
       - name: "Növény probléma"
         icon: mdi:spa
         availability: >
@@ -177,22 +187,6 @@ template:
           {%- set months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'] %}
           {{ (now().timestamp() | timestamp_custom('%d, # %Y')).replace('#', months[now().month-1]) }}
   
-      - name: "Hunyadvári Zoltán Wifi"
-        state: >
-          {% if states('sensor.sm_a536b_wifi_connection') == "MiciMacko 5GHz" %}
-            home
-          {% else %}
-            not_home
-          {% endif %}
-  
-      - name: "Szakacs Katalin Wifi"
-        state: >
-          {% if states('sensor.sm_a336b_wifi_connection') == "MiciMacko 5GHz" %}
-            home
-          {% else %}
-            not_home
-          {% endif %}
-
       - name: "MetNo Temperature"
         unit_of_measurement: '°C'
         state_class: 'measurement'

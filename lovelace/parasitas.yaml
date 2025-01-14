@@ -6,10 +6,11 @@ cards:
         ha-card {
           background: none;
           border: none;
+          box_shadow: none;
         }
     cards:
       - type: custom:mushroom-fan-card
-        entity: fan.aroma_diffuser
+        entity: fan.aroma_diffuser_aroma_diffuzor
         card_mod: *background_none
         show_percentage_control: true
         <<: &none2
@@ -23,23 +24,23 @@ cards:
           - chips:
               - type: conditional
                 conditions:
-                  - entity: select.aroma_diffuser_timer
+                  - entity: select.aroma_diffuser_idozito
                     state_not: 'Off'
-                  - entity: fan.aroma_diffuser
+                  - entity: fan.aroma_diffuser_aroma_diffuzor
                     state: 'on'
                 chip:
                   type: template
                   tap_action: none
                   hold_action: none
                   double_tap_action: none
-                  entity: select.aroma_diffuser_timer
+                  entity: select.aroma_diffuser_idozito
                   content: |
                     {% if not is_state_attr(entity, 'remaining', 0) %}
                       {{ state_attr(entity, 'remaining') }} perc a leállásig
                     {% endif %}
   - type: conditional
     conditions:
-      - entity: fan.aroma_diffuser
+      - entity: fan.aroma_diffuser_aroma_diffuzor
         state_not: 'off'
     card:
       type: custom:stack-in-card
@@ -48,14 +49,14 @@ cards:
         - type: custom:decluttering-card
           template: mushroom_light_template
           variables:
-            - entity: light.aroma_diffuser_nightlight
+            - entity: light.aroma_diffuser_ejjeli_lampa
         - type: custom:decluttering-card
           template: mushroom_chips_template
           variables:
             - chips:
                 - type: conditional
                   conditions:
-                    - entity: light.aroma_diffuser_nightlight
+                    - entity: light.aroma_diffuser_ejjeli_lampa
                       state: 'on'
                   chip:
                     type: action
@@ -66,12 +67,12 @@ cards:
                       data:
                         effect: Colorful
                       target:
-                        entity_id: light.aroma_diffuser_nightlight
+                        entity_id: light.aroma_diffuser_ejjeli_lampa
                     hold_action: none
                     double_tap_action: none
   - type: conditional
     conditions:
-      - entity: fan.aroma_diffuser
+      - entity: fan.aroma_diffuser_aroma_diffuzor
         state_not: 'off'
     card:
       type: horizontal-stack
@@ -110,3 +111,37 @@ cards:
         opacity: 0.2
       - entity: sensor.furdoszoba_paratartalom
         name: Fürdő
+  - type: grid
+    square: false
+    columns: 3
+    cards:
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.ebedlo_humidity
+          - name: Ebédlő
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.nappali_humidity
+          - name: Nappali
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.haloszoba_humidity
+          - name: Háló
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.konyha_humidity
+          - name: Konyha
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.gyerekszoba_humidity
+          - name: Gyerekszoba
+      - type: custom:decluttering-card
+        template: mushroom_entity_futes_template
+        variables:
+          - entity: sensor.furdoszoba_paratartalom
+          - name: Fürdő

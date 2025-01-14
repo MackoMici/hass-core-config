@@ -6,6 +6,7 @@ chips:
         ha-card {
           background: none;
           border: none;
+          box_shadow: none;
         }
     entity: alarm_control_panel.gateway_alarm
     content_info: none

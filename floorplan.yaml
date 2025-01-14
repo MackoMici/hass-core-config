@@ -88,9 +88,11 @@ views:
                   - light.eloszoba_main
                   - light.furdo_main
                   - light.kamra_main
+                  - light.kazan_main
                   - light.wc_main
                   - light.halo_main
                   - light.ebedlo_main
+                  - light.szoba_main
                   - light.nappali_asztali_lampa
                   - light.aroma_diffuser_nightlight
                 state_action:
@@ -102,9 +104,11 @@ views:
                   - light.eloszoba_main
                   - light.furdo_main
                   - light.kamra_main
+                  - light.kazan_main
                   - light.wc_main
                   - light.halo_main
                   - light.ebedlo_main
+                  - light.szoba_main
                   - light.nappali_asztali_lampa
                   - light.aroma_diffuser_nightlight
                 tap_action:

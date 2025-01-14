@@ -32,33 +32,9 @@ zone:
     icon: mdi:home
 
 recorder:
-  include:
-    entities:
-      - device_tracker.sm_a705fn
-      - device_tracker.sm_a336b
-      - device_tracker.sm_a536b
-  exclude:
-    domains:
-      - zone
-      - script
-      - openplantbook
-      - timer
-      - select
-      - alarm_control_panel
-      - remote
-      - device_tracker
-      - button
-    entity_globs:
-      - binary_sensor.sm_*
-      - sensor.sm_*
-      - sensor.*_battery*
-      - sensor.*_ble
-      - sensor.tablet_*
-      - sensor.*_elem_akku
-    entities:
-      - person.tablet
-      - sensor.time
-      - sensor.date
+  auto_purge: true
+  auto_repack: true
+  purge_keep_days: 30
 
 lovelace:
   mode: yaml
@@ -139,11 +115,23 @@ homeassistant:
   allowlist_external_dirs:
     - "/home/zoolesz/.homeassistant"
 
+device_tracker:
+  - platform: iphonedetect
+    consider_home: 60
+    scan_interval: 12
+    new_device_defaults:
+      track_new_devices: true
+    hosts:
+      Szakacs_Katalin_Wifi: 192.168.1.93
+      Hunyadvari_Zoltan_Wifi: 192.168.1.95
+
 #python_script:
 
 gree_ext:
 
-powercalc:
+isal:
+
+#powercalc:
 
 sonoff:
   username: !secret sonoff_username
@@ -159,11 +147,6 @@ tts:
     type: TamasNeural
     region: westeurope
     rate: -10
-
-stt:
-  - platform: google_cloud_stt
-    key_file: service_account.json
-    model: command_and_search
 
 frontend:
   themes: !include_dir_merge_named themes

@@ -47,12 +47,12 @@ views:
     cards:
       - !include lovelace/fejlec.yaml
       - !include lovelace/parasitas.yaml
-  - path: porszivo
-    icon: mdi:robot-vacuum
-    badges: []
-    type: custom:vertical-layout
-    cards:
-      !include lovelace/vacuum.yaml
+#  - path: porszivo
+#    icon: mdi:robot-vacuum
+#    badges: []
+#    type: custom:vertical-layout
+#    cards:
+#      !include lovelace/vacuum.yaml
   - path: novenyek
     icon: mdi:leaf
     badges: []
@@ -71,6 +71,12 @@ views:
     type: custom:vertical-layout
     cards:
       !include lovelace/karacsony.yaml
+  - path: terkep
+    icon: mdi:map-clock
+    badges: []
+    type: ''
+    cards:
+      - !include lovelace/terkep.yaml
   - path: informacio
     icon: mdi:information-outline
     badges: []

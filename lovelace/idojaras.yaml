@@ -31,6 +31,7 @@ cards:
         ha-card {
           background: none;
           border: none;
+          box-shadow: none;
         }  
     <<: &none
       tap_action: none

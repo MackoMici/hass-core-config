@@ -12,6 +12,7 @@
       ha-card {
         background: none;
         border: none;
+         box_shadow: none;
       }
 - type: custom:config-template-card
   entities:

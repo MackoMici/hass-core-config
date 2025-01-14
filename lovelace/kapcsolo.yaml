@@ -17,7 +17,17 @@
     - type: custom:decluttering-card
       template: mushroom_switch_light_template
       variables:
-        - entity: switch.sonoff_furdoszoba
+        - entity: switch.sonoff_zbminil2_furdo
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_zbminil2_szoba
+    - type: custom:decluttering-card
+      template: mushroom_switch_light_template
+      variables:
+        - entity: switch.sonoff_zbminil2_kazanhaz
+- type: horizontal-stack
+  cards:
     - type: custom:mushroom-light-card
       entity: switch.sonoff_furdo_szelloztetes
       layout: vertical
@@ -32,41 +42,33 @@
           ha-card {
             background: none;
             border: none;
+            box-shadow: none;
           }
       hold_action: none
       double_tap_action: none
-    - type: custom:mushroom-template-card
-      entity: switch.sonoff_furdoszoba_futes
-      card_mod:
-        style: |
-          ha-card {
-            background: none;
-            border: none;
-          }
-      primary: Fürdőszoba fűtés
-      icon: mdi:heating-coil
-      icon_color: '{{ is_state(entity, "on") | iif("var(--rgb-orange-color)", "") }}'
-      layout: vertical
-      hold_action:
-        action: fire-dom-event
-        browser_mod:
-          service: browser_mod.popup
-          data:
-            style: |
-              --popup-border-width: var(--ha-card-border-width);
-              --popup-border-radius: var(--ha-card-border-radius);
-              --popup-background-color: var(--primary-background-color);
-            content:
-              type: custom:decluttering-card
-              template: mushroom_number_template
-              variables: 
-                - entity: input_number.furdoszoba_futes
-      secondary: |
-        {% if is_state('timer.furdoszoba_futes', 'active') %}
-          Hátralévő idő {{ ((as_timestamp(state_attr('timer.furdoszoba_futes', 'finishes_at')) - as_timestamp(now())) / 60) | round(0) }} perc
-        {% else %}
-          Ki
-        {% endif %}
+    - type: custom:decluttering-card
+      template: mushroom_button_futes_template
+      variables:
+        - entity: switch.sonoff_furdoszoba_futes
+        - hold_action:
+            action: fire-dom-event
+            browser_mod:
+              service: browser_mod.popup
+              data:
+                style: |
+                  --popup-border-with: var(--ha-card-border-width);
+                  --popup-border-radius: var(--ha-card-border-radius);
+                content:
+                  type: custom:decluttering-card
+                  template: mushroom_number_template
+                  variables:
+                    - entity: input_number.furdoszoba_futes
+        - secondary: "
+            {% if is_state('timer.furdoszoba_futes', 'active') %}
+              Hátralévő idő {{ ((as_timestamp(state_attr('timer.furdoszoba_futes', 'finishes_at')) - as_timestamp(now())) / 60) | round(0) }} perc
+            {% else %}
+              Ki
+            {% endif %}"
 - type: custom:decluttering-card
   template: mushroom_light_template
   variables:
@@ -84,12 +86,51 @@
     - type: custom:decluttering-card
       template: mushroom_switch_light_template
       variables:
-        - entity: switch.tablet_konnektor
+        - entity: switch.smartplug_usb
     - type: custom:decluttering-card
       template: mushroom_switch_light_template
       variables:
-        - entity: switch.hipad_xpro_mozgaserzekeles
+        - entity: switch.smartplug_konnektor
     - type: custom:decluttering-card
-      template: mushroom_switch_light_template
+      template: mushroom_button_futes_template
       variables:
         - entity: switch.sonoff_illatosito
+        - hold_action:
+            action: fire-dom-event
+            browser_mod:
+              service: browser_mod.popup
+              data:
+                style: |
+                  --popup-border-with: var(--ha-card-border-width);
+                  --popup-border-radius: var(--ha-card-border-radius);
+                content:
+                  type: vertical-stack
+                  cards:
+                    - type: custom:decluttering-card
+                      template: mushroom_number_template
+                      variables:
+                        - entity: input_number.wc_illatosito
+                    - type: horizontal-stack
+                      cards:
+                        - type: custom:decluttering-card
+                          template: mushroom_program_template
+                          variables:
+                            - entity: counter.wc_illatosito
+                        - type: custom:mushroom-template-card
+                          primary: Wc Illatosító Nullázás
+                          secondary: ''
+                          icon: mdi:restart-alert
+                          icon_color: var(--rgb-blue-color)
+                          tap_action:
+                            action: perform-action
+                            perform_action: counter.reset
+                            target:
+                              entity_id: counter.wc_illatosito
+                            hold_action: none
+                            double_tapaction: none
+        - secondary: "
+            {% if is_state('timer.furdoszoba_futes', 'active') %}
+              Hátralévő idő {{ ((as_timestamp(state_attr('timer.furdoszoba_futes', 'finishes_at')) - as_timestamp(now())) / 60) | round(0) }} perc
+            {% else %}
+              Ki
+            {% endif %}"

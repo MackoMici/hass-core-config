@@ -77,7 +77,7 @@ cards:
           - secondary: Klíma
           - icon: mdi:air-conditioner
           - color: var(--rgb-green-color)
-          - nav: klima_mobil
+          - nav: klima
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:
@@ -88,10 +88,10 @@ cards:
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:
-          - secondary: Takarítás
-          - icon: mdi:robot-vacuum
+          - secondary: TV
+          - icon: mdi:television
           - color: var(--rgb-cyan-color)
-          - nav: porszivo
+          - nav: tv
       - type: custom:decluttering-card
         template: mushroom_home_template
         variables:

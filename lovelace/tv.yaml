@@ -27,11 +27,11 @@
           entity_id: media_player.samsung_q80_series_65
           source: Youtube
       - type: service
-        name: HBO Max
+        name: Max
         id: media_player.select_source
         data:
           entity_id: media_player.samsung_q80_series_65
-          source: HBO Max
+          source: Max
       - type: service
         name: SkyShowtime
         id: media_player.select_source
@@ -65,6 +65,7 @@
             ha-card {
               background: none;
               border: none;
+              box_shadow: none;
             }
       - type: custom:decluttering-card
         template: tv_controll_template

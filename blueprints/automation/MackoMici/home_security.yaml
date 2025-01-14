@@ -13,6 +13,13 @@ blueprint:
           device_class:
           - door
           multiple: false
+    family_wifi:
+      name: Family wifi connected
+      selector:
+        entity:
+          domain:
+          - group
+          multiple: false
     family:
       name: Family Location
       selector:
@@ -26,8 +33,6 @@ blueprint:
         entity:
           domain:
           - alarm_control_panel
-          device_class:
-          - alarm
           multiple: false
     actions_on:
       name: Notify Actions
@@ -47,49 +52,60 @@ blueprint:
   source_url: https://gist.github.com/MackoMici/721dd6ac1e68127fc198cbf8a44d1af9
 trigger:
 - platform: state
-  entity_id: !input family
+  entity_id: !input family_wifi
+  id: Family_wifi
 - platform: state
   entity_id: !input doorsensor
   from: 'off'
   to: 'on'
+  id: Door
+variables:
+  family: !input family
+  family_wifi: !input family_wifi
 action:
 - choose:
   - conditions:
     - condition: state
-      entity_id: !input family
+      entity_id: !input family_wifi
       state: not_home
-    - condition: state
-      entity_id: !input security
-      state: disarmed
+    - condition: trigger
+      id:
+      - Family_wifi
     sequence:
-    - service: alarm_control_panel.alarm_arm_away
-      target:
-        entity_id: !input security
-      data: {}
-    - choose: []
-      default: !input actions_on
+    - wait_template: '{{ is_state(family_wifi, ''home'') }}'
+      timeout: 60
+    - if:
+      - condition: template
+        value_template: '{{ not wait.completed }}'
+      then:
+      - action: alarm_control_panel.alarm_arm_away
+        target:
+          entity_id: !input security
+      - choose: []
+        default: !input actions_on
   - conditions:
     - condition: state
-      entity_id: !input family
-      state: home
+      entity_id: !input doorsensor
+      state: 'on'
     - condition: state
-      entity_id: !input security
-      state: armed_away
-    sequence:
-    - service: alarm_control_panel.alarm_disarm
-      target:
-        entity_id: !input security
-      data: {}
-    - choose: []
-      default: !input actions_off
-  - conditions:
-    - condition: state
-      entity_id: !input security
-      state: armed_away
-    - condition: state
-      entity_id: !input family
+      entity_id: !input family_wifi
       state: not_home
+    - condition: trigger
+      id:
+      - Door
     sequence:
-    - choose: []
-      default: !input actions_alarm
+    - wait_template: '{{ is_state(family, ''home'') }}'
+      timeout: 60
+    - if:
+      - condition: template
+        value_template: '{{ not wait.completed }}'
+      then:
+      - choose: []
+        default: !input actions_alarm
+      else:
+      - service: alarm_control_panel.alarm_disarm
+        target:
+          entity_id: !input security
+      - choose: []
+        default: !input actions_off
 mode: single
