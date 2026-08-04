@@ -22,11 +22,11 @@
 
 | <img src="/readme-img/mobil_tv.png" width=30%><br>TV | <img src="/readme-img/mobil_kapcsolok.png" width=30%><br>Kapcsolók | <img src="/readme-img/mobil_noveny.png" width=30%><br>Növény |
 |:---:|:---:|:---:|
-| <img src="/readme-img/mobil_parasito.png" width=30%><br>Párásító | <img src="/readme-img/mobil_light.png" width=30%><br>Világítás | <img src="/readme-img/mobil_popup.png" width=20%><br>PopUp |
-| <img src="/readme-img/mobil_system.png" width=10%><br>Rendszer
+| <img src="/readme-img/mobil_parasito.png" width=30%><br>Párásító | <img src="/readme-img/mobil_light.png" width=30%><br>Világítás | <img src="/readme-img/mobil_popup.png" width=30%><br>PopUp |
+| <img src="/readme-img/mobil_system.png" width=30%><br>Rendszer
 | [![battery](/readme-img/tablet_battery.png)](/readme-img/tablet_battery.png)<br>**Battery** | [![idojaras](/readme-img/tablet_idojaras.png)](/readme-img/tablet_idojaras.png)<br>**Időjárás előrejelzés** | [![idojaras2](/readme-img/tablet_radar.png)](/readme-img/tablet_radar.png)<br>**Időjárás Radar** |
 | [![noveny](/readme-img/tablet_noveny.png)](/readme-img/tablet_noveny.png)<br>**Nővény** | [![vilagitas](/readme-img/tablet_vilagitas.png)](/readme-img/tablet_vilagitas.png)<br>**Világítás** | [![system](/readme-img/tablet_system.png)](/readme-img/tablet_system.png)<br>**System** |
-| [![tablet](/readme-img/tablet_tablet.png)](/readme-img/tablet_tablet.png)<br>**Tablet Infó** | [![system](/readme-img/tablet_system.gif)](/readme-img/tablet_system.gif)<br>**System** | [![Light](/readme-img/tablet_light.gif)](/readme-img/tablet_light.gif)<br>**Világítás válzotás** |
+| [![tablet](/readme-img/tablet_info.png)](/readme-img/tablet_info.png)<br>**Tablet Infó** | [![system](/readme-img/tablet_system.png)](/readme-img/tablet_system.png)<br>**System** | [![Light](/readme-img/tablet_light.gif)](/readme-img/tablet_light.gif)<br>**Világítás válzotás** |
 
 #### Kinézet
 
