@@ -12,7 +12,7 @@
 * [HA Floorplan](https://github.com/ExperienceLovelace/ha-floorplan)-t használok a 3D-s alaprajz megjelenítéséhez, melyen minden a házban található eszközt lehet vezérelni. [BitBorn](https://www.youtube.com/watch?v=MCNxgb0mrSA) videója apalján készült az új felület immár több kisebb png fájllal a világítás vezérlés miatt.
 * Mint a tableten és a mobilon a felület úgy lett kialakítva, hogy ne legyen ismétlés így sokkal könnyebb átalakítani vagy javítani. Ehhez nagyrészt a [Streamline Card](https://github.com/brunosabot/streamline-card)-ot valamint 1 opcióhoz a [Decluttering Card](https://github.com/custom-cards/decluttering-card)-ot használtam.
 * Ezúttal a falakra lett feltéve a hőmérséklet és páratartalom érték CSS segítségével elérve a szép összhatást.
-* Próbálgattam mostanság riasztásokat, hogyan lehetne róla értesítést kapni és az [Alert2](https://github.com/redstone99/hass-alert2) vált be a leginkább, mely az alap beápített [Alert](https://www.home-assistant.io/integrations/alert/) fejleszti tovább és egyszerűen egy [yaml](/alerts.yaml) fájlban meg van írva mikor miről kérek riasztást éjszakai szundi üzemmóddal.
+* Próbálgattam mostanság riasztásokat, hogyan lehetne róla értesítést kapni és az [Alert2](https://github.com/redstone99/hass-alert2) vált be a leginkább, mely az alap beépített [Alert](https://www.home-assistant.io/integrations/alert/) fejleszti tovább és egyszerűen egy [yaml](/alerts.yaml) fájlban meg van írva mikor miről kérek riasztást éjszakai szundi üzemmóddal.
 
 
 #### Oldalsáv
