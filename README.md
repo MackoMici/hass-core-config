@@ -12,6 +12,7 @@
 * [HA Floorplan](https://github.com/ExperienceLovelace/ha-floorplan)-t használok a 3D-s alaprajz megjelenítéséhez, melyen minden a házban található eszközt lehet vezérelni. [BitBorn](https://www.youtube.com/watch?v=MCNxgb0mrSA) videója apalján készült az új felület immár több kisebb png fájllal a világítás vezérlés miatt.
 * Mint a tableten és a mobilon a felület úgy lett kialakítva, hogy ne legyen ismétlés így sokkal könnyebb átalakítani vagy javítani. Ehhez nagyrészt a [Streamline Card](https://github.com/brunosabot/streamline-card)-ot valamint 1 opcióhoz a [Decluttering Card](https://github.com/custom-cards/decluttering-card)-ot használtam.
 * Ezúttal a falakra lett feltéve a hőmérséklet és páratartalom érték CSS segítségével elérve a szép összhatást.
+* Próbálgattam mostanság riasztásokat, hogyan lehetne róla értesítést kapni és az [Alert2](https://github.com/redstone99/hass-alert2) vált be a leginkább, mely az alap beápített [Alert](https://www.home-assistant.io/integrations/alert/) fejleszti tovább és egyszerűen egy [yaml](/alerts.yaml) fájlban meg van írva mikor miről kérek riasztást éjszakai szundi üzemmóddal.
 
 
 #### Oldalsáv
@@ -28,7 +29,7 @@
 | [![noveny](/readme-img/tablet_noveny.png)](/readme-img/tablet_noveny.png)<br>**Nővény** | [![vilagitas](/readme-img/tablet_vilagitas.png)](/readme-img/tablet_vilagitas.png)<br>**Világítás** | [![system](/readme-img/tablet_system.png)](/readme-img/tablet_system.png)<br>**System** |
 | [![tablet](/readme-img/tablet_info.png)](/readme-img/tablet_info.png)<br>**Tablet Infó** | [![system](/readme-img/tablet_system.png)](/readme-img/tablet_system.png)<br>**System** | [![Light](/readme-img/tablet_light.gif)](/readme-img/tablet_light.gif)<br>**Világítás válzotás** |
 
-#### Kinézet
+#### Téma
 
 [Bubble](https://github.com/Clooos/Bubble)
 
@@ -36,7 +37,7 @@
 
 | Gyártó | Termék | Integráció |
 |---|---|---|
-| Mikrotik | [hAP ac²](https://mikrotik.com/product/hap_ax3) | [mikrotik extended](https://github.com/Csontikka/ha-mikrotik-extended) |
+| Mikrotik | [hAP ax3](https://mikrotik.com/product/hap_ax3) | [mikrotik extended](https://github.com/Csontikka/ha-mikrotik-extended) |
 | Samsung | [Q80 Smart Tv](https://www.samsung.com/hu/tvs/qled-tv/q80t-65-inch-qled-4k-smart-tv-qe65q80tatxxh/) | [samsung smart](https://github.com/ollo69/ha-samsungtv-smart) |
 | Xiaomi | [Xiaomi Gateway 3](https://xiaomishop.hu/mi-smart-home-hub-cn-valtozat-zigbee-30-gateway-okosotthon-kozponti-egyseg) | [xiaomi gateway 3](https://github.com/AlexxIT/XiaomiGateway3) |
 | Xiaomi | [Mi Temperature and Humidity Monitor 2](https://xiaomishop.hu/okos-otthon/mi-temperature-and-humidity-monitor-2-bluetooth-homerseklet-es-paratartalom-mero) | [xiaomi gateway 3](https://github.com/AlexxIT/XiaomiGateway3) |
