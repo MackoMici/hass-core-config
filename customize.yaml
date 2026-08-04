@@ -2,3 +2,15 @@ person.hunyadvari_zoltan:
   entity_picture: "/local/person/zoolesz.png"
 person.szakacs_katalin:
   entity_picture: "/local/person/kata.png"
+sensor.kulteri_homerseklet:
+  device_class: temperature
+sensor.kulteri_paratartalom:
+  device_class: humidity
+sensor.belteri_homerseklet:
+  device_class: temperature
+sensor.belteri_paratartalom:
+  device_class: humidity
+sensor.furdoszoba_homerseklet:
+  device_class: temperature
+sensor.furdoszoba_paratartalom:
+  device_class: humidity

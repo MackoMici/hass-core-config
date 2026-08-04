@@ -1,108 +1,9 @@
-reggeli_informacio:
-  alias: Reggeli információ
-  sequence:
-  - service: tts.microsoft_say
-    data:
-      entity_id: media_player.hipad_xpro
-      message: "{% set honap = \n  { 1: 'Január', \n    2: 'Február', \n    3: 'Március',
-        \n    4: 'Április', \n    5: 'Május', \n    6: 'Június', \n    7: 'Július',
-        \n    8: 'Augusztus', \n    9: 'Szeptember', \n    10: 'Október', \n    11:
-        'November', \n    12: 'December', \n  }\n%}\n{% set napok = \n  { 0: 'Ma',\n
-        \   1: 'Holnap',\n    2: 'Holnapután',\n  }\n%}\nA mai dátum {{ now().year
-        | string }} {{ honap[now().month] }} {{ now().day | string }}.\nA pontos idő
-        {{ now().strftime('%-H') }} óra {{ now().strftime('%-M') }} perc.\nA mai névnap
-        {{ state_attr('calendar.magyar_nevnapok', 'message') }}.\n{% if ((states.calendar.macko_mici_gmail_com.attributes.start_time
-        | as_datetime | as_local).date() - (now() | as_local).date()).days | int <
-        3 -%}\n  Zoltán naptárjában a következő naptári esemény: {{ napok[((states.calendar.macko_mici_gmail_com.attributes.start_time
-        | as_datetime | as_local).date() - (now() | as_local).date()).days | int]
-        }}, {{ state_attr('calendar.macko_mici_gmail_com', 'message') }}.\n{% endif
-        %}\n{% if ((states.calendar.szakacskata_gmail_com.attributes.start_time |
-        as_datetime | as_local).date() - (now() | as_local).date()).days | int < 3
-        -%}\n  Kata naptárjában a következő naptári esemény: \n  {% for i in range(0,
-        5) %}\n    {% if is_state('sensor.ical_szakacs_katalin_event_' + i | string,
-        'unavailable') %}\n      A naptár elérhetetlen.\n    {% elif ((as_timestamp(state_attr('sensor.ical_szakacs_katalin_event_'
-        + i | string, 'start')) | as_datetime | as_local).date() - (now() | as_local).date()).days
-        | int < 3 %}\n      {{ napok[((as_timestamp(state_attr('sensor.ical_szakacs_katalin_event_'
-        + i | string, 'start')) | as_datetime | as_local).date() - (now() | as_local).date()).days
-        | int] }}\n      {% if is_state_attr('sensor.ical_szakacs_katalin_event_'
-        + i | string, 'all_day', true) %}\n        egész nap \n      {% else %}\n
-        \       {{ as_timestamp(state_attr('sensor.ical_szakacs_katalin_event_' +
-        i | string, 'start')) | timestamp_custom('%H:%M') }}\n      {% endif %}\n
-        \     {{ state_attr('sensor.ical_szakacs_katalin_event_' + i | string, 'summary')
-        }}.\n    {% endif %}\n  {% endfor %}\n{% endif %}\n{% if ((states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
-        | as_datetime | as_local).date() - (now() | as_local).date()).days | int <
-        3 and is_state('calendar.zoltan_hunyadvari_gmail_com', 'off') and is_state_attr('calendar.zoltan_hunyadvari_gmail_com',
-        'all_day', false) %}\n  A következő munkanap: {{ napok[((states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
-        | as_datetime | as_local).date() - (now() | as_local).date()).days | int]
-        }}, {{ (states.calendar.zoltan_hunyadvari_gmail_com.attributes.start_time
-        | as_datetime | as_local).time() }}.\n{% endif %}\n\n{% if not is_state('sensor.idokep_elorejelzes',
-        'unavailable') %}\n  Országos időjárás előrejelzés: \n  {{ state_attr('sensor.idokep_elorejelzes',
-        'details') | replace(\" -\", \" mínusz \") }}\n{% endif %}\n{% set odakinn
-        = states('sensor.kulteri_homerseklet') %}\n{% if not is_state('weather.forecast_home',
-        'unavailable') %}\n\n  {% set odakinn = state_attr('weather.forecast_home',
-        'temperature') %}\n\n  {% set idok = \n    { 'clear-night': 'Tiszta este',\n
-        \     'cloudy': 'Felhős idő',\n      'exceptional': 'Extrém idő',\n      'fog':
-        'Köd',\n      'hail': 'Jégeső',\n      'lightning': 'Vihar',\n      'lightning-rainy':
-        'Viharos eső',\n      'partlycloudy': 'Részben felhős idő',\n      'pouring':
-        'Szakadó eső',\n      'rainy': 'Esős idő',\n      'snowy': 'Havazás',\n      'snowy-rainy':
-        'Havas eső',\n      'sunny': 'Napos idő',\n      'windy': 'Szeles idő',\n
-        \     'windy-variant': 'Változóan szeles idő',\n    }\n  %}\n  Helyi időjárás:\n
-        \ {{ idok[states.weather.forecast_home.state] }} várható {{ [ 'ma', 'mára',
-        'a mai napra', 'az előrejelzés szerint', 'az időjós békám szerint'] | random
-        }}, {{ states.sensor.weather_daily.attributes.forecast[0].templow | round(0)
-        | replace('-','mínusz ') }} és {{ states.sensor.weather_daily.attributes.forecast[0].temperature
-        | round(0) | replace('-','mínusz ') }} fok közötti hőmérséklettel.\n\n  {%
-        if state_attr('weather.forecast_home', 'wind_speed') | int > 10 %}\n    A
-        szélsebesség {{ state_attr('weather.forecast_home', 'wind_speed') }} kilométer
-        per óra.\n  {% endif %}\n\n  {% if states.sensor.weather_daily.attributes.forecast[0].precipitation
-        | float(0) == 0 %}\n    A mai egy csapadékmentes nap lesz.\n  {% else %}\n
-        \   Körülbelül {{ states.sensor.weather_daily.attributes.forecast[0].precipitation
-        | float(0) }} milliméter csapadék várható.\n  {% endif %}\n{% else %}\n  Az
-        időjárás előrejelző szolgáltatás sajnos nem elérhető.\n{% endif %}\n{{ ['Most
-        épp', 'Jelenleg', 'Pillanatnyilag'] | random }} {{ odakinn | replace('-','mínusz
-        ') }} fok  {{ ['van', 'a kinti hőmérséklet', 'van odakinn'] | random }}."
-  mode: single
-  icon: mdi:weather-sunset-up
-valaki_hazajott:
-  alias: Valaki hazajött
-  sequence:
-  - service: tts.microsoft_say
-    data:
-      entity_id: media_player.u1006_media_player
-      message: '{% set odakinn=states(''sensor.kulteri_homerseklet'') %} {% set idebenn=states(''sensor.belteri_homerseklet'')
-        %} {% if not is_state(''weather.pirate_weather_daily'', ''unavailable'') %}
-        {% set odakinn=state_attr(''weather.pirate_weather_daily'', ''temperature'')
-        %} {% endif %} {{ [''Most épp'', ''Jelenleg'', ''Pillanatnyilag''] | random
-        }} {{ odakinn | round }} fok {{ [''a kinti hőmérséklet'', ''van odakinn'']
-        | random }} és {{ idebenn | round }} fok {{ [''van'', ''van idebenn''] | random
-        }} a lakásban. {% if is_state(''binary_sensor.haloszoba_ablak_contact'', ''on'')
-        %} Figyelem! A hálószoba ablak nyitva van. {% endif %}'
-  mode: single
-  icon: mdi:home
-clean_house:
-  alias: Xiaomi Clean Zone
-  use_blueprint:
-    path: MackoMici/Xiaomi_Clean_Zone.yaml
-    input:
-      vacuum: vacuum.viomise
-      room_zone: '[ {%- if is_state(''input_boolean.nappali_takaritas'', ''on'') -%}
-        [-2.1, -4.9, 2.2, 0.3], {%- endif -%} {%- if is_state(''input_boolean.ebedlo_takaritas'',
-        ''on'') -%} [2.2, -4.0, 5.3, 0.3], {%- endif -%} {%- if is_state(''input_boolean.konyha_takaritas'',
-        ''on'') -%} [3.5, 0.1, 5.3, 4.25], [5.2, 1.8, 6.55, 4.25], {%- endif -%} {%-
-        if is_state(''input_boolean.haloszoba_takaritas'', ''on'') -%} [5.2, -4.9,
-        7.8, -1.0], {%- endif -%} {%- if is_state(''input_boolean.eloszoba_takaritas'',
-        ''on'') -%} [5.2, -1.2, 6.8, 1.8], {%- endif -%} {%- if is_state(''input_boolean.folyoso_takaritas'',
-        ''on'') -%} [0.1, 0.2, 3.5, 2], {%- endif -%} {%- if is_state(''input_boolean.gyerekszoba_takaritas'',
-        ''on'') -%} [-2.1, 0.2, 0.4, 4.25], {%- endif -%} ]'
-  mode: single
-  icon: mdi:robot-vacuum
 uzenet_kuldes_zolinak:
-  alias: Üzenet küldés Zolinak
   sequence:
-  - service: notify.mobile_app_sm_a536b
-    data:
+  - data:
       message: '{{message}}'
       title: '{{title}}'
+    action: notify.mobile_app_sm_a536b
   icon: mdi:cellphone-message
   mode: single
   fields:
@@ -118,3 +19,47 @@ uzenet_kuldes_zolinak:
       name: Message
       description: Az üzenet szövege
       required: true
+  alias: Üzenet küldés Zolinak
+  description: ''
+idojaras:
+  sequence:
+  - action: visionect_joan.send_weather
+    data:
+      layout: detailed_summary
+      device_id: f4de3d4bb183675616e06d6080ad0155
+      weather_entity: weather.forecast_otthon
+  alias: Időjárás
+  description: ''
+input_datetime_allitas:
+  alias: Input datetime állítás
+  mode: single
+  fields:
+    entity:
+      description: Input_datetime entity_id
+      example: input_datetime.pelda_ido
+    step:
+      description: Lépés percben (pozitív vagy negatív)
+      example: 15
+    min_time:
+      description: Minimális idő (HH:MM:SS)
+      example: 06:00:00
+    max_time:
+      description: Maximális idő (HH:MM:SS)
+      example: '22:00:00'
+  sequence:
+  - variables:
+      step_sec: '{{ (step | int) * 60 }}'
+      current_ts: '{{ today_at(states(entity)) | as_timestamp }}
+
+        '
+      new_ts: '{{ current_ts + step_sec }}'
+      min_ts: '{{ today_at(min_time) | as_timestamp }}'
+      max_ts: '{{ today_at(max_time) | as_timestamp }}'
+      final_ts: "{% if new_ts < min_ts %}\n  {{ min_ts }}\n{% elif new_ts > max_ts
+        %}\n  {{ max_ts }}\n{% else %}\n  {{ new_ts }}\n{% endif %}\n"
+  - target:
+      entity_id: '{{ entity }}'
+    data:
+      time: '{{ final_ts | timestamp_custom(''%H:%M:%S'', true) }}'
+    action: input_datetime.set_datetime
+  description: ''

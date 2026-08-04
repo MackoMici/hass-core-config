@@ -1,0 +1,92 @@
+type: vertical-stack
+card_mod:
+  style: |
+    :host {
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      width: 33vw !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+cards:
+  - type: picture-elements
+    card_mod: &background
+      style: |
+        ha-card {
+          background: transparent;
+          box-shadow: none;
+        }
+    image: /local/background/time.png
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+    elements:
+      - type: custom:streamline-card
+        template: datetime_template
+        variables:
+          - entity: sensor.time
+          - color: var(--rgb-amber)
+          - filter: opacity(60%)
+          - font-size: 8vw
+          - top: 50%
+          - z-index: 0
+      - type: custom:streamline-card
+        template: datetime_template
+        variables:
+          - entity: sensor.week_day
+          - filter: opacity(50%)
+          - font-size: 5vw
+          - top: 15%
+          - z-index: 1
+      - type: custom:streamline-card
+        template: datetime_template
+        variables:
+          - entity: sensor.current_date
+          - filter: opacity(100%)
+          - font-size: 2vw
+          - top: 80%
+          - z-index: 2
+  - type: custom:weather-forecast-card
+    default_forecast: daily
+    entity: weather.forecast_otthon
+    card_mod: *background
+    show_current: true
+    show_forecast: false
+    forecast:
+      mode: chart
+      default_chart_attribute: temperature_and_precipitation
+      extra_attribute: wind_bearing
+      hourly_group_size: 1
+    tap_action:
+      action: navigate
+      navigation_path: "#weather"
+    hold_action:
+      action: navigate
+      navigation_path: "#weather_map"
+  - type: custom:bubble-card
+    card_type: calendar
+    rows: 6
+    styles: |
+      .bubble-calendar-container {
+        background: none;
+      }
+    sub_button:
+      main: []
+      bottom: []
+    entities:
+      - entity: calendar.magyar_nevnapok
+        color: yellow
+      - entity: calendar.ical_szakacs_katalin
+        color: purple
+      - entity: calendar.zoltan_hunyadvari_gmail_com
+        color: green
+      - entity: calendar.macko_mici_gmail_com
+        color: blue
+    days: 5
+    limit: 10
+    event_action:
+      tap_action:
+        action: none
+    show_end: true

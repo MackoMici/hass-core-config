@@ -1,0 +1,406 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: sub-buttons
+    hide_main_background: true
+    sub_button:
+      main: []
+      bottom:
+        - entity: input_select.menu
+          state_background: true
+          sub_button_type: default
+          icon: mdi:home-assistant
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            data:
+              option: Home Assistant Server
+            service: input_select.select_option
+          show_background: true
+        - entity: input_select.menu
+          state_background: true
+          sub_button_type: default
+          icon: mdi:puzzle
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            data:
+              option: Home Assistant Add-on
+            service: input_select.select_option
+          show_background: true
+        - entity: input_select.menu
+          state_background: true
+          sub_button_type: default
+          icon: mdi:debian
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            data:
+              option: Debian Server
+            service: input_select.select_option
+        - entity: input_select.menu
+          state_background: true
+          sub_button_type: default
+          icon: mdi:plex
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            data:
+              option: Plex Server
+            service: input_select.select_option
+          show_background: true
+        - entity: input_select.menu
+          state_background: true
+          sub_button_type: default
+          icon: mdi:swap-vertical
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            data:
+              option: qBittorrent Server
+            service: input_select.select_option
+        - entity: input_select.menu
+          state_background: true
+          sub_button_type: default
+          icon: mdi:pi-hole
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            data:
+              option: Pi-Hole Server
+            service: input_select.select_option
+          show_background: true
+        - entity: input_select.menu
+          state_background: true
+          sub_button_type: default
+          icon: mdi:server-network
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            data:
+              option: Proxmox Server
+            service: input_select.select_option
+        - entity: input_select.menu
+          state_background: true
+          sub_button_type: default
+          icon: mdi:router-network-wireless
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            data:
+              option: Mikrotik Router
+            service: input_select.select_option
+    styles: |
+      .bubble-sub-button-1 {
+        background-color: ${ hass.states['input_select.menu'].state === 'Home Assistant Server' ? "var(--bubble-default-color)" : "" } !important;
+      }
+      .bubble-sub-button-2 {
+        background-color: ${ hass.states['input_select.menu'].state === 'Home Assistant Add-on' ? "var(--bubble-default-color)" : "" } !important;
+      }
+      .bubble-sub-button-3 {
+        background-color: ${ hass.states['input_select.menu'].state === 'Debian Server' ? "var(--bubble-default-color)" : "" } !important;
+      }
+      .bubble-sub-button-4 {
+        background-color: ${ hass.states['input_select.menu'].state === 'Plex Server' ? "var(--bubble-default-color)" : "" } !important;
+      }
+      .bubble-sub-button-5 {
+        background-color: ${ hass.states['input_select.menu'].state === 'qBittorrent Server' ? "var(--bubble-default-color)" : "" } !important;
+      }
+      .bubble-sub-button-6 {
+        background-color: ${ hass.states['input_select.menu'].state === 'Pi-Hole Server' ? "var(--bubble-default-color)" : "" } !important;
+      }
+      .bubble-sub-button-7 {
+        background-color: ${ hass.states['input_select.menu'].state === 'Proxmox Server' ? "var(--bubble-default-color)" : "" } !important;
+      }
+      .bubble-sub-button-8 {
+        background-color: ${ hass.states['input_select.menu'].state === 'Mikrotik Router' ? "var(--bubble-default-color)" : "" } !important;
+      }
+    rows: 0.938
+  - type: vertical-stack
+    visibility:
+      - condition: state
+        entity: input_select.menu
+        state: "Home Assistant Server"
+    cards:
+      - type: custom:streamline-card
+        template: separator_uptime_template
+        variables:
+          - entity: sensor.home_assistant_server_uptime
+      - type: custom:streamline-card
+        template: bubble_state_template
+        variables:
+          - entity: sensor.hgc09ssbwn6_sn_mynetname_net_tanusitvany_lejarata
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.system_monitor_processzor_hasznalat
+          - entity_2: sensor.system_monitor_memoriahasznalat
+          - entity_3: sensor.system_monitor_disk_used_percentage
+          - tap_action:
+              action: navigate
+              navigation_path: "#haos_stat"
+      - type: custom:streamline-card
+        template: bubble_state_template
+        variables:
+          - entity: sensor.home_assistant_v2_db_meret
+      - type: custom:streamline-card
+        template: addon_template
+        variables:
+          - entity_update: update.home_assistant_supervisor_update
+          - entity_cpu: sensor.home_assistant_supervisor_cpu_percent
+          - entity_mem: sensor.home_assistant_supervisor_memory_percent
+          - entity_on: input_boolean.cpu_es_memoria
+          - tap_action:
+              action: navigate
+              navigation_path: "#haos_stat"
+      - type: custom:streamline-card
+        template: addon_template
+        variables:
+          - entity_update: update.home_assistant_operating_system_update
+      - type: custom:streamline-card
+        template: update_template
+        variables:
+          - entity: sensor.hacs_updates
+          - tap_action:
+              action: navigate
+              navigation_path: /config
+      - type: custom:streamline-card
+        template: separator_uptime_template
+        variables:
+          - entity: sensor.home_assistant_core_uptime
+      - type: custom:streamline-card
+        template: addon_template
+        variables:
+          - entity_update: update.home_assistant_core_update
+          - entity_cpu: sensor.home_assistant_core_cpu_percent
+          - entity_mem: sensor.home_assistant_core_memory_percent
+          - entity_on: input_boolean.cpu_es_memoria
+          - tap_action:
+              action: navigate
+              navigation_path: "#haos_stat"
+  - type: vertical-stack
+    visibility:
+      - condition: state
+        entity: input_select.menu
+        state: "Home Assistant Add-on"
+    cards:
+      - type: custom:streamline-card
+        template: addon_template
+        variables:
+          - entity_update: update.mosquitto_broker_frissites
+          - entity_cpu: sensor.mosquitto_broker_cpu_szazalek
+          - entity_mem: sensor.mosquitto_broker_memoria_szazalek
+          - entity_on: binary_sensor.mosquitto_broker_mukodesben
+          - tap_action:
+              action: navigate
+              navigation_path: "#addon_stat"
+      - type: custom:streamline-card
+        template: addon_template
+        variables:
+          - entity_update: update.terminal_ssh_frissites
+          - entity_cpu: sensor.terminal_ssh_cpu_szazalek
+          - entity_mem: sensor.terminal_ssh_memoria_szazalek
+          - entity_on: binary_sensor.terminal_ssh_mukodesben
+          - tap_action:
+              action: navigate
+              navigation_path: "#addon_stat"
+      - type: custom:streamline-card
+        template: addon_template
+        variables:
+          - entity_update: update.visionect_server_v3_all_in_one_frissites
+          - entity_cpu: sensor.visionect_server_v3_all_in_one_cpu_szazalek
+          - entity_mem: sensor.visionect_server_v3_all_in_one_memoria_szazalek
+          - entity_on: binary_sensor.visionect_server_v3_all_in_one_mukodesben
+          - tap_action:
+              action: navigate
+              navigation_path: "#addon_stat"
+      - type: custom:streamline-card
+        template: addon_template
+        variables:
+          - entity_update: update.get_hacs_frissites
+          - entity_on: binary_sensor.get_hacs_mukodesben
+      - type: custom:streamline-card
+        template: addon_template
+        variables:
+          - entity_update: update.let_s_encrypt_frissites
+          - entity_on: binary_sensor.let_s_encrypt_mukodesben
+  - type: vertical-stack
+    visibility:
+      - condition: state
+        entity: input_select.menu
+        state: "Debian Server"
+    cards:
+      - type: custom:streamline-card
+        template: separator_uptime_template
+        variables:
+          - entity: sensor.debian_server_uptime
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.lxc_debian_103_cpu_used
+          - entity_2: sensor.lxc_debian_103_memory_used_percentage
+          - entity_3: sensor.lxc_debian_103_disk_used_percentage
+          - tap_action:
+              action: navigate
+              navigation_path: "#debian_stat"
+  - type: vertical-stack
+    visibility:
+      - condition: state
+        entity: input_select.menu
+        state: "Plex Server"
+    cards:
+      - type: custom:streamline-card
+        template: separator_uptime_template
+        variables:
+          - entity: sensor.plex_server_uptime
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.lxc_plex_101_cpu_used
+          - entity_2: sensor.lxc_plex_101_memory_used_percentage
+          - entity_3 : sensor.lxc_plex_101_disk_used_percentage
+          - tap_action:
+              action: navigate
+              navigation_path: "#plex_stat"
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.storage_pve_backup_disk_used_percentage
+          - entity_2: sensor.disk_pve_st16000nm001g_2kk103_temperature
+          - entity_3: binary_sensor.disk_pve_st16000nm001g_2kk103_health
+          - tap_action:
+              action: navigate
+              navigation_path: "#plex_stat"
+  - type: vertical-stack
+    visibility:
+      - condition: state
+        entity: input_select.menu
+        state: "qBittorrent Server"
+    cards:
+      - type: custom:streamline-card
+        template: separator_uptime_template
+        variables:
+          - entity: sensor.qbittorrent_server_uptime
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.lxc_qbittorrent_102_cpu_used
+          - entity_2: sensor.lxc_qbittorrent_102_memory_used_percentage
+          - entity_3: sensor.lxc_qbittorrent_102_disk_used_percentage
+          - tap_action:
+              action: navigate
+              navigation_path: "#qbittorrent_stat"
+  - type: vertical-stack
+    visibility:
+      - condition: state
+        entity: input_select.menu
+        state: "Pi-Hole Server"
+    cards:
+      - type: custom:streamline-card
+        template: separator_uptime_template
+        variables:
+          - entity: sensor.pi_hole_server_uptime
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.lxc_pihole_100_cpu_used
+          - entity_2: sensor.lxc_pihole_100_memory_used_percentage
+          - entity_3: sensor.lxc_pihole_100_disk_used_percentage
+          - tap_action:
+              action: navigate
+              navigation_path: "#pihole_stat"
+  - type: vertical-stack
+    visibility:
+      - condition: state
+        entity: input_select.menu
+        state: "Mikrotik Router"
+    cards:
+      - type: custom:streamline-card
+        template: separator_uptime_template
+        variables:
+          - entity: sensor.mikrotik_router_uptime
+      - type: custom:streamline-card
+        template: update_template
+        variables:
+          - entity: update.hap_ax_3_router_core_routerboard_firmware_update
+      - type: custom:streamline-card
+        template: update_template
+        variables:
+          - entity: update.hap_ax_3_router_core_routeros_update
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.hap_ax_3_router_core_cpu_load
+          - entity_2: sensor.hap_ax_3_router_core_memory_usage
+          - entity_3: sensor.hap_ax_3_router_core_hdd_usage
+          - tap_action:
+              action: navigate
+              navigation_path: "#mikrotik_stat"
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.hap_ax_3_router_core_cpu_temperature
+          - entity_2: sensor.hap_ax_3_router_core_wired_clients
+          - entity_3: sensor.hap_ax_3_router_core_wireless_clients
+          - tap_action:
+              action: navigate
+              navigation_path: "#mikrotik_stat"
+      - type: custom:bubble-card
+        card_type: sub-buttons
+        hide_main_background: true
+        sub_button:
+          main: []
+          bottom:
+            - entity: sensor.hap_ax_3_router_ppp_pppoe_out_telekom_rx
+              show_state: true
+              state_background: false
+              tap_action:
+                action: navigate
+                navigation_path: "#rxtx_stat"
+            - entity: sensor.hap_ax_3_router_ppp_pppoe_out_telekom_tx
+              show_state: true
+              state_background: false
+              tap_action:
+                action: navigate
+                navigation_path: "#rxtx_stat"
+        rows: 0.9
+  - type: vertical-stack
+    visibility:
+      - condition: state
+        entity: input_select.menu
+        state: "Proxmox Server"
+    cards:
+      - type: custom:streamline-card
+        template: separator_uptime_template
+        variables:
+          - entity: sensor.proxmox_server_uptime
+      - type: custom:streamline-card
+        template: update_template
+        variables:
+          - entity: sensor.node_pve_total_updates
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.node_pve_cpu_used
+          - entity_2: sensor.node_pve_memory_used_percentage
+          - entity_3: sensor.disk_pve_kingston_shfs37a120g_temperature
+          - tap_action:
+              action: navigate
+              navigation_path: "#pve_stat"
+      - type: custom:streamline-card
+        template: sensor_template
+        variables:
+          - entity_1: sensor.storage_pve_local_lvm_disk_used_percentage
+          - entity_2: sensor.storage_pve_local_disk_used_percentage
+          - entity_3: sensor.disk_pve_kingston_shfs37a120g_life_left
+          - tap_action:
+              action: navigate
+              navigation_path: "#pve_stat"

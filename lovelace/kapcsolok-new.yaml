@@ -1,0 +1,105 @@
+type: custom:bubble-card
+card_type: climate
+sub_button:
+  main:
+    - name: HVAC modes menu
+      select_attribute: hvac_modes
+      state_background: false
+      show_arrow: false
+      sub_button_type: select
+    - name: Fan modes menu
+      sub_button_type: select
+      select_attribute: fan_modes
+      show_arrow: false
+      state_background: false
+      icon: mdi:fan
+      visibility:
+        - condition: state
+          entity: climate.gree_klima
+          state_not: "off"
+    - name: Preset modes menu
+      state_background: false
+      sub_button_type: select
+      select_attribute: preset_modes
+      show_arrow: false
+      icon: mdi:cog
+      visibility:
+        - condition: state
+          entity: climate.gree_klima
+          state_not: "off"
+    - name: Vertical Swing menu
+      select_attribute: swing_modes
+      state_background: false
+      show_arrow: false
+      sub_button_type: select
+      entity: select.c6542af9_vertical_swing
+      visibility:
+        - condition: state
+          entity: climate.gree_klima
+          state_not: "off"
+  bottom:
+    - name: Group 1
+      buttons_layout: inline
+      group:
+        - entity: switch.gree_klima_xtra_ventilator
+          show_name: true
+          show_state: false
+          tap_action:
+            action: toggle
+          visibility:
+            - condition: state
+              entity: climate.gree_klima
+              state_not: "off"
+        - entity: switch.gree_klima_egeszsegugyi_mod
+          show_name: true
+          tap_action:
+            action: toggle
+          visibility:
+            - condition: state
+              entity: climate.gree_klima
+              state_not: "off"
+    - name: Group 2
+      buttons_layout: inline
+      group:
+        - entity: switch.gree_klima_csendes_ventilator
+          show_name: true
+          tap_action:
+            action: toggle
+          visibility:
+            - condition: state
+              entity: climate.gree_klima
+              state_not: "off"
+  bottom_layout: rows
+entity: climate.gree_klima
+show_state: true
+state_color: true
+tap_action:
+  action: none
+button_action: {}
+main_buttons_position: bottom
+show_attribute: true
+attribute: current_temperature
+card_layout: large
+rows: 3.094
+styles: |
+  .large .bubble-container {
+    height: ${hass.states[[[entity]]].state === 'off' ? '112px' : ''} !important;
+    transition: height 900ms ease;
+  }
+
+  .bubble-sub-button-bottom-container.groups-layout-rows {
+    opacity: ${hass.states[[[entity]]].state === 'off' ? '0' : '1'};
+    transform: ${hass.states[[[entity]]].state === 'off'
+      ? 'translateY(-6px)'
+      : 'translateY(0)'};
+    transition: opacity 250ms ease, transform 250ms ease;
+    display: ${hass.states[[[entity]]].state === 'off' ? 'none' : 'flex'};
+  }
+
+  ${icon.setAttribute("icon",
+    hass.states[[[entity]]].state === 'heat' ? 'mdi:fire' :
+    hass.states[[[entity]]].state === 'cool' ? 'mdi:snowflake' :
+    hass.states[[[entity]]].state === 'fan_only' ? 'mdi:fan' :
+    hass.states[[[entity]]].state === 'auto' ? 'mdi:thermostat-auto' :
+    hass.states[[[entity]]].state === 'dry' ? 'mdi:water-percent' : 'mdi:thermostat')
+  }

@@ -1,0 +1,534 @@
+person_template:
+  card:
+    type: custom:bubble-card
+    card_type: button
+    button_type: state
+    entity: "[[entity]]"
+    show_name: false
+    show_state: true
+    <<: &none
+      tap_action:
+        action: none
+      hold_action:
+        action: none
+      double_tap_action:
+        action: none
+      button_action:
+        tap_action:
+          action: none
+        hold_action:
+          action: none
+        double_tap_action:
+          action: none
+    styles: &styles |
+      .bubble-sub-button-1 > ha-icon {
+          color: var(${hass.states['[[wi_fi_connection]]'].state === 'MiciMacko 2,4GHz' ?
+          '--success-color' : hass.states['[[wi_fi_connection]]'].state === '<not connected>' ?
+          '--error-color' : '--warning-color'}) !important;
+        }
+      }
+      .bubble-sub-button-2 > ha-icon {
+          color: var(${hass.states['[[battery_level]]'].state > 50 ?
+          '--success-color' : hass.states['[[battery_level]]'].state > 20 ?
+          '--warning-color' : '--error-color'}) !important;
+        }
+      }
+    sub_button:
+      main:
+        - entity: "[[wi_fi_connection]]"
+          show_icon: true
+          state_background: false
+          show_attribute: false
+          tap_action:
+            action: none
+        - entity: "[[battery_level]]"
+          state_background: false
+          show_state: true
+          tap_action:
+            action: none
+        - icon: mdi:map-clock
+          state_background: false
+          tap_action:
+            action: navigate
+            navigation_path: "[[navigation_path]]"
+      bottom: []
+
+tablet_person_template:
+  card:
+    type: custom:bubble-card
+    card_type: button
+    button_type: state
+    sub_button:
+      main: []
+      bottom: []
+    slider_fill_orientation: left
+    slider_value_position: right
+    entity: "[[entity]]"
+    scrolling_effect: false
+    show_name: false
+    show_state: false
+    tap_action:
+      action: navigate
+      navigation_path: "[[navigation_path]]"
+    button_action:
+      tap_action:
+        action: none
+      hold_action:
+        action: none
+      double_tap_action:
+        action: none
+    styles: |
+      .bubble-button-card-container {
+        background: none;
+      }
+
+popup_person_template:
+  card:
+    type: custom:bubble-card
+    card_type: button
+    button_type: state
+    entity: "[[entity]]"
+    show_name: false
+    show_state: true
+    <<: *none
+    styles: *styles
+    sub_button:
+      main:
+        - entity: "[[wi_fi_connection]]"
+          show_icon: true
+          state_background: false
+          show_attribute: false
+          tap_action:
+            action: none
+        - entity: "[[battery_level]]"
+          state_background: false
+          show_state: true
+          tap_action:
+            action: none
+
+map_template:
+  card:
+    type: map
+    default_zoom: 14
+    hours_to_show: 1
+    auto_fit: true
+    entities: "[[entities]]"
+
+light_template:
+  default:
+    icon: mdi:dome-light
+  card:
+    type: custom:bubble-card
+    card_type: button
+    button_type: switch
+    entity: "[[entity]]"
+    icon: "[[icon]]"
+    tap_action:
+      action: toggle
+    sub_button:
+      main:
+        - entity: "[[entity]]"
+          select_attribute: effect_list
+          sub_button_type: select
+          visibility:
+            - condition: state
+              entity: "[[entity]]"
+              state: "on"
+      bottom:
+        - name: Group 1
+          buttons_layout: column
+          group:
+            - entity: "[[entity]]"
+              sub_button_type: slider
+              use_accent_color: false
+              tap_to_slide: false
+              relative_slide: false
+              fill_width: true
+              always_visible: true
+              visibility:
+                - condition: state
+                  entity: "[[entity]]"
+                  state: "on"
+            - entity: "[[entity]]"
+              sub_button_type: slider
+              light_slider_type: white_temp
+              fill_width: true
+              always_visible: true
+              visibility:
+                - condition: state
+                  entity: "[[entity]]"
+                  state: "on"
+            - entity: "[[entity]]"
+              sub_button_type: slider
+              light_slider_type: hue
+              always_visible: true
+              fill_width: true
+              visibility:
+                - condition: state
+                  entity: "[[entity]]"
+                  state: "on"
+            - entity: "[[entity]]"
+              sub_button_type: slider
+              light_slider_type: saturation
+              fill_width: true
+              always_visible: true
+              visibility:
+                - condition: state
+                  entity: "[[entity]]"
+                  state: "on"
+      bottom_layout: rows
+    modules: []
+    rows: "[[rows]]"
+    styles: |
+      .bubble-sub-button-1 {
+        display: ${hass.states['[[entity]]'].attributes.effect !== undefined ? '' : 'none'} !important;
+      }
+      .bubble-sub-button-slider-2 {
+        display: ${hass.states['[[entity]]'].attributes.brightness != null ? 
+        (hass.states['[[entity]]'].attributes.effect != 'Colorful' ? '' : 'none') : 'none'} !important;
+      }
+      .bubble-sub-button-slider-3 {
+        display: ${ (m => (Array.isArray(m) ? m : String(m).split(',').map(x => x.trim())).includes('color_temp'))(hass.states['[[entity]]'].attributes.supported_color_modes) ? '' : 'none' } !important;
+      }
+      .bubble-sub-button-slider-4 {
+        display: ${ (m => (Array.isArray(m) ? m : String(m).split(',').map(x => x.trim())).includes('rgb'))(hass.states['[[entity]]'].attributes.supported_color_modes) || hass.states['[[entity]]'].attributes.effect === 'off' ? '' : 'none' } !important;
+      }
+      .bubble-sub-button-slider-5 { 
+        display: ${ (m => (Array.isArray(m) ? m : String(m).split(',').map(x => x.trim())).includes('hs'))(hass.states['[[entity]]'].attributes.supported_color_modes) && hass.states['[[entity]]'].attributes.effect !== 'Colorful' ? '' : 'none' } !important;
+      }
+      .large .bubble-container {
+        height: ${hass.states['[[entity]]'].state === 'on' && hass.states['[[entity]]'].attributes.effect !== 'Colorful' ? '' : '56px'} !important;
+        transition: height 900ms ease;
+      }
+      .bubble-sub-button-bottom-container.groups-layout-rows {
+        opacity: ${hass.states['[[entity]]'].state === 'off' && hass.states['[[entity]]'].attributes.effect !== 'Colorful' ? '0' : '1'};
+        transform: ${hass.states['[[entity]]'].state === 'off' && hass.states['[[entity]]'].attributes.effect !== 'Colorful'
+          ? 'translateY(-6px)'
+          : 'translateY(0)'};
+        transition: opacity 250ms ease, transform 250ms ease;
+        display: ${hass.states['[[entity]]'].state === 'off' && hass.states['[[entity]]'].attributes.effect !== 'Colorful' ? 'none' : 'flex'};
+      }
+
+switch_template:
+  default:
+    icon: mdi:dome-light
+  card:
+    type: custom:bubble-card
+    card_type: button
+    button_type: switch
+    entity: "[[entity]]"
+    icon: "[[icon]]"
+    tap_action:
+      action: toggle
+
+bubble_graph_template:
+  default:
+    - entity_sub: '[[entity]]'
+    - force_icon: false
+    - show_attribute: false
+    - attribute: ''
+    - icon: ''
+    - name: ''
+  card:
+    type: custom:bubble-card
+    card_type: button
+    entity: '[[entity]]'
+    scrolling_effect: false
+    show_name: true
+    name: '[[name]]'
+    card_layout: normal
+    show_icon: true
+    show_state: false
+    button_type: state
+    show_attribute: '[[show_attribute]]'
+    force_icon: '[[force_icon]]'
+    icon: '[[icon]]'
+    attribute: '[[attribute]]'
+    styles: |
+      .bubble-button-card-container {
+        background: transparent;
+      }
+      .bubble-name {
+        font-weight: bold !important;
+      }
+      ha-card::after {
+        position: absolute;
+        top: 0px;
+        left: 30px;
+        padding: 0 10px;
+        border-radius: 999px;
+        border: 0px solid black;
+        color: #fff;
+        background: red;
+        display: block;
+      }
+    <<: *none
+    sub_button:
+      main:
+        - show_background: false
+          show_icon: false
+          show_state: true
+          entity: '[[entity_sub]]'
+          scrolling_effect: false
+          <<: *none
+      bottom: []
+
+statistics_graph_template:
+  default:
+    - stacked: false
+  card:
+    type: custom:statistics-graph-chart-card
+    show_tooltip: false
+    show_legend: false
+    show_x_ticks: true
+    show_y_ticks: true
+    brush_zoom: false
+    stacked: '[[stacked]]'
+    show_interval_picker: true
+    interval_options:
+      - 1H
+      - 2H
+      - 4H
+      - 12H
+      - 24H
+      - 7D
+      - 30D
+    tooltip_match_axis: false
+    height: 200
+    y_axis_ticks: 4
+    y_axis_decimals: 0
+    x_grid_style: dashed
+    y_grid_style: dashed
+    align_header: center
+    state_layout: horizontal
+    entities: '[[entities]]'
+    annotations: []
+
+separator_uptime_template:
+  card:
+    type: custom:bubble-card
+    card_type: separator
+    name_javascript: >
+      return states['[[entity]]'].attributes.friendly_name
+    icon: mdi:clock-check-outline
+    rows: 0.8
+    <<: *none
+    sub_button:
+      main:
+        - show_background: false
+          show_state: true
+          show_icon: false
+          entity: "[[entity]]"
+          <<: *none
+      bottom: []
+
+bubble_state_template:
+  card:
+    type: custom:bubble-card
+    card_type: button
+    button_type: state
+    entity: "[[entity]]"
+    <<: *none
+    rows: 0.938
+
+sensor_template:
+  card:
+    type: custom:bubble-card
+    card_type: sub-buttons
+    hide_main_background: true
+    sub_button:
+      main: []
+      bottom:
+        - entity: "[[entity_1]]"
+          show_state: true
+          state_background: false
+          tap_action: '[[tap_action]]'
+        - entity: "[[entity_2]]"
+          show_state: true
+          state_background: false
+          tap_action: '[[tap_action]]'
+        - entity: "[[entity_3]]"
+          show_state: true
+          state_background: false
+          tap_action: '[[tap_action]]'
+    rows: 0.9
+
+update_template:
+  default:
+    - tap_action:
+        action: none
+  card:
+    type: custom:bubble-card
+    card_type: sub-buttons
+    sub_button:
+      main: []
+      bottom:
+        - entity: "[[entity]]"
+          show_state: true
+          scrolling_effect: true
+          show_background: true
+          state_background: true
+          show_icon: false
+          fill_width: true
+          name_javascript: >
+            return states['[[entity]]'].attributes.friendly_name
+          show_name: true
+          tap_action: "[[tap_action]]"
+    hide_main_background: true
+    rows: 0.8
+
+addon_template:
+  card:
+    type: custom:bubble-card
+    card_type: sub-buttons
+    sub_button:
+      main: []
+      bottom:
+        - entity: "[[entity_update]]"
+          show_state: true
+          show_background: true
+          state_background: true
+          fill_width: true
+          name_javascript: >
+            return states['[[entity_update]]'].attributes.friendly_name
+          show_name: true
+        - entity: "[[entity_cpu]]"
+          show_state: true
+          show_background: true
+          state_background: false
+          fill_width: false
+          show_name: false
+          tap_action: '[[tap_action]]'
+          visibility:
+            - condition: state
+              entity: "[[entity_on]]"
+              state: "on"
+        - entity: "[[entity_mem]]"
+          show_state: true
+          show_background: true
+          state_background: false
+          fill_width: false
+          show_name: false
+          tap_action: '[[tap_action]]'
+          visibility:
+            - condition: state
+              entity: "[[entity_on]]"
+              state: "on"
+    hide_main_background: true
+    rows: 0.8
+
+plus_minus_template:
+  default:
+    - name: ""
+  card:
+    type: custom:bubble-card
+    card_type: button
+    button_type: state
+    sub_button:
+      main:
+        - entity: "[[entity]]"
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            service: input_number.decrement
+          show_background: true
+          icon: mdi:minus
+          state_background: false
+        - entity: "[[entity]]"
+          tap_action:
+            action: call-service
+            target:
+              entity_id: entity
+            service: input_number.increment
+          icon: mdi:plus
+          state_background: false
+      bottom: []
+    entity: "[[entity]]"
+    name: "[[name]]"
+    show_state: true
+    <<: *none
+
+time_plus_minus_template:
+  card:
+    type: custom:bubble-card
+    card_type: button
+    button_type: state
+    sub_button:
+      main:
+        - entity: "[[entity]]"
+          tap_action:
+            action: call-service
+            data:
+              entity: "[[entity]]"
+              step: "-[[step]] "
+              min_time: "[[min_time]]"
+              max_time: "[[max_time]]"
+            service: script.input_datetime_allitas
+          show_background: true
+          icon: mdi:minus
+          state_background: false
+        - entity: "[[entity]]"
+          tap_action:
+            action: call-service
+            data:
+              entity: "[[entity]]"
+              step: "[[step]]"
+              min_time: "[[min_time]]"
+              max_time: "[[max_time]]"
+            service: script.input_datetime_allitas
+          icon: mdi:plus
+          state_background: false
+      bottom: []
+    entity: "[[entity]]"
+
+datetime_template:
+  default:
+    color: white
+    font-weight: bold
+  element:
+    type: state-label
+    entity: "[[entity]]"
+    <<: *none
+    style:
+      color: "[[color]]"
+      filter: "[[filter]]"
+      font-size: "[[font-size]]"
+      font-weight: "[[font-weight]]"
+      left: 50%
+      top: "[[top]]"
+      text-shadow: 0px 10px 10px var(--divider-color)
+      z-index: "[[z-index]]"
+
+clock_weather_template:
+  default:
+    hide_forecast: true
+    hide_today: false
+  card:
+    type: custom:clock-weather-card
+    entity: '[[entity]]'
+    sun_entity: sun.sun
+    weather_icon_type: fill
+    locale: hu
+    date_pattern: y. LLLL d.
+    hide_forecast_section: '[[hide_forecast]]'
+    hide_today_section: '[[hide_today]]'
+    <<: *none
+
+hourly_weather_template:
+  card:
+    type: custom:hourly-weather
+    entity: '[[entity]]'
+    name: null
+    icons: true
+    forecast_type: hourly
+    language: hu
+    num_segments: |
+      {% set segments = 24 - now().hour %}
+      {{ segments if segments >= 10 else 24 }}
+    label_spacing: |
+      {% set segments = 24 - now().hour %}
+      {{ 4 if (segments > 14) or (segments < 10) else 2 }}
+    <<: *none
+    show_wind: speed
+    show_precipitation_amounts: true

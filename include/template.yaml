@@ -12,20 +12,38 @@ template:
           {{ 'on' if open > 0 else 'off' }}
 
   - sensor:
-      - name: "Bejárati Ajtó Battery"
-        unit_of_measurement: "%"
-        state_class: measurement
-        device_class: battery
-        availability: >
-          {{ states('sensor.sonoff_bejarati_ajto_battery_voltage') not in ['unavailable', 'unknown'] }}      
+      - name: "Mikrotik Router Uptime"
+        unique_id: router_uptime
+        icon: mdi:history
         state: >
-          {% if states('sensor.sonoff_bejarati_ajto_battery_voltage') != None %}
-            {% set min = 1.87 | float(2) %}
-            {% set current = states('sensor.sonoff_bejarati_ajto_battery_voltage') | float(2) %}
-            {{ ((current - min) / 0.011) | int }}
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.hap_ax_3_router_core_uptime'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
           {% endif %}
-  
-      - name: "Home Assistant Uptime"
+
+      - name: "Home Assistant Server Uptime"
+        unique_id: ha_server_uptime
+        icon: mdi:history
+        state: >
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.system_monitor_utolso_rendszerinditas'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
+          {% endif %}
+
+      - name: "Home Assistant Core Uptime"
+        unique_id: ha_core_uptime
         icon: mdi:history
         state: >
           {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.uptime'))) | int // 60 %}
@@ -40,9 +58,10 @@ template:
           {% endif %}
 
       - name: "Debian Server Uptime"
+        unique_id: debian_uptime
         icon: mdi:history
         state: >
-          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.last_boot'))) | int // 60 %}
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.lxc_debian_103_last_boot'))) | int // 60 %}
           {% set hours = mins // 60 %}
           {% set days = mins // 1440 %}
           {% if days > 1 %}
@@ -52,11 +71,57 @@ template:
           {% else %}
             {{ mins }} perce
           {% endif %}
-  
-      - name: "Mikrotik Router Uptime"
+
+      - name: "qBittorrent Server Uptime"
+        unique_id: torrent_uptime
         icon: mdi:history
         state: >
-          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.mikrotik_hap_ax_3_uptime'))) | int // 60 %}
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.lxc_qbittorrent_102_last_boot'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
+          {% endif %}
+
+      - name: "Pi-Hole Server Uptime"
+        unique_id: pi-hole_uptime
+        icon: mdi:history
+        state: >
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.lxc_pihole_100_last_boot'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
+          {% endif %}
+
+      - name: "Plex Server Uptime"
+        unique_id: plex_uptime
+        icon: mdi:history
+        state: >
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.lxc_plex_101_last_boot'))) | int // 60 %}
+          {% set hours = mins // 60 %}
+          {% set days = mins // 1440 %}
+          {% if days > 1 %}
+            {{ days }} napja
+          {% elif hours > 1 %}
+            {{ hours }} órája
+          {% else %}
+            {{ mins }} perce
+          {% endif %}
+
+      - name: "Proxmox Server Uptime"
+        unique_id: proxmox_uptime
+        icon: mdi:history
+        state: >
+          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.node_pve_last_boot'))) | int // 60 %}
           {% set hours = mins // 60 %}
           {% set days = mins // 1440 %}
           {% if days > 1 %}
@@ -83,68 +148,8 @@ template:
             {{ mins }} perce
           {% endif %}
 
-      - name: "Tablet App Uptime"
-        icon: mdi:history
-        availability: >
-          {{ states('sensor.ha_tablet_last_app_start') not in ['unavailable', 'unknown'] }}
-        state: >
-          {% set mins = (as_timestamp(now()) - as_timestamp(states('sensor.ha_tablet_last_app_start'))) | int // 60 %}
-          {% set hours = mins // 60 %}
-          {% set days = mins // 1440 %}
-          {% if days > 1 %}
-            {{ days }} napja
-          {% elif hours > 1 %}
-            {{ hours }} órája
-          {% else %}
-            {{ mins }} perce
-          {% endif %}
-
-      - name: "HiPad XPro Tablet Storage"
-        availability: >
-          {{ (states('sensor.hipad_xpro_belso_tarhely_szabad') or states('sensor.hipad_xpro_belso_tarhely_kapacitas')) not in ['unavailable', 'unknown'] }}
-        state: >
-          {% set FreeSpace = states('sensor.hipad_xpro_belso_tarhely_szabad') | float(default=0) %}
-          {% set TotalSpace = states('sensor.hipad_xpro_belso_tarhely_kapacitas') | float(default=0) %}
-          {% if not (FreeSpace == 0.0 or TotalSpace == 0.0) %}
-            {{ 100 - (FreeSpace / TotalSpace * 100) | int(default=0) }}
-          {% endif %}
-        icon: mdi:sd
-        unit_of_measurement: '%'
-        state_class: measurement
-
-      - name: "HiPad XPro Tablet Memory"
-        availability: >
-          {{ (states('sensor.hipad_xpro_szabad_memoria') or states('sensor.hipad_xpro_teljes_memoria')) not in ['unavailable', 'unknown'] }} 
-        state: >
-          {% set FreeMemory = states('sensor.hipad_xpro_szabad_memoria') | float(default=0) %}
-          {% set TotalMemory = states('sensor.hipad_xpro_teljes_memoria') | float(default=0) %}
-          {% if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
-            {{ 100 - (FreeMemory / TotalMemory * 100) | int(default=0) }}
-          {% endif %}
-        icon: mdi:memory
-        unit_of_measurement: '%'
-        state_class: measurement
-
-      - name: "Devices with Low Battery"
-        unit_of_measurement: devices
-        state: >
-          {{ states.sensor
-            | selectattr('attributes.device_class', 'defined')
-            | selectattr('attributes.device_class', 'eq', 'battery')
-            | rejectattr('entity_id', 'search', 'battery_level')
-            | map(attribute = 'state')
-            | map('int', -1)
-            | select('lessthan', states('input_number.battery_threshold') | int)
-            | list
-            | count }}
-        icon: >
-          {% if is_state('sensor.devices_with_low_battery', 0) %}
-            mdi:battery-check
-          {% else %}
-            mdi:battery-alert
-          {% endif %}
-
       - name: "HACS updates"
+        unique_id: hacs_update
         icon: hacs:hacs
         state: >
           {{ states.update
@@ -181,54 +186,55 @@ template:
         state: >
           {%- set days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'] %}
           {{ days[now().weekday()]}}
-  
+
       - name: "Current Date"
         state: >
           {%- set months = ['Január', 'Február', 'Március', 'Április', 'Május', 'Június', 'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'] %}
           {{ (now().timestamp() | timestamp_custom('%d, # %Y')).replace('#', months[now().month-1]) }}
-  
+
       - name: "MetNo Temperature"
-        unit_of_measurement: '°C'
-        state_class: 'measurement'
+        unit_of_measurement: "°C"
+        state_class: "measurement"
+        device_class: "temperature"
         state: >
-          {{ state_attr('weather.forecast_home', 'temperature') }}
+          {{ state_attr('weather.forecast_otthon', 'temperature') }}
 
       - name: "MetNo Humidity"
-        unit_of_measurement: '%'
-        state_class: 'measurement'
+        unit_of_measurement: "%"
+        state_class: "measurement"
+        device_class: "humidity"
         state: >
-          {{ state_attr('weather.forecast_home', 'humidity') }} 
-  
-  - trigger:
-      - platform: time_pattern
-        hours: 0
-        minutes: 0
-    
-    sensor:
-      - name: "Napkelte"
-        state: >
-          {{ states('sensor.sun_next_rising') }}
-  
-      - name: "Napnyugta"
-        state: >
-          {{ states('sensor.sun_next_setting') }}
+          {{ state_attr('weather.forecast_otthon', 'humidity') }}
 
-  - trigger:
-      - platform: time_pattern
-        hours: /1
-      - platform: homeassistant
-        event: start
-    action:
-      - service: weather.get_forecasts
-        data:
-          type: daily
-        target:
-          entity_id: weather.forecast_home
-        response_variable: daily
-  
-    sensor:
-      - name: Weather Daily
-        unique_id: weather_forecast_daily
-        state: "{{ now().isoformat() }}"
-        attributes:
-          forecast: "{{ daily['weather.forecast_home'].forecast }}"
+#  - trigger:
+#      - trigger: time
+#        at: "00:00"
+#
+#    sensor:
+#      - name: "Napkelte"
+#        state: >
+#          {{ states('sensor.sun_next_rising') }}
+#
+#      - name: "Napnyugta"
+#        state: >
+#          {{ states('sensor.sun_next_setting') }}
+
+#  - trigger:
+#      - trigger: time_pattern
+#        hours: /1
+#      - trigger: homeassistant
+#        event: start
+#    action:
+#      - action: weather.get_forecasts
+#        data:
+#          type: daily
+#        target:
+#          entity_id: weather.forecast_otthon
+#        response_variable: daily
+#
+#    sensor:
+#      - name: Weather Daily
+#        unique_id: weather_forecast_daily
+#        state: "{{ now().isoformat() }}"
+#        attributes:
+#          forecast: "{{ daily['weather.forecast_otthon'].forecast }}"

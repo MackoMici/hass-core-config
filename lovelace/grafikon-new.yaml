@@ -1,0 +1,60 @@
+type: vertical-stack
+cards:
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.kulteri_homerseklet
+      - min: 0
+      - max: 35
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.kulteri_homerseklet
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.haloszoba_temperature
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.haloszoba_temperature
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.ebedlo_temperature
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.ebedlo_temperature
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.konyha_temperature
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.konyha_temperature
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.nappali_temperature
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.nappali_temperature
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.furdoszoba_homerseklet
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.furdoszoba_homerseklet
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.gyerekszoba_temperature
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.gyerekszoba_temperature

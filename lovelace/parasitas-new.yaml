@@ -1,0 +1,40 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: button
+    sub_button:
+      main:
+        - entity: select.parasito_idozito
+          sub_button_type: select
+          show_arrow: false
+          icon: mdi:timer-settings
+          visibility:
+            - condition: state
+              entity: fan.aroma_diffuser
+              state: "on"
+      bottom: []
+    button_type: slider
+    entity: fan.aroma_diffuser
+    show_attribute: true
+    attribute: percentage
+    show_state: true
+    tap_action:
+      action: toggle
+    button_action:
+      hold_action:
+        action: none
+    show_icon: true
+    styles: |
+      ${icon.setAttribute("icon",
+      hass.states[[[entity]]].state === 'off' ? 'mdi:fan-off' :
+      hass.states[[[entity]]].attributes.percentage === 100 ? 'mdi:fan-speed-2' :
+      hass.states[[[entity]]].attributes.percentage === 50 ? 'mdi:fan-speed-1' : 'mdi:fan')}
+
+      ${hass.states['select.parasito_idozito'].attributes.remaining !== 0 && 
+      (card.querySelector('.bubble-state').innerText = 
+      hass.states['select.parasito_idozito'].attributes.remaining + ' perc a leállásig')}
+  - type: custom:streamline-card
+    template: light_template
+    variables:
+      - entity: light.aroma_diffuser_nightlight
+      - rows: 3.194

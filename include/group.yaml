@@ -4,12 +4,14 @@ group:
       - person.hunyadvari_zoltan
       - person.szakacs_katalin
       - device_tracker.hunyadvari_zoltan_wifi
-      - device_tracker.szakacs_katalin_wifi
+      - device_tracker.szakacs_kata_wifi
+      - device_tracker.szakacs_kata_ceges
 
   family_wifi:
     entities:
       - device_tracker.hunyadvari_zoltan_wifi
-      - device_tracker.szakacs_katalin_wifi
+      - device_tracker.szakacs_kata_wifi
+      - device_tracker.szakacs_kata_ceges
 
   family_gps:
     entities:

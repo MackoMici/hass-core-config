@@ -1,0 +1,42 @@
+type: vertical-stack
+cards:
+  - type: custom:streamline-card
+    template: switch_template
+    variables:
+      - entity: switch.sonoff_eloszoba
+  - type: custom:streamline-card
+    template: switch_template
+    variables:
+      - entity: switch.sonoff_haloszoba
+  - type: custom:streamline-card
+    template: switch_template
+    variables:
+      - entity: switch.sonoff_ebedlo
+  - type: custom:streamline-card
+    template: switch_template
+    variables:
+      - entity: switch.sonoff_kazan
+  - type: custom:streamline-card
+    template: switch_template
+    variables:
+      - entity: switch.sonoff_furdo
+  - type: custom:streamline-card
+    template: switch_template
+    variables:
+      - entity: switch.sonoff_szoba
+  - type: custom:streamline-card
+    template: light_template
+    variables:
+      - entity: light.kamra_main
+      - rows: 3.8
+  - type: custom:streamline-card
+    template: light_template
+    variables:
+      - entity: light.wc_main
+      - rows: 3.8
+  - type: custom:streamline-card
+    template: light_template
+    variables:
+      - entity: light.nappali_asztali_lampa
+      - icon: mdi:desk-lamp
+      - rows: 2.7

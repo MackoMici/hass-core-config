@@ -1,3 +1,5 @@
+Mivel közben az oldal megváltozott így a leírás már nem lehet végigpróbálni, de attól még kiindulópontnak megfelelő hogyan kell megoldani az ilyen problémát.
+
 Egy kis segítség annak akinek gondjai akadnak a honlapról való információ kinyeréssel kapcsolatban. Első sorban nézzük a _select_ opciót. A [koponyeg.hu](https://koponyeg.hu/elorejelzes/kaposvar) oldalról kaposvár település előrejelzését fogjuk kiolvasni.
 ![koponyeg](/readme-img/koponyeg.png)
 

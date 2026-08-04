@@ -1,0 +1,854 @@
+type: vertical-stack
+cards:
+  - hash: '#alarm'
+    type: custom:bubble-card
+    popup_style: classic
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    name: Riasztó
+    show_icon: false
+    popup_mode: centered
+    full_width_on_mobile: true
+    cards:
+      - type: custom:bubble-card
+        card_type: button
+        button_type: state
+        <<: &none
+          tap_action:
+            action: none
+          hold_action:
+            action: none
+          button_action:
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+        entity: alarm_control_panel.gateway_alarm
+        sub_button:
+          main:
+            - entity: alarm_control_panel.gateway_alarm
+              tap_action:
+                action: perform-action
+                perform_action: alarm_control_panel.alarm_arm_away
+                target:
+                  entity_id: alarm_control_panel.gateway_alarm
+                data: {}
+              icon: mdi:shield-lock
+            - entity: alarm_control_panel.gateway_alarm
+              tap_action:
+                action: perform-action
+                perform_action: alarm_control_panel.alarm_disarm
+                target:
+                  entity_id: alarm_control_panel.gateway_alarm
+                data: {}
+              icon: mdi:shield-off
+        styles: |
+          .bubble-button-card-container {
+            background-color: ${state === 'disarmed' ? 'var(--success-color)' : state === 'triggered' || state ==='pending' ? 'var(--error-color)' : 'var(--warning-color)'};
+          }
+          .bubble-icon {
+            color: ${state === 'disarmed' ? 'var(--success-color)' : state === 'triggered' || state ==='pending' ? 'var(--error-color)' : 'var(--warning-color)'} !important;
+            opacity: 0.6 !important;
+          }
+  - hash: '#batterys'
+    type: custom:bubble-card
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    sub_button:
+    name: Merülő elemek
+    show_icon: false
+    popup_mode: centered
+    full_width_on_mobile: true
+    cards:
+      - type: custom:auto-entities
+        card:
+          square: false
+          type: grid
+          columns: 1
+        card_param: cards
+        filter:
+          template: >-
+            {%- for state in states.sensor if "battery_plus" in state.entity_id and 
+              (state.attributes.battery_low == true or state.state == "unknown") -%}
+              {{
+                {
+                  "entity": state.entity_id,
+                  "name": state.attributes.friendly_name.rsplit(' ', 1)[0],
+                  "type": "custom:bubble-card",
+                  "card_type": "button",
+                  "card_layout": "large",
+                  "rows": "1.5",
+                  "button_type": "slider",
+                  "tap_action": {
+                    "action": "none",
+                  },
+                  "button_action": {
+                    "tap_action": {
+                      "action": "none",
+                    },
+                  },
+                  "show_last_changed": true,
+                  "show_state": true,
+                  "read_only_slider": true,
+                  "scrolling_effect": false,
+                  "styles": ".bubble-range-fill {  \n  background-color: var(${state > 50.0 ?  '--success-color' : state > 20.0 ? '--warning-color' : '--error-color'}) !important;\n}\n${(() => {\n  let date = new Date(hass.states[entity].attributes['battery_last_replaced']);\n  let options = {\n    weekday: \"short\",\n    year: \"numeric\",\n    month: \"short\",\n    day: \"numeric\",  \n  }\n  card.querySelector('.bubble-state').innerText = hass.states[entity].state + '% - ' + (hass.states[entity].attributes['battery_last_replaced'] == null ?\n  \"never\" : date.toLocaleDateString(undefined, options));\n  })()\n} \n .slider-container {  \n  cursor: default !important;\n}",
+                  "sub_button": [
+                      {
+                          "show_state": false,
+                          "show_icon": false,
+                          "state_background": false,
+                          "show_background": false,
+                          "show_attribute": true,
+                          "tap_action": {
+                              "action": "none",
+                          },
+                          "attribute": "battery_type_and_quantity"
+                      },
+                      {
+                          "show_name": true,
+                          "show_state": false,
+                          "show_icon": false,
+                          "state_background": true,
+                          "show_background": true,
+                          "tap_action": {
+                              "action": "perform-action",
+                              "perform_action": "button.press",
+                              "target": {
+                                "entity_id": state.entity_id | replace('sensor.', 'button.') | replace('_plus', '_replaced')
+                                }  
+                          },
+                          "name": states[state.entity_id | replace('sensor.', 'button.') | replace('_plus', '_replaced')].attributes.friendly_name.rsplit(' ', 2)[-2] ~ ' ' ~ states[state.entity_id | replace('sensor.', 'button.') | replace('_plus', '_replaced')].attributes.friendly_name.rsplit(' ', 2)[-1]
+                      }
+                  ],
+                  "modules": [
+                      "home-assistant-default"
+                  ]
+                }
+              }},
+            {%- endfor -%}
+        sort:
+          method: state
+          numeric: true
+          reverse: false
+          ip: false
+          ignore_case: false
+        show_empty: true
+        visibility:
+          - condition: state
+            state_not: ''
+  - hash: '#windows'
+    type: custom:bubble-card
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    name: Nyitott Ablakok
+    show_icon: false
+    popup_mode: centered
+    full_width_on_mobile: true
+    cards:
+      - type: custom:auto-entities
+        card:
+          square: false
+          type: grid
+          columns: 1
+        card_param: cards
+        filter:
+          include:
+            - options:
+                type: custom:bubble-card
+                card_type: button
+                button_type: state
+                show_last_changed: true
+                show_state: true
+                read_only_slider: true
+                scrolling_effect: false
+                <<: *none
+              attributes:
+                device_class: window
+              state: 'on'
+          exclude:
+            - options: {}
+              entity_id: binary_sensor.ablakok
+            - options: {}
+              entity_id: binary_sensor.futes_ablak
+        sort:
+          method: state
+          numeric: true
+          reverse: false
+          ip: false
+          ignore_case: false
+        show_empty: true
+        visibility:
+          - condition: state
+            state_not: ''
+  - hash: '#weather'
+    type: custom:bubble-card
+    popup_mode: centered
+    width_desktop: 100%
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Időjárás jelentés
+    cards:
+      - type: custom:weather-forecast-card
+        default_forecast: daily
+        tap_action:
+          action: none
+        entity: weather.forecast_otthon
+        show_condition_effects:
+          - rain
+          - sun
+          - moon
+          - sky
+        forecast:
+          mode: chart
+          default_chart_attribute: temperature_and_precipitation
+          extra_attribute: wind_bearing
+          hourly_group_size: 1
+        forecast_action:
+          tap_action:
+            action: toggle-forecast
+          hold_action:
+            action: select-forecast-attribute
+  - hash: '#weather_map'
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    width_desktop: 100%
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Időjárás térkép
+    cards:
+      - type: custom:weather-radar-card
+        zoom_level: 8
+        static_map: true
+        show_scale: true
+        show_range: true
+        show_snow: true
+        markers:
+          - entity: zone.home
+        map_style: OSM
+        center_latitude: 46.3356
+        center_longitude: 18.6658
+  - hash: '#weather_text'
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    name: Időjárás szövegesen
+    show_icon: false
+    cards:
+      - type: markdown
+        content: |-
+          {{ states['sensor.idokep_elorejelzes'].attributes.details }}
+          {{ states['sensor.idokep_elorejelzes'].attributes.forecast_details }}
+          {{ states['sensor.idokep_elorejelzes'].attributes.forecast_details_2 }}
+          {{ states['sensor.idokep_elorejelzes'].attributes.forecast_details_3 }}
+  - hash: '#ivoviz'
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    name: Szekszárd Ivóvíz minőség
+    show_icon: false
+    cards:
+      - type: markdown
+        content: |-
+          {{ states['binary_sensor.ivoviz_szekszard_ivoviz_szekszard'].attributes.Minősítés }}
+  - hash: '#map_zoli'
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    name: Zoli pozicíója
+    show_icon: false
+    cards:
+      - type: custom:streamline-card
+        template: map_template
+        variables:
+          - entities:
+            - entity: device_tracker.sm_a536b
+            - entity: person.hunyadvari_zoltan
+  - hash: '#map_kata'
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    name: Kata poziciója
+    show_icon: false
+    cards:
+      - type: custom:streamline-card
+        template: map_template
+        variables:
+          - entities:
+            - entity: device_tracker.sm_a336b
+            - entity: device_tracker.sm_a566b
+            - entity: person.szakacs_katalin
+  - hash: '#heating'
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    name: Fűtés vezérlés
+    show_header: true
+    show_icon: false
+    cards:
+      - type: custom:streamline-card
+        template: plus_minus_template
+        variables:
+          - entity: input_number.kinti_homerseklet
+          - name: Kinti hőmérséklet amikor bekapcsol a fűtés
+      - type: custom:streamline-card
+        template: plus_minus_template
+        variables:
+          - entity: input_number.ejszakai_homerseklet
+          - name: Éjszaka mennyire fűtsük a lakást
+      - type: custom:streamline-card
+        template: plus_minus_template
+        variables:
+          - entity: input_number.nappali_homerseklet
+          - name: Nappal mennyire fűtsük a lakást
+      - type: custom:streamline-card
+        template: plus_minus_template
+        variables:
+          - entity: input_number.napkozbeni_homerseklet
+          - name: Munka közben mennyire fűtsük a lakást
+      - type: custom:streamline-card
+        template: time_plus_minus_template
+        variables:
+          - entity: input_datetime.ejszaka_kezdete
+          - step: 5
+          - min_time: "20:00:00"
+          - max_time: "23:00:00"
+      - type: custom:streamline-card
+        template: time_plus_minus_template
+        variables:
+          - entity: input_datetime.reggel_kezdete
+          - step: 5
+          - min_time: "05:00:00"
+          - max_time: "07:00:00"
+      - type: custom:streamline-card
+        template: time_plus_minus_template
+        variables:
+          - entity: input_datetime.hetvege_kezdete
+          - step: 5
+          - min_time: "06:00:00"
+          - max_time: "08:00:00"
+      - type: custom:streamline-card
+        template: time_plus_minus_template
+        variables:
+          - entity: input_datetime.napkozben_vege
+          - step: 5
+          - min_time: "15:00:00"
+          - max_time: "16:30:00"
+  - hash: "#timer"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    name: Időzítő
+    show_icon: false
+    cards:
+      - type: custom:streamline-card
+        template: plus_minus_template
+        variables:
+          - entity: input_number.furdoszoba_futes
+  - hash: "#illatosito"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    name: Illatosító beállítások
+    show_icon: false
+    cards:
+      - type: custom:streamline-card
+        template: plus_minus_template
+        variables:
+          - entity: input_number.wc_illatosito
+      - type: custom:bubble-card
+        card_type: button
+        button_type: state
+        sub_button:
+          main:
+            - entity: counter.wc_illatosito
+              icon: mdi:restore
+              tap_action:
+                action: call-service
+                target:
+                  entity_id: entity
+                service: counter.reset
+          bottom: []
+        show_state: true
+        <<: *none
+        entity: counter.wc_illatosito
+  - hash: "#zoli"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: fit-content
+    width_desktop: 90%
+    card_type: pop-up
+    button_type: name
+    show_header: false
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:streamline-card
+            template: popup_person_template
+            variables:
+              - entity: person.hunyadvari_zoltan
+              - wi_fi_connection: sensor.sm_a536b_wi_fi_connection
+              - battery_level: sensor.sm_a536b_battery_level
+          - type: custom:streamline-card
+            template: map_template
+            variables:
+              - entities:
+                - entity: device_tracker.sm_a536b
+                - entity: person.hunyadvari_zoltan
+  - hash: "#kata"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: fit-content
+    width_desktop: 90%
+    card_type: pop-up
+    button_type: name
+    show_header: false
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:streamline-card
+            template: popup_person_template
+            variables:
+              - entity: person.szakacs_katalin
+              - wi_fi_connection: sensor.kata_sajat_wi_fi_connection
+              - battery_level: sensor.kata_sajat_battery_level
+          - type: custom:streamline-card
+            template: map_template
+            variables:
+              - entities:
+                - entity: device_tracker.kata_sajat
+                - entity: device_tracker.sm_a566b
+                - entity: person.szakacs_katalin
+  - hash: "#leaf"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: false
+    cards:
+      - !include noveny-new.yaml
+  - hash: "#system"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: false
+    cards:
+      - !include system-new.yaml
+  - hash: "#light.kamra_main"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Kamra Fény
+    cards:
+      - type: custom:streamline-card
+        template: light_template
+        variables:
+          - entity: light.kamra_main
+          - rows: 3.8
+  - hash: "#light.wc_main"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: WC Fény
+    cards:
+      - type: custom:streamline-card
+        template: light_template
+        variables:
+          - entity: light.wc_main
+          - rows: 3.8
+  - hash: "#light.nappali_asztali_lampa"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Nappali Asztali Lampa Fény
+    cards:
+      - type: custom:streamline-card
+        template: light_template
+        variables:
+          - entity: light.nappali_asztali_lampa
+          - icon: mdi:desk-lamp
+          - rows: 2.7
+  - hash: "#tv"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: TV
+    cards:
+      - !include tv-new.yaml
+  - hash: "#parasitas"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Párásítás
+    cards:
+      - !include parasitas-new.yaml
+  - hash: "#tablet"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Tablet
+    cards:
+      - !include tablet-new.yaml
+  - hash: "#klima"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Klima
+    cards:
+      - !include klima-new.yaml
+  - hash: "#futes"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Fűtés
+    cards:
+      - !include futes-new.yaml
+  - hash: "#alert2"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Alert2 Információk
+    cards:
+      - type: custom:alert2-overview
+  - hash: "#tablet_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Tablet Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.tablet_battery_temperature
+                color: "#ff4757"
+              - entity: sensor.tablet_used_memory
+                color: "#378ADD"
+              - entity: sensor.tablet_app_used_memory
+                color: "#2ecc71"
+  - hash: "#joan_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Joan Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.joan_1_temperature
+                color: "#ff4757"
+              - entity: sensor.joan_1_wi_fi_signal_strength
+                color: "#378ADD"
+              - entity: sensor.joan_1_used_storage
+                color: "#2ecc71"
+  - hash: "#haos_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Home Assistant Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.system_monitor_processzor_hasznalat
+                color: "#ff4757"
+              - entity: sensor.system_monitor_memoriahasznalat
+                color: "#378ADD"
+              - entity: sensor.system_monitor_disk_used_percentage
+                color: "#2ecc71"
+              - entity: sensor.home_assistant_supervisor_cpu_percent
+                color: "#f39c12"
+              - entity: sensor.home_assistant_supervisor_memory_percent
+                color: "#9b59b6"
+              - entity: sensor.home_assistant_core_cpu_percent
+                color: "#1abc9c"
+              - entity: sensor.home_assistant_core_memory_percent
+                color: "#fd79a8"
+  - hash: "#addon_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Home Assistant Add-on Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.mosquitto_broker_cpu_szazalek
+                color: "#ff4757"
+              - entity: sensor.mosquitto_broker_memoria_szazalek
+                color: "#378ADD"
+              - entity: sensor.terminal_ssh_cpu_szazalek
+                color: "#2ecc71"
+              - entity: sensor.terminal_ssh_memoria_szazalek
+                color: "#f39c12"
+              - entity: sensor.visionect_server_v3_all_in_one_cpu_szazalek
+                color: "#9b59b6"
+              - entity: sensor.visionect_server_v3_all_in_one_memoria_szazalek
+                color: "#1abc9c"
+  - hash: "#debian_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Debian Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.lxc_debian_103_cpu_used
+                color: "#ff4757"
+              - entity: sensor.lxc_debian_103_memory_used_percentage
+                color: "#378ADD"
+              - entity: sensor.lxc_debian_103_disk_used_percentage
+                color: "#2ecc71"
+  - hash: "#plex_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Plex Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.lxc_plex_101_cpu_used
+                color: "#ff4757"
+              - entity: sensor.lxc_plex_101_memory_used_percentage
+                color: "#378ADD"
+              - entity: sensor.lxc_plex_101_disk_used_percentage
+                color: "#2ecc71"
+              - entity: sensor.storage_pve_backup_disk_used_percentage
+                color: "#f39c12"
+              - entity: sensor.disk_pve_st16000nm001g_2kk103_temperature
+                color: "#9b59b6"
+  - hash: "#qbittorrent_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: qBittorrent Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.lxc_qbittorrent_102_cpu_used
+                color: "#ff4757"
+              - entity: sensor.lxc_qbittorrent_102_memory_used_percentage
+                color: "#378ADD"
+              - entity: sensor.lxc_qbittorrent_102_disk_used_percentage
+                color: "#2ecc71"
+  - hash: "#pihole_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Pi-Hole Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.lxc_pihole_100_cpu_used
+                color: "#ff4757"
+              - entity: sensor.lxc_pihole_100_memory_used_percentage
+                color: "#378ADD"
+              - entity: sensor.lxc_pihole_100_disk_used_percentage
+                color: "#2ecc71"
+  - hash: "#mikrotik_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: MikroTik Router Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.hap_ax_3_router_core_cpu_load
+                color: "#ff4757"
+              - entity: sensor.hap_ax_3_router_core_memory_usage
+                color: "#378ADD"
+              - entity: sensor.hap_ax_3_router_core_hdd_usage
+                color: "#2ecc71"
+              - entity: sensor.hap_ax_3_router_core_cpu_temperature
+                color: "#f39c12"
+              - entity: sensor.hap_ax_3_router_core_wired_clients
+                color: "#9b59b6"
+              - entity: sensor.hap_ax_3_router_core_wireless_clients
+                color: "#1abc9c"
+  - hash: "#pve_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Proxmox Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - entities:
+              - entity: sensor.node_pve_cpu_used
+                color: "#ff4757"
+              - entity: sensor.node_pve_memory_used_percentage
+                color: "#378ADD"
+              - entity: sensor.disk_pve_kingston_shfs37a120g_temperature
+                color: "#2ecc71"
+              - entity: sensor.storage_pve_local_lvm_disk_used_percentage
+                color: "#f39c12"
+              - entity: sensor.storage_pve_local_disk_used_percentage
+                color: "#9b59b6"
+              - entity: sensor.disk_pve_kingston_shfs37a120g_life_left
+                color: "#1abc9c"
+  - hash: "#rxtx_stat"
+    type: custom:bubble-card
+    popup_style: classic
+    popup_mode: centered
+    full_width_on_mobile: true
+    card_type: pop-up
+    button_type: name
+    show_header: true
+    show_icon: false
+    name: Net Forgalom Statisztika
+    cards:
+      - type: custom:streamline-card
+        template: statistics_graph_template
+        variables:
+          - stacked: true
+          - entities:
+              - entity: sensor.hap_ax_3_router_ppp_pppoe_out_telekom_rx
+                color: "#ff4757"
+                graph_type: bar
+                value_factor: -3
+                unit: MB/s
+              - entity: sensor.hap_ax_3_router_ppp_pppoe_out_telekom_tx
+                color: "#378ADD"
+                graph_type: bar
+                value_factor: -3
+                invert: true
+                unit: MB/s

@@ -1,6 +1,6 @@
 # Home Assistant Konfiguráció
 
-[Home Assistant Core](https://www.home-assistant.io/installation/#compare-installation-methods) fut egy Intel(R) Core (TM) i5-7500 CPU @ 3.40 GHz Debian Serveren. Egy fali tablet [Chuwi HiPad XPro](https://www.chuwi.com/product/items/chuwi-hipad-xpro.html) felel a megjelenítésért, amin [Fully Kiosk Browser](https://www.fully-kiosk.com/#get-kiosk-apps) fut. Valamint okostelefonokra optimalizált felület is van.
+[Home Assistant OS](https://community-scripts.org/scripts/haos-vm) fut egy Intel(R) Core (TM) i5-7500 CPU @ 3.40 GHz Debian Serveren 16GB RAM-mal. Egy fali tablet [Chuwi HiPad XPro](https://www.chuwi.com/product/items/chuwi-hipad-xpro.html) felel a megjelenítésért, amin [Fully Kiosk Browser](https://www.fully-kiosk.com/#get-kiosk-apps) fut. Valamint okostelefonokra optimalizált felület is van. Mindezt úgy megírva, hogy ami lehetséges csak egy helyen legyen és ha máshol is kell akkor include-oljuk az adott tartalmat.
 
 ![lovelace](/readme-img/tablet_kezdolap.png)
 | <img src="/readme-img/mobil_kezdolap.png" width=30%> | <img src="/readme-img/mobil_futes.png" width=30%> | <img src="/readme-img/mobil_klima.png" width=30%> |
@@ -8,38 +8,36 @@
 
 ## Kinézet
 
-* [Dashboard (Lovelace)](https://www.home-assistant.io/lovelace/) tabletre és telefonokra optimalizálva a megjelenítés.
+* [Dashboard (Lovelace)](https://www.home-assistant.io/lovelace/) tabletre és telefonokra optimalizálva a megjelenítés, szinte csak a [Bubble Card](https://github.com/Clooos/bubble-card)-ot használtam és annak a felugró ablakait.
 * [HA Floorplan](https://github.com/ExperienceLovelace/ha-floorplan)-t használok a 3D-s alaprajz megjelenítéséhez, melyen minden a házban található eszközt lehet vezérelni. [BitBorn](https://www.youtube.com/watch?v=MCNxgb0mrSA) videója apalján készült az új felület immár több kisebb png fájllal a világítás vezérlés miatt.
-* Tableten ez eszközök vezérlése előugró ablakokon keresztűl működik ([browser_mod](https://github.com/thomasloven/hass-browser_mod/blob/master/README.md)), valamint a mobilos nézetben is vannnak ilyen funkciók a ritkán használt opciókhoz.
-* Mint a tableten és a mobilon a felület úgy lett kialakítva, hogy ne legyen ismétlés így sokkal könnyebb átalakítani vagy javítani (kivétel a system menu). Ehhez a [Decluttering Card](https://github.com/custom-cards/decluttering-card)-ot használtam, valamint az [apexcharts-card](https://github.com/RomRider/apexcharts-card)-nál is sablonok lettek létrehozva.
+* Mint a tableten és a mobilon a felület úgy lett kialakítva, hogy ne legyen ismétlés így sokkal könnyebb átalakítani vagy javítani. Ehhez nagyrészt a [Streamline Card](https://github.com/brunosabot/streamline-card)-ot valamint 1 opcióhoz a [Decluttering Card](https://github.com/custom-cards/decluttering-card)-ot használtam.
 * Ezúttal a falakra lett feltéve a hőmérséklet és páratartalom érték CSS segítségével elérve a szép összhatást.
 
 
 #### Oldalsáv
 
 * A pontos idő és dátum megjelenítés
-* Adott napi időjárás [Hourly Weather Card](https://github.com/decompil3d/lovelace-hourly-weather)
-* Valamint a közelgő események megjelenítése [Atomic Calendar Revive](https://github.com/totaldebug/atomic-calendar-revive)
+* Adott napi időjárás, ahol kattintásra megjelenik a részletes időjárás, vaéamint hosszan nyomvatartásra a radarkép
+* Legallul a közelgő események megjelenítése kapott még helyet.
 
-| <img src="/readme-img/mobil_tv.png" width=30%><br>TV | <img src="/readme-img/mobil_vacuum.png" width=30%><br>Robot porszívó | <img src="/readme-img/mobil_noveny.png" width=30%><br>Növény |
+| <img src="/readme-img/mobil_tv.png" width=30%><br>TV | <img src="/readme-img/mobil_kapcsolok.png" width=30%><br>Kapcsolók | <img src="/readme-img/mobil_noveny.png" width=30%><br>Növény |
 |:---:|:---:|:---:|
-| <img src="/readme-img/mobil_parasito.png" width=30%><br>Párásító | <img src="/readme-img/mobil_light.png" width=30%><br>Kapcsolók | <img src="/readme-img/mobil_idojaras.png" width=20%><br>Időjárás |
+| <img src="/readme-img/mobil_parasito.png" width=30%><br>Párásító | <img src="/readme-img/mobil_light.png" width=30%><br>Világítás | <img src="/readme-img/mobil_popup.png" width=20%><br>PopUp |
 | <img src="/readme-img/mobil_system.png" width=10%><br>Rendszer
-| [![battery](/readme-img/tablet_battery.png)](/readme-img/tablet_battery.png)<br>**Battery** | [![klima](/readme-img/tablet_klima.png)](/readme-img/tablet_klima.png)<br>**Klima** | [![noveny](/readme-img/tablet_noveny.png)](/readme-img/tablet_noveny.png)<br>**Nővény** |
-| [![parasito](/readme-img/tablet_parasito.png)](/readme-img/rendszer.png)<br>**Párásító** | [![vacuum](/readme-img/tablet_vacuum.png)](/readme-img/tablet_vacuum.png)<br>**Vacuum**| [![tablet](/readme-img/tablet_tablet.png)](/readme-img/tablet_tablet.png)<br>**Tablet** |
-| [![user](/readme-img/tablet_user.png)](/readme-img/tablet_user.png)<br>**User**| [![system](/readme-img/tablet_system.gif)](/readme-img/tablet_system.gif)<br>**System** | [![Light](/readme-img/tablet_light.gif)](/readme-img/tablet_light.gif)<br>**Világítás** |
+| [![battery](/readme-img/tablet_battery.png)](/readme-img/tablet_battery.png)<br>**Battery** | [![idojaras](/readme-img/tablet_idojaras.png)](/readme-img/tablet_idojaras.png)<br>**Időjárás előrejelzés** | [![idojaras2](/readme-img/tablet_radar.png)](/readme-img/tablet_radar.png)<br>**Időjárás Radar** |
+| [![noveny](/readme-img/tablet_noveny.png)](/readme-img/tablet_noveny.png)<br>**Nővény** | [![vilagitas](/readme-img/tablet_vilagitas.png)](/readme-img/tablet_vilagitas.png)<br>**Világítás** | [![system](/readme-img/tablet_system.png)](/readme-img/tablet_system.png)<br>**System** |
+| [![tablet](/readme-img/tablet_tablet.png)](/readme-img/tablet_tablet.png)<br>**Tablet Infó** | [![system](/readme-img/tablet_system.gif)](/readme-img/tablet_system.gif)<br>**System** | [![Light](/readme-img/tablet_light.gif)](/readme-img/tablet_light.gif)<br>**Világítás válzotás** |
 
 #### Kinézet
 
-[Waves Theme](https://github.com/tgcowell/waves)
+[Bubble](https://github.com/Clooos/Bubble)
 
 ## Eszközök
 
 | Gyártó | Termék | Integráció |
 |---|---|---|
-| Mikrotik | [hAP ac²](https://mikrotik.com/product/hap_ac2) | [mikrotik router](https://github.com/tomaae/homeassistant-mikrotik_router) |
+| Mikrotik | [hAP ac²](https://mikrotik.com/product/hap_ax3) | [mikrotik extended](https://github.com/Csontikka/ha-mikrotik-extended) |
 | Samsung | [Q80 Smart Tv](https://www.samsung.com/hu/tvs/qled-tv/q80t-65-inch-qled-4k-smart-tv-qe65q80tatxxh/) | [samsung smart](https://github.com/ollo69/ha-samsungtv-smart) |
-| Xiaomi | [Viomi SE](https://www.viomi.com/robot-vacuums/viomi-se) | [mqtt](https://www.home-assistant.io/integrations/mqtt/) |
 | Xiaomi | [Xiaomi Gateway 3](https://xiaomishop.hu/mi-smart-home-hub-cn-valtozat-zigbee-30-gateway-okosotthon-kozponti-egyseg) | [xiaomi gateway 3](https://github.com/AlexxIT/XiaomiGateway3) |
 | Xiaomi | [Mi Temperature and Humidity Monitor 2](https://xiaomishop.hu/okos-otthon/mi-temperature-and-humidity-monitor-2-bluetooth-homerseklet-es-paratartalom-mero) | [xiaomi gateway 3](https://github.com/AlexxIT/XiaomiGateway3) |
 | Xiaomi | [Mi Door and Window Sensor 2](https://xiaomishop.hu/okos-otthon/szenzorok-es-kapcsolok/mi-door-and-window-sensor-2-ajto-es-ablaknyitas-erzekelo-fenyerzekelovel) | [xiaomi gateway 3](https://github.com/AlexxIT/XiaomiGateway3) |
@@ -50,84 +48,80 @@
 | Sonoff | [TX 1C](https://sonoff.tech/product/smart-wall-switches/tx-series/) | [sonoff lan](https://github.com/AlexxIT/SonoffLAN) |
 | Sonoff | [S26 R2](https://sonoff.tech/product/smart-plugs/s26r2/) | [sonoff lan](https://github.com/AlexxIT/SonoffLAN) |
 | Sonoff | [DW2-Wifi](https://sonoff.tech/product/gateway-and-sensors/dw2-wifi/) | [sonoff lan](https://github.com/AlexxIT/SonoffLAN)
-| Gree | [Comfort X](https://gree-magyarorszag.hu/klima/gree-comfort-x-inverter-27-kw-klima-szett/) | [gree climate](https://www.home-assistant.io/integrations/gree) |
+| Gree | [Comfort X](https://gree-magyarorszag.hu/klima/gree-comfort-x-inverter-27-kw-klima-szett/) | [gree climate](https://www.home-assistant.io/integrations/gree) , [gree extension](https://github.com/mullerdavid/hass_GreeExt)|
 | Honeywell | [T6 Thermosztát](https://getconnected.honeywellhome.com/hu/t6.html) | [honeywell lyric](https://www.home-assistant.io/integrations/lyric) |
-| Broadlink | [RM4 mini](https://www.broadlink.ae/product-page/broadlink-rm4-mini) | [broadlink remote](https://www.home-assistant.io/integrations/broadlink) |
 | Blitzwolf | [BW-LT31](https://blitzwolf.hu/BlitzWolf-BW-LT31-smart-LED-fenycsik-5m-/10m-hossz) | [tuya-local](https://github.com/make-all/tuya-local) |
 | GX.Diffuser | [Aroma Diffuser](https://sea.banggood.com/GX_Diffuser-Intelligent-Air-Humidifier-Essential-Oil-Diffuser-Support-for-GeogleandAlexa-Voice-Control-Negative-Ion-Purification-p-1597711.html?rmmds=myorder&cur_warehouse=CN) | [tuya-local](https://github.com/make-all/tuya-local) |
 | Yeelight | [Xiaomi Yeelight Smart LED Bulb W3](https://www.pcx.hu/xiaomi-yeelight-smart-led-bulb-w3-multicolor-okos-izzo-yldp005-00432819) | [yeelight](https://www.home-assistant.io/integrations/yeelight) |
 | Gosund | [Gosund EP2](https://www.emag.hu/gosund-wifis-okoskonnektor-ep2/pd/DKX2Y4MBM/) | [tuya-local](https://github.com/make-all/tuya-local) |
 | CHUWI | [HiPad XPro](https://www.chuwi.com/product/items/chuwi-hipad-xpro.html) | [fully kiosk browser](https://www.home-assistant.io/integrations/fully_kiosk), [mqtt](https://www.home-assistant.io/integrations/mqtt/), [mobil app](https://www.home-assistant.io/integrations/mobile_app) |
 | IKEA | [TRADFRI E14](https://www.ikea.com/hu/hu/p/tradfri-led-izzo-e14-470-lumen-okos-eszkoez-vezetek-nelkueli-szabalyozo-feher-spektrum-csillar-20486784/) | [zha](https://www.home-assistant.io/integrations/zha) |
+| JOAN | [JOAN6](https://support.getjoan.com/knowledge/joan-6-technical-specifications) | [Visiontech Joan](https://github.com/Adam7411/visionect_joan) |
+
 
 ## Integrációk
 
 | Integrációk |
 |---|
-| [Generic Camera](https://www.home-assistant.io/integrations/generic) |
+| [Alert2](https://github.com/redstone99/hass-alert2) |
+| [Backup](https://www.home-assistant.io/integrations/backup) |
+| [Battery Notes](https://codechimp.org/HA-Battery-Notes/)|
 | [Browser mod](https://github.com/thomasloven/hass-browser_mod/blob/master/README.md) |
+| [Bubble Card Tools](https://github.com/Clooos/Bubble-Card-Tools) |
+| [Drinking Water Quality](https://github.com/tomorigabor/drinkingwaterquality_hu_nnk) |
 | [Season](https://www.home-assistant.io/integrations/season) |
 | [File size](https://www.home-assistant.io/integrations/filesize) |
+| [Fully Kiosk Browser](https://www.home-assistant.io/integrations/fully_kiosk) |
 | [Google Calendar](https://www.home-assistant.io/integrations/google) |
-| [Gree Extension](https://github.com/mullerdavid/hass_GreeExt) |
 | [HACS](https://hacs.xyz/docs/configuration/basic/) |
 | [ical Sensor](https://www.home-assistant.io/integrations/ical) |
+| [iPhone Detect](https://github.com/mudape/iphonedetect) |
 | [Meteorologisk institutt (Met.no)](https://www.home-assistant.io/integrations/met) |
 | [Multiscrape](https://github.com/danieldotnl/ha-multiscrape) |
 | [Workday](https://www.home-assistant.io/integrations/workday) |
 | [Sun](https://www.home-assistant.io/integrations/sun) |
 | [Homeassistant-plant](https://github.com/Olen/homeassistant-plant/) |
 | [Openplantbook](https://github.com/Olen/home-assistant-openplantbook/) |
-| [Scheduler](https://github.com/nielsfaber/scheduler-component) |
 | [Thermal Comfort](https://github.com/dolezsa/thermal_comfort/blob/master/README.md) |
 | [Uptime](https://www.home-assistant.io/integrations/uptime) |
-| [Version](https://www.home-assistant.io/integrations/version) |
-| [card-tools](https://github.com/thomasloven/lovelace-card-tools) |
-| [layout-card](https://github.com/thomasloven/lovelace-layout-card) |
 | [Ha Floorplan](https://github.com/ExperienceLovelace/ha-floorplan) |
 | [Home Assistant Swipe Navigation](https://github.com/zanna-37/hass-swipe-navigation) |
-| [Bar Card](https://github.com/custom-cards/bar-card) |
-| [Clock Weather Card](https://github.com/pkissling/clock-weather-card) |
-| [Config Template Card](https://github.com/iantrich/config-template-card) |
-| [Atomic Calendar Revive](https://github.com/totaldebug/atomic-calendar-revive) |
-| [Mushroom](https://github.com/piitaya/lovelace-mushroom) |
 | [card-mod 3](https://github.com/thomasloven/lovelace-card-mod) |
-| [Lovelace swipe card](https://github.com/bramkragten/swipe-card) |
 | [auto-entities](https://github.com/thomasloven/lovelace-auto-entities) |
-| [apexcharts-card](https://github.com/RomRider/apexcharts-card) |
-| [Hourly Weather Card](https://github.com/decompil3d/lovelace-hourly-weather) |
-| [Flower Card](https://github.com/Olen/lovelace-flower-card) |
 | [Decluttering Card](https://github.com/custom-cards/decluttering-card) |
-| [Scheduler Card](https://github.com/nielsfaber/scheduler-card) |
 | [Weather Radar Card](https://github.com/Makin-Things/weather-radar-card) |
-| [Stack In Card](https://github.com/custom-cards/stack-in-card) |
-| [state-switch](https://github.com/thomasloven/lovelace-state-switch) |
 | [Valetudo Map Card](https://github.com/Hypfer/lovelace-valetudo-map-card) |
-| [Mini Media Player](https://github.com/kalkih/mini-media-player) |
+| [Pi-Hole](https://github.com/bastgau/ha-pi-hole-v6) |
+| [Proxmox VE](https://github.com/dougiteixeira/proxmoxve) |
+| [Streamline Card](https://github.com/brunosabot/streamline-card) |
+| [Certificate Expiry](https://www.home-assistant.io/integrations/cert_expiry) |
+
+
+
 
 ## Automatizációk
 
-* Ablak nyitás klíma kikapcsolás
+* Alert2 értesítések éjszakai kikapcsolása
 * Ajtó nyitás tablen mozgás érzékelő bekapcsolás
 * Fürdőszoba szellőztetés vezérlés külső belső páratartalom figyelenbevételével
 * Előszoba világítás ki/be kapcsolás, bejárati ajtó nyitás-ra
+* Fürdőszoba fűtés
+* Home Assistant Nightly Git Backup
+* Joan időjárás frissítés
 * Kamra világítás vezérlés
-* Kapcsolók időzítés figyelése (Fűttés mindenképp, Fürdőszaoba fűttés)
+* Lemerülő elemek
 * Riasztó bekapcsolás
 * Tablet töltés
+* Tablet mozgásra képkészítés és e-mail küldés
 * Tanusítvány lejárat figyelés
 * Világítás kikapcsolás ha elhagyjuk a házat
 * WC frissítő vezérlés
-* Párásító világítás kikapcsolás
-* Reggeli információ engedélyezés
-* Reggeli információ felolvasás
-* Tablet bekapcsolás reggeli információ felolvasáshoz
 
 ## Szkriptek
 
-* Reggeli információk, időjárás jelentés naptár események
-* Robot porszívó adott helység takarítás
-* Fényfűzérhez színek és módok váltásához
+* Időjárás - a Joan6-on való megjelenítéshez
+* Input datetime állítás - a fűtés időpontok vezérléshez
+* Üzenet küldés Zolinak
 
 ## Leírás
 

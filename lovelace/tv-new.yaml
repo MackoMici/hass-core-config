@@ -1,0 +1,216 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: media-player
+    button_type: switch
+    entity: media_player.samsung_q80_series_65
+    force_icon: true
+    icon: mdi:television
+    hide:
+      next_button: true
+      previous_button: true
+    tap_action:
+      action: none
+    button_action: {}
+    cover_background: true
+    styles: |
+      .bubble-background {
+        background-image: url("${hass.hassUrl('local/samsungtv_smart_logos/' + hass.states['media_player.samsung_q80_series_65'].attributes.media_title + '.png')}");
+        filter: blur(5px);
+      }
+      ${icon.setAttribute("icon",
+      hass.states[[[entity]]].state === 'off' ? 'mdi:television-off' : 'mdi:television')}
+    main_buttons_position: default
+    card_layout: normal
+    rows: 1
+  - type: custom:bubble-card
+    card_type: sub-buttons
+    sub_button:
+      main: []
+      bottom:
+        - name: Group 1
+          buttons_layout: inline
+          group:
+            - show_icon: true
+              state_background: false
+              show_background: false
+              scrolling_effect: false
+              tap_action:
+                action: none
+            - icon: mdi:chevron-up
+              tap_action:
+                action: perform-action
+                perform_action: media_player.play_media
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                data:
+                  media:
+                    media_content_type: send_key
+                    media_content_id: KEY_UP
+            - state_background: false
+              show_background: false
+              scrolling_effect: false
+              tap_action:
+                action: none
+        - name: Group 2
+          buttons_layout: inline
+          group:
+            - icon: mdi:chevron-left
+              tap_action:
+                action: perform-action
+                perform_action: media_player.play_media
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                data:
+                  media:
+                    media_content_type: send_key
+                    media_content_id: KEY_LEFT
+            - icon: mdi:circle-outline
+              tap_action:
+                action: perform-action
+                perform_action: media_player.play_media
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                data:
+                  media:
+                    media_content_type: send_key
+                    media_content_id: KEY_ENTER
+            - icon: mdi:chevron-right
+              tap_action:
+                action: perform-action
+                perform_action: media_player.play_media
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                data:
+                  media:
+                    media_content_type: send_key
+                    media_content_id: KEY_RIGHT
+        - name: Group 3
+          buttons_layout: inline
+          group:
+            - show_icon: true
+              state_background: false
+              show_background: false
+              scrolling_effect: false
+              tap_action:
+                action: none
+            - icon: mdi:chevron-down
+              tap_action:
+                action: perform-action
+                perform_action: media_player.play_media
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                data:
+                  media:
+                    media_content_type: send_key
+                    media_content_id: KEY_DOWN
+            - state_background: false
+              show_background: false
+              scrolling_effect: false
+              tap_action:
+                action: none
+        - name: Group 4
+          buttons_layout: inline
+          group:
+            - icon: mdi:arrow-u-left-top-bold
+              tap_action:
+                action: perform-action
+                perform_action: media_player.play_media
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                data:
+                  media:
+                    media_content_type: send_key
+                    media_content_id: KEY_RETURN
+            - state_background: false
+              show_background: false
+              scrolling_effect: false
+              tap_action:
+                action: none
+            - icon: mdi:play-pause
+              tap_action:
+                action: perform-action
+                perform_action: media_player.media_play_pause
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+        - name: Group 5
+          buttons_layout: inline
+          group:
+            - icon: mdi:home
+              fill_width: false
+          justify_content: center
+        - name: Group 6
+          buttons_layout: column
+          group:
+            - state_background: false
+              show_background: true
+              scrolling_effect: false
+              name: Plex
+              show_name: true
+              tap_action:
+                action: perform-action
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                perform_action: media_player.select_source
+                data:
+                  source: Plex
+            - state_background: false
+              show_background: true
+              scrolling_effect: false
+              name: Netflix
+              show_name: true
+              tap_action:
+                action: perform-action
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                perform_action: media_player.select_source
+                data:
+                  source: Netflix
+            - state_background: false
+              show_background: true
+              scrolling_effect: false
+              name: HBO Max
+              show_name: true
+              tap_action:
+                action: perform-action
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                perform_action: media_player.select_source
+                data:
+                  source: Max
+            - state_background: false
+              show_background: true
+              scrolling_effect: false
+              name: Skyshowtime
+              show_name: true
+              tap_action:
+                action: perform-action
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                perform_action: media_player.select_source
+                data:
+                  source: SkyShowtime
+            - state_background: false
+              show_background: true
+              scrolling_effect: false
+              name: Tarr MobilTv
+              show_name: true
+              tap_action:
+                action: perform-action
+                target:
+                  entity_id: media_player.samsung_q80_series_65
+                perform_action: media_player.select_source
+                data:
+                  source: TARR MobilTv
+      bottom_layout: rows
+    card_layout: large
+    styles: |
+      .card-content {
+          width: 40%;
+          margin-left: 30% !important;
+        }
+    rows: 7.125
+    visibility:
+      - condition: state
+        entity: media_player.samsung_q80_series_65
+        state: "on"

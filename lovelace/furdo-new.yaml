@@ -1,0 +1,33 @@
+type: custom:bubble-card
+card_type: button
+button_type: state
+sub_button:
+  main:
+    - entity: switch.sonoff_furdoszoba_futes
+      icon: mdi:timer-cog
+      tap_action:
+        action: navigate
+        navigation_path: "#timer"
+  bottom: []
+entity: switch.sonoff_furdoszoba_futes
+show_state: true
+styles: |
+  .bubble-icon {
+    color: ${ hass.states[[[entity]]].state === 'on' ? "orange" : "" } !important;
+  }
+  .timer-progress-remaining { 
+    margin-left: 3px; /* Adjust this value (e.g., 3px) as needed */
+  }
+button_action:
+  tap_action:
+    action: toggle
+  hold_action:
+    action: none
+modules:
+  - timer_progress
+timer_progress:
+  endColor: indigo
+  timer_entity: timer.furdoszoba_futes
+  inverted: true
+tap_action:
+  action: toggle

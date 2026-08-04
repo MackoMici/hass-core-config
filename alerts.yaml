@@ -1,0 +1,328 @@
+defaults:
+  notifier: notify.sm_a536b
+  summary_notifier: true
+  done_notifier: true
+  annotate_messages: true
+  reminder_frequency_mins: [ 5, 15, 30 ]
+  throttle_fires_per_mins: [ 10, 60 ]
+
+alerts:
+  - domain: pi_hole
+    name: dns_queries_frequency
+    friendly_name: "Pi-hole DNS queries"
+    priority: medium
+
+    # A riasztás bekapcsolása (trigger_on): amikor a DNS lekérések száma 1000 fölé ugrik
+    trigger_on:
+      - trigger: numeric_state
+        entity_id: sensor.pi_hole_dns_queries_frequency
+        above: 1000
+        for: "00:05:00" # trigger_delay: 300 mp folyamatosan fennálló állapot esetén
+
+    # A riasztás kikapcsolása (trigger_off): amikor az érték újra 1000 alá süllyed
+    trigger_off:
+      - trigger: numeric_state
+        entity_id: sensor.pi_hole_dns_queries_frequency
+        below: 1000
+
+    icon: mdi:pi-hole
+
+    # Értesítési beállítások
+    title: "Riasztás:"
+    message: "Magas az átlagos DNS lekérés száma - {{ states('sensor.pi_hole_dns_queries_frequency') }}"
+    done_message: "terheltsége visszaállt a normális szintre - {{ states('sensor.pi_hole_dns_queries_frequency') }}"
+
+  - domain: battery
+    name: joan
+    friendly_name: "Joan Battery"
+
+    # Az emergency téma alapján a legmagasabb prioritás (piros jelvény a felületen)
+    priority: "high"
+
+    # A riasztás bekapcsolása (trigger_on): ha a töltöttség 15% alá esik
+    trigger_on:
+      - trigger: numeric_state
+        entity_id: sensor.joan_1_battery
+        below: 15
+        for: "00:05:00" # trigger_delay: 300 mp folyamatosan fennálló állapot esetén
+
+    icon: mdi:battery-alert
+
+    # A riasztás kikapcsolása (trigger_off): ha a töltöttség újra 15% vagy afelett van (pl. töltőre tették)
+    trigger_off:
+      - trigger: numeric_state
+        entity_id: sensor.joan_1_battery
+        above: 15
+
+    # Értesítési beállítások
+    title: "Riasztás:"
+    message: "töltöttség túl alacsony - {{ states('sensor.joan_1_battery') }}%"
+    done_message: "töltődik."
+
+  - domain: router_temp
+    name: mikrotik_cpu_temperature
+    friendly_name: "Mikrotik CPU Hőmérséklet"
+    
+    # Az alarm téma alapján közepes prioritás (narancssárga jelvény)
+    priority: "high"
+
+    # A riasztás bekapcsolása (trigger_on): ha a CPU hőmérséklet 75 °C fölé emelkedik
+    trigger_on:
+      - trigger: numeric_state
+        entity_id: sensor.hap_ax_3_router_core_cpu_temperature
+        above: 75
+        for: "00:05:00" # trigger_delay: 300 mp folyamatosan fennálló állapot esetén
+
+    # A riasztás kikapcsolása (trigger_off): ha a hőmérséklet visszaesik 75 °C vagy az alá
+    trigger_off:
+      - trigger: numeric_state
+        entity_id: sensor.hap_ax_3_router_core_cpu_temperature
+        below: 75
+
+    icon: mdi:thermometer
+
+    # Értesítési beállítások
+    title: "Riasztás:"
+    message: "magas - {{ states('sensor.hap_ax_3_router_core_cpu_temperature') }}°C"
+    done_message: "visszaállt a normális szintre - {{ states('sensor.hap_ax_3_router_core_cpu_temperature') }}°C"
+
+  - domain: router_cpu
+    name: "mikrotik_cpu_load_{{ cpu_load }}"
+    friendly_name: "Mikrotik CPU Használat {{ cpu_load }}%"
+    
+    priority: "{{ pri }}"
+
+    supersedes: "{{ genPrevDomainName }}"
+
+    generator:
+      - { cpu_load: 20, pri: low }
+      - { cpu_load: 50, pri: medium }
+      - { cpu_load: 75, pri: high }
+
+    condition: >-
+      {{ states('sensor.hap_ax_3_router_core_cpu_load') | int(0) > cpu_load }}
+
+    delay_on_secs: 300
+
+    icon: mdi:cpu-64-bit
+
+    title: "Riasztás:"
+    message: "magas terhelést ért el - {{ states('sensor.hap_ax_3_router_core_cpu_load') }}%"
+    done_message: "visszaállt a normális szintre - {{ states('sensor.hap_ax_3_router_core_cpu_load') }}%"
+
+  - domain: router_memoria
+    name: mikrotik_memory
+    friendly_name: "Mikrotik Memory Használat"
+    
+    priority: "medium"
+
+    trigger_on:
+      - trigger: numeric_state
+        entity_id: sensor.hap_ax_3_router_core_memory_usage
+        above: 50
+        for: "00:05:00"
+
+    trigger_off:
+      - trigger: numeric_state
+        entity_id: sensor.hap_ax_3_router_core_memory_usage
+        below: 50
+
+    icon: mdi:memory
+
+    title: "Riasztás:"
+    message: "magas - {{ states('sensor.hap_ax_3_router_core_memory_usage') }}%"
+    done_message: "visszaállt a normális szintre - {{ states('sensor.hap_ax_3_router_core_memory_usage') }}%"
+
+  - domain: lxc_cpu
+    friendly_name: "{{ genGroups[0] | replace('_', ' ') | title }} CPU Használat"
+
+    priority: "high"
+
+    generator: "{{ states.sensor|entity_regex('sensor.lxc_(.*)_cpu_used')|list }}"
+
+    name: "{{ genGroups[0] }}_cpu_load"
+    
+    condition: >-
+      {{ states(genEntityId) | int(0) > 5 }}
+
+    delay_on_secs: 300
+
+    icon: mdi:cpu-64-bit
+
+    title: "Riasztás:"
+    message: "magas terhelést ért el - {{ states(genEntityId) }}%"
+    done_message: "terheltsége visszaállt a normális szintre - {{ states(genEntityId) }}%"
+
+  - domain: addon_cpu
+    friendly_name: "{{ genGroups[0] | replace('_', ' ') | title }} CPU Használat"
+
+    priority: "high"
+
+    generator: "{{ states.sensor|entity_regex('sensor.(.*)_cpu_szazalek')|list }}"
+
+    name: "{{ genGroups[0] }}_cpu_load"
+    
+    condition: >-
+      {{ states(genEntityId) | int(0) > 5 }}
+
+    delay_on_secs: 300
+
+    icon: mdi:cpu-64-bit
+
+    title: "Riasztás:"
+    message: "magas terhelést ért el - {{ states(genEntityId) }}%"
+    done_message: "terheltsége visszaállt a normális szintre - {{ states(genEntityId) }}%"
+
+  - domain: proxmox_cpu
+    name: "sensor.node_pve_cpu_used_{{ cpu_load }}"
+    friendly_name: "Proxmox CPU Használat {{ cpu_load }}%"
+    
+    priority: "{{ pri }}"
+
+    supersedes: "{{ genPrevDomainName }}"
+
+    generator:
+      - { cpu_load: 20, pri: low }
+      - { cpu_load: 50, pri: medium }
+      - { cpu_load: 75, pri: high }
+
+    condition: >-
+      {{ states('sensor.node_pve_cpu_used') | int(0) > cpu_load }}
+
+    delay_on_secs: 300
+
+    icon: mdi:cpu-64-bit
+
+    title: "Riasztás:"
+    message: "magas terhelést ért el - {{ states('sensor.node_pve_cpu_used') }}%"
+    done_message: "visszaállt a normális szintre - {{ states('sensor.node_pve_cpu_used') }}%"
+
+  - domain: haos_cpu
+    name: "sensor.system_monitor_processzor_hasznalat_{{ cpu_load }}"
+    friendly_name: "HAOS CPU Használat {{ cpu_load }}%"
+    
+    priority: "{{ pri }}"
+
+    supersedes: "{{ genPrevDomainName }}"
+
+    generator:
+      - { cpu_load: 10, pri: low }
+      - { cpu_load: 30, pri: medium }
+      - { cpu_load: 60, pri: high }
+
+    condition: >-
+      {{ states('sensor.system_monitor_processzor_hasznalat') | int(0) > cpu_load }}
+
+    delay_on_secs: 300
+
+    icon: mdi:cpu-64-bit
+
+    title: "Riasztás:"
+    message: "magas terhelést ért el - {{ states('sensor.system_monitor_processzor_hasznalat') }}%"
+    done_message: "visszaállt a normális szintre - {{ states('sensor.system_monitor_processzor_hasznalat') }}%"
+
+  - domain: lxc_memoria
+    friendly_name: "{{ genGroups[0] | replace('_', ' ') | title }} Memory Használat"
+
+    priority: "high"
+
+    generator: "{{ states.sensor|entity_regex('sensor.lxc_(.*)_memory_used_percentage')|list }}"
+
+    name: "{{ genGroups[0] }}_memory_usage"
+    
+    condition: >-
+      {{ states(genEntityId) | int(0) > 20 }}
+
+    delay_on_secs: 300
+
+    icon: mdi:memory
+
+    title: "Riasztás:"
+    message: "magas - {{ states(genEntityId) }}%"
+    done_message: "visszaállt a normális szintre - {{ states(genEntityId) }}%"
+
+  - domain: proxmox_memoria
+    name: proxmox_memory
+    friendly_name: "Proxmox Memory Használat"
+    
+    priority: "medium"
+
+    trigger_on:
+      - trigger: numeric_state
+        entity_id: sensor.node_pve_memory_used_percentage
+        above: 70
+        for: "00:05:00"
+
+    trigger_off:
+      - trigger: numeric_state
+        entity_id: sensor.node_pve_memory_used_percentage
+        below: 70
+
+    icon: mdi:memory
+
+    title: "Riasztás:"
+    message: "magas - {{ states('sensor.node_pve_memory_used_percentage') }}%"
+    done_message: "visszaállt a normális szintre - {{ states('sensor.node_pve_memory_used_percentage') }}%"
+
+  - domain: addon_memoria
+    friendly_name: "{{ genGroups[0] | replace('_', ' ') | title }} Memory Használat"
+
+    priority: "high"
+
+    generator: "{{ states.sensor|entity_regex('sensor.(.*)_memoria_szazalek')|list }}"
+
+    name: "{{ genGroups[0] }}_memory_usage"
+    
+    condition: >-
+      {{ states(genEntityId) | int(0) > 30 }}
+
+    delay_on_secs: 300
+
+    icon: mdi:memory
+
+    title: "Riasztás:"
+    message: "magas - {{ states(genEntityId) }}%"
+    done_message: "visszaállt a normális szintre - {{ states(genEntityId) }}%"
+
+  - domain: haos_memoria
+    name: haos_memory
+    friendly_name: "HAOS Memory Használat"
+    
+    priority: "medium"
+
+    trigger_on:
+      - trigger: numeric_state
+        entity_id: sensor.system_monitor_memoriahasznalat
+        above: 40
+        for: "00:05:00"
+
+    trigger_off:
+      - trigger: numeric_state
+        entity_id: sensor.system_monitor_memoriahasznalat
+        below: 40
+
+    icon: mdi:memory
+
+    title: "Riasztás:"
+    message: "magas - {{ states('sensor.system_monitor_memoriahasznalat') }}%"
+    done_message: "visszaállt a normális szintre - {{ states('sensor.system_monitor_memoriahasznalat') }}%"
+
+  - domain: disk_used
+    friendly_name: "{{ genGroups[0] | replace('_', ' ') | title }} Lemez telítettség"
+
+    priority: "high"
+
+    generator: "{{ states.sensor|entity_regex('sensor.(.*)_disk_used_percentage')|list }}"
+
+    name: "{{ genGroups[0] }}_disk_usage"
+    
+    condition: >-
+      {{ states(genEntityId) | int(0) > 75 }}
+
+    delay_on_secs: 300
+
+    icon: mdi:harddisk
+
+    title: "Riasztás:"
+    message: "kevés a szabad hely - {{ states(genEntityId) }}%"
+    done_message: "már van elég szabad hely - {{ states(genEntityId) }}%"

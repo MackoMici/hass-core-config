@@ -1,0 +1,99 @@
+type: custom:bubble-card
+card_type: sub-buttons
+sub_button:
+  bottom_layout: rows
+  main: []
+  bottom:
+    - name: Group 1
+      justify_content: center
+      group:
+        - entity: sensor.ablakok
+          show_state: true
+          scrolling_effect: false
+          state_background: false
+          fill_width: false
+          tap_action:
+            action: navigate
+            navigation_path: "#windows"
+        - entity: sensor.vilagitas
+          show_state: true
+          scrolling_effect: false
+          state_background: false
+          fill_width: false
+          tap_action:
+            action: navigate
+            navigation_path: "vilagitas"
+        - entity: sensor.elemek
+          show_state: true
+          scrolling_effect: false
+          state_background: false
+          fill_width: false
+          tap_action:
+            action: navigate
+            navigation_path: "#batterys"
+        - entity: sensor.noveny_problema
+          show_state: true
+          scrolling_effect: false
+          state_background: false
+          fill_width: false
+          tap_action:
+            action: navigate
+            navigation_path: "noveny"
+        - entity: sensor.illatosito_telitettseg
+          show_state: true
+          scrolling_effect: false
+          state_background: false
+          fill_width: false
+          tap_action:
+            action: navigate
+            navigation_path: "#illatosito"
+        - entity: sensor.alert2_on_unacked_count
+          scrolling_effect: false
+          show_state: true
+          state_background: false
+          fill_width: false
+          tap_action:
+            action: navigate
+            navigation_path: "#alert2"
+    - name: Group 2
+      group:
+        - entity: alarm_control_panel.gateway_alarm
+          show_state: true
+          tap_action:
+            action: navigate
+            navigation_path: "#alarm"
+        - entity: media_player.samsung_q80_series_65
+          icon: mdi:television
+          show_attribute: true
+          state_background: false
+          attribute: source
+          fill_width: true
+          tap_action:
+            action: navigate
+            navigation_path: "tv"
+footer_mode: true
+rows: 1.625
+hide_main_background: true
+styles: |
+  .bubble-sub-button-1 > ha-icon {
+    color: ${hass.states['binary_sensor.ablakok'].state === 'on' ? 'var(--warning-color)' : 'var(--success-color)'} !important;
+  }
+  .bubble-sub-button-2 > ha-icon {
+    color: ${hass.states['light.vilagitas'].state === 'on' ? 'var(--warning-color)' : 'var(--success-color)'} !important;
+  }
+  .bubble-sub-button-3 > ha-icon {
+    color: ${hass.states['binary_sensor.elemek'].state === 'on' ? 'var(--warning-color)' : 'var(--success-color)'} !important;
+  }
+  .bubble-sub-button-4 > ha-icon {
+    color: ${hass.states['sensor.noveny_problema'].state > 0 ? 'var(--warning-color)' : 'var(--success-color)'} !important;
+  }
+  .bubble-sub-button-5 > ha-icon {
+    color: ${hass.states['sensor.illatosito_telitettseg'].state < 5 ? 'var(--warning-color)' : 'var(--success-color)'} !important;
+  }
+  .bubble-sub-button-6 > ha-icon {
+    color: ${hass.states['alarm_control_panel.gateway_alarm'].state === 'disarmed' ? 'var(--success-color)' : hass.states['alarm_control_panel.gateway_alarm'].state === 'triggered' || state ==='pending' ? 'var(--error-color)' : 'var(--warning-color)'} !important;
+  }
+  ${subButtonIcon[6].setAttribute("icon",
+    hass.states['media_player.samsung_q80_series_65'].state === 'on' ?
+    'mdi:television' : 'mdi:television-off')
+  }

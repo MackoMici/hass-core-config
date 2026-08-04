@@ -1,114 +1,58 @@
-- id: '1665923714852'
-  alias: Párásító világítás kikapcsolás
-  description: Ha nincs otthon senki és a párásítót bekapcsoljuk akkor a párásító
-    világítst kapcsolja ki.
-  trigger:
-  - platform: state
-    entity_id:
-    - fan.aroma_diffuser
-    from: 'off'
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: group.family_wifi
-    state: not_home
-  action:
-  - data: {}
-    target:
-      entity_id: light.aroma_diffuser_nightlight
-    action: light.turn_off
-  mode: single
-- id: '1676475309119'
+- id: '1758009879346'
+  alias: Lemerülő elemek
+  description: ''
+  use_blueprint:
+    path: gist.githubusercontent.com/low-battery-level-detection-notification-for-all-ha-battery-notes-battery-sensors.yaml
+    input:
+      actions:
+      - action: script.uzenet_kuldes_zolinak
+        metadata: {}
+        data:
+          title: Lemerülő elem(ek)!
+          message: '''{{sensors}}'''
+- id: '1758010172403'
+  alias: Kamra világítás
+  description: ''
+  use_blueprint:
+    path: gist.githubusercontent.com/chamber_light.yaml
+    input:
+      season: sensor.season
+      doorsensor_entity: binary_sensor.kamra_ajto_contact
+      doorsensor_light: binary_sensor.kamra_ajto_light
+      light_switch: light.kamra_main
+- id: '1758010450105'
   alias: Fürdőszoba fűtés
   description: ''
   use_blueprint:
-    path: MackoMici/Switch_timer.yaml
+    path: gist.githubusercontent.com/Switch_timer.yaml
     input:
       switch: switch.sonoff_furdoszoba_futes
       timer: timer.furdoszoba_futes
       inumber: input_number.furdoszoba_futes
-- id: '1676475337454'
-  alias: Fűtés mindenképp
+- id: '1758010588965'
+  alias: Előszoba világítás
   description: ''
   use_blueprint:
-    path: MackoMici/Switch_timer.yaml
-    input:
-      switch: input_boolean.futes
-      timer: timer.futes_mindenkepp
-      inumber: input_number.futes_mindenkepp
-- id: '1683179020941'
-  alias: Előszoba villany kapcsolás
-  description: ''
-  use_blueprint:
-    path: MackoMici/Door_Sensor_Light.yaml
+    path: gist.githubusercontent.com/Door_Sensor_Light.yaml
     input:
       workday: binary_sensor.workday_sensor
       calendar: calendar.unnepnapok_magyarorszag
-      doorsensor_entity: binary_sensor.sonoff_bejarati_ajto
+      doorsensor_entity: binary_sensor.bejarati_ajto
       light_switch: switch.sonoff_eloszoba
-- id: '1692591387982'
-  alias: Kamra világítás vezérlés
+- id: '1759126336071'
+  alias: Bathroom Humidity Management
   description: ''
   use_blueprint:
-    path: MackoMici/chamber_light.yaml
+    path: MackoMici/Bathroom_Humidity_Management.yaml
     input:
-      season: sensor.season
-      doorsensor_entity: binary_sensor.kamra_contact
-      doorsensor_light: binary_sensor.kamra_light
-      light_switch: light.kamra_main
-- id: '1694905706739'
-  alias: Ablak nyitásra klíma vezérlés
-  description: ''
-  use_blueprint:
-    path: MackoMici/Climate_window.yaml
-    input:
-      window_entity: binary_sensor.nappali_ablak_contact
-      climate_target: climate.gree_klima
-- id: '1694915125006'
-  alias: Reggeli információ engedélyezés
-  description: ''
-  trigger:
-  - platform: time
-    at: 00:00:00
-  condition: []
-  action:
-  - service: input_boolean.turn_on
-    data: {}
-    target:
-      entity_id: input_boolean.reggeli_info
-  mode: single
-- id: '1695652594042'
-  alias: Tablet Charging
-  description: ''
-  use_blueprint:
-    path: MackoMici/tablet_charging.yaml
-    input:
-      tablet_battery: sensor.hipad_xpro_elem_akku
-      tablet_switch: switch.smartplug_usb
-      tablet_screen: switch.hipad_xpro_kepernyo
-      turn_on: 20
-- id: '1698389877534'
-  alias: Wc frissítő vezérlés
-  description: ''
-  use_blueprint:
-    path: MackoMici/toilet_freshener.yaml
-    input:
-      doorsensor_entity: binary_sensor.wc_contact
-      timer: timer.wc
-      freshener_switch: switch.sonoff_illatosito
-      light_switch: light.wc_main
-      count: counter.wc_illatosito
-- id: '1698766222855'
-  alias: Ajtó nyitásra tablet mozgás érzékelő bekapcsolás
-  description: ''
-  use_blueprint:
-    path: MackoMici/tablet_motion.yaml
-    input:
-      motion_switch: switch.hipad_xpro_mozgaserzekeles
-      camera: camera.hipad_xpro
-      family: group.family_wifi
-      doorsensor: binary_sensor.sonoff_bejarati_ajto
-- id: '1699947818450'
+      humidity_sensor: sensor.furdoszoba_paratartalom
+      absolutehumidity_sensor: sensor.furdoszoba_abszolut_paratartalom
+      reference_humidity_sensor: sensor.belteri_paratartalom
+      outdoor_absolutehumidity_sensor: sensor.kulteri_abszolut_paratartalom
+      fan_switch: switch.sonoff_furdo_szelloztetes
+      bathroom_window: binary_sensor.furdoszoba_ablak_contact
+      time_stop: '23:00:00'
+- id: '1765523020622'
   alias: Világítás kikapcsolás
   description: ''
   use_blueprint:
@@ -116,166 +60,92 @@
     input:
       family: group.family_wifi
       lights: light.vilagitas
+      tavol: 5
       actions:
       - action: script.uzenet_kuldes_zolinak
+        metadata: {}
         data:
           title: Világítás
-          message: Nem érhető el!
-- id: '1699948193610'
+          message: Nem tudtam kikapcsolni!
+- id: '1769467787458'
   alias: Tanusítvány lejárat figyelés
   description: ''
   use_blueprint:
     path: MackoMici/ssl_expiration.yaml
     input:
-      certificate_input: sensor.ssl_cert_expiry
-      days_input: 21
-      actions:
-      - action: script.uzenet_kuldes_zolinak
-        data:
-          title: SSL tanúsítvány
-          message: Az SSL tanúsítvány {{ expire_days_var }} nap múlva jár le.
-- id: '1706098214814'
-  alias: Tablet képernyő bekapcsolás reggel
-  description: ''
-  use_blueprint:
-    path: MackoMici/tablet_screen_on.yaml
-    input:
-      ebedlo_switch: switch.sonoff_zbminil2_ebedlo
-      reggeli_info: input_boolean.reggeli_info
-      tablet_screen: switch.hipad_xpro_kepernyo
-      timer: timer.tablet_bekapcsolas
-      actions:
-      - service: number.set_value
-        data:
-          value: 90
-        target:
-          entity_id: number.hipad_xpro_kepernyo_kikapcsolasi_idozito
-      - service: browser_mod.popup
-        data:
-          dismissable: false
-          autoclose: false
-          title: Magyarország eső térkép
-          size: fullscreen
-          timeout: 60000
-          browserID:
-          - Tablet
-          content:
-            type: custom:weather-radar-card
-            zoom_level: 8
-            static_map: true
-            show_scale: true
-            map_style: voyager
-      - delay:
-          seconds: 5
-      - service: script.reggeli_informacio
-        data: {}
-      - delay:
-          seconds: 80
-      - service: number.set_value
-        data:
-          value: 10
-        target:
-          entity_id: number.hipad_xpro_kepernyo_kikapcsolasi_idozito
-      browser_screen: light.tablet_screen
-- id: '1707477045071'
-  alias: Low battery level detection & notification for all battery sensors
-  description: ''
-  use_blueprint:
-    path: MackoMici/low-battery-level-detection-notification-for-all-battery-sensors.yaml
-    input:
-      time: '10:00:00'
-      exclude:
-        entity_id:
-        - sensor.valetudo_viomise_battery_level
-        - sensor.sm_a336b_battery_level
-        - sensor.sm_a536b_battery_level
-        - sensor.sm_a705fn_battery_level
+      certificate_input: sensor.hgc09ssbwn6_sn_mynetname_net_tanusitvany_lejarata
       actions:
       - action: script.uzenet_kuldes_zolinak
         metadata: {}
         data:
-          title: Lemerül elemek!
-          message: '{{sensors}}'
-- id: '1709722553432'
-  alias: Bathroom Humidity Management
+          title: Tanúsítvány lejárat
+          message: Figyelem a tanúsítvány hamarosan lejár, megpróbáljuk megújítani.
+      - action: hassio.addon_start
+        metadata: {}
+        data:
+          addon: core_letsencrypt
+- id: '1771637488924'
+  alias: Tablet Charging
   description: ''
   use_blueprint:
-    path: MackoMici/Bathroom_Humidity_Management.yaml
+    path: MackoMici/tablet_charging.yaml
     input:
-      outdoor_absolutehumidity_sensor: sensor.kulteri_absolutehumidity
-      humidity_sensor: sensor.furdoszoba_humidity
-      absolutehumidity_sensor: sensor.furdoszoba_absolutehumidity
-      reference_humidity_sensor: sensor.belteri_paratartalom
-      fan_switch: switch.sonoff_furdo_szelloztetes
-      bathroom_window: binary_sensor.furdoszoba_ablak_contact
-- id: '1723303352625'
-  alias: 'Hőmérséklet riasztás üzenet Router '
+      tablet_battery: sensor.hipad_xpro_battery_level
+      tablet_switch: switch.tablet_smartplug_usb
+      tablet_screen: switch.hipad_xpro_kepernyo
+- id: '1772032168149'
+  alias: Wc frissítő vezérlés
   description: ''
   use_blueprint:
-    path: MackoMici/temp_alarm.yaml
+    path: MackoMici/toilet_freshener.yaml
     input:
-      temp_sensor: sensor.mikrotik_hap_ax_3_cpu_temperature
-      temp_threshold: 70
+      doorsensor_entity: binary_sensor.wc_ajto_contact
+      light_switch: light.wc_main
+      freshener_switch: switch.sonoff_illatosito
+      timer: timer.wc_idozito
+      count: counter.wc_illatosito
+      inumber: input_number.wc_illatosito
       actions:
       - action: script.uzenet_kuldes_zolinak
+        metadata: {}
         data:
-          title: Router
-          message: Kezd nagyon meleg lenni!
-- id: '1723356670612'
-  alias: Hőmérséklet riasztás üzenet Szerver
+          title: Wc Illatosító
+          message: Hamarosan kifogy, cserélni kell!
+      time: '11:00:00'
+- id: '1779346990094'
+  alias: Home Assistant Nightly Git Backup
   description: ''
-  use_blueprint:
-    path: MackoMici/temp_alarm.yaml
-    input:
-      temp_sensor: sensor.processor_temperature
-      temp_threshold: 70
-      actions:
-      - action: script.uzenet_kuldes_zolinak
-        data:
-          title: Szerver
-          message: Kezd nagyon meleg lenni!
-- id: '1723357489109'
-  alias: Hőmérséklet riasztás üzenet Tablet
-  description: ''
-  use_blueprint:
-    path: MackoMici/temp_alarm.yaml
-    input:
-      temp_sensor: sensor.ha_tablet_battery_temperature
-      temp_threshold: 40
-      actions:
-      - action: script.uzenet_kuldes_zolinak
-        data:
-          title: Tablet
-          message: Kezd kicsit meleg lenni!
-- id: '1723450900531'
-  alias: Klíma alvó üzemmódra kapcsolás
-  description: ''
-  trigger:
-  - platform: time
-    at: '22:00:00'
-  condition:
-  - condition: state
-    entity_id: climate.gree_klima
-    state: cool
-  action:
-  - action: climate.set_preset_mode
-    data:
-      preset_mode: sleep
-    target:
-      entity_id: climate.gree_klima
+  triggers:
+  - at: 03:00:00
+    trigger: time
+  actions:
+  - action: shell_command.git_auto_backup
   mode: single
-- id: '1726452970315'
+- id: '1780244688737'
+  alias: Joan időjárás frissítés
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    minutes: '0'
+  conditions: []
+  actions:
+  - action: script.idojaras
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1781417567301'
   alias: Otthoni riasztás
   description: ''
   use_blueprint:
     path: MackoMici/home_security.yaml
     input:
-      doorsensor: binary_sensor.sonoff_bejarati_ajto
+      doorsensor: binary_sensor.bejarati_ajto
       family_wifi: group.family_wifi
-      family: group.family_all
       security: alarm_control_panel.gateway_alarm
+      tablet_motion: switch.hipad_xpro_mozgaserzekeles
       actions_on:
       - action: script.uzenet_kuldes_zolinak
+        metadata: {}
         data:
           title: Riasztó
           message: Bekapcsolva
@@ -289,5 +159,57 @@
       - action: script.uzenet_kuldes_zolinak
         metadata: {}
         data:
-          title: Riasztó
+          title: Riasztás
           message: Valaki bejutott a lakásba!
+- id: '1781446701854'
+  alias: Tablet mozgásra képkészítés és e-mail küldés
+  description: ''
+  use_blueprint:
+    path: MackoMici/tablet_motion.yaml
+    input:
+      motion_sensor: binary_sensor.tablet_on_motion
+      camera: camera.hipad_xpro
+- id: '1781781434917'
+  alias: Fűtés automatikus vezérlés
+  description: ''
+  use_blueprint:
+    path: MackoMici/heating.yaml
+    input:
+      elofutes: input_boolean.elofutes
+      family: group.family_wifi
+      window_sensor: binary_sensor.futes_ablak
+      thermostat: climate.honeywell_home_termosztat
+      workday: binary_sensor.workday_sensor
+      manual_control: input_boolean.futes_manualis_vezerles
+      out_temp_sensor: sensor.kulteri_homerseklet
+      out_lower_temp: input_number.kinti_homerseklet
+      nappali_temp: input_number.nappali_homerseklet
+      ejszakai_temp: input_number.ejszakai_homerseklet
+      napkozben_temp: input_number.napkozbeni_homerseklet
+      ejszaka_kezdete: input_datetime.ejszaka_kezdete
+      reggel_kezdete: input_datetime.reggel_kezdete
+      hetvege_kezdete: input_datetime.hetvege_kezdete
+      napkozben_vege: input_datetime.napkozben_vege
+- id: '1785178747065'
+  alias: Alert2 értesítések éjszakai kikapcsolása
+  description: Kikapcsolja a notification_control-t az alert2 entitásoknál 21:00 és
+    06:00 között (kivéve alert2.alert2...)
+  triggers:
+  - at: '21:00:00'
+    trigger: time
+  actions:
+  - action: alert2.notification_control
+    data:
+      enable: 'on'
+      snooze_until: '{{ (now() + timedelta(hours=9)).strftime(''%Y-%m-%d %H:%M:%S%z'')
+        }}'
+      ack_at_snooze_start: false
+    target:
+      entity_id: "{{ states \n   | map(attribute='entity_id') \n   | select('search',
+        '^alert2\\\\.') \n   | reject('search', '^alert2\\\\.alert2') \n   | list
+        }}\n"
+- id: '1785296113855'
+  alias: Alert2 értesítések éjszakai kikapcsolása
+  description: ''
+  use_blueprint:
+    path: MackoMici/Alert2-snooze.yaml

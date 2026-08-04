@@ -1,0 +1,117 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: button
+    button_type: state
+    sub_button:
+      main: []
+      bottom: []
+    entity: plant.new_zealand_spinach
+    show_attribute: true
+    attribute: species
+    show_state: false
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+    button_action:
+      tap_action:
+        action: none
+      hold_action:
+        action: none
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.new_zealand_spinach_air_humidity
+      - min: 30
+      - max: 80
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity_sub: sensor.new_zealand_spinach_air_humidity
+      - entity: plant.new_zealand_spinach
+      - attribute: humidity_status
+      - force_icon: true
+      - show_attribute: true
+      - icon: mdi:water-percent
+      - name: Kültéri páratartalom
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.new_zealand_spinach_conductivity
+      - min: 350
+      - max: 2000
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity_sub: sensor.new_zealand_spinach_conductivity
+      - entity: plant.new_zealand_spinach
+      - attribute: conductivity_status
+      - force_icon: true
+      - show_attribute: true
+      - icon: mdi:spa-outline
+      - name: Tápanyagellátás
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.new_zealand_spinach_illuminance
+      - min: 3700
+      - max: 50000
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity_sub: sensor.new_zealand_spinach_illuminance
+      - entity: plant.new_zealand_spinach
+      - attribute: illuminance_status
+      - force_icon: true
+      - show_attribute: true
+      - icon: mdi:brightness-6
+      - name: Megvilágítás
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.new_zealand_spinach_soil_moisture
+      - min: 15
+      - max: 60
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity_sub: sensor.new_zealand_spinach_soil_moisture
+      - entity: plant.new_zealand_spinach
+      - attribute: moisture_status
+      - force_icon: true
+      - show_attribute: true
+      - icon: mdi:water
+      - name: Talajnedvesség
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.new_zealand_spinach_temperature
+      - min: 10
+      - max: 35
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity_sub: sensor.new_zealand_spinach_temperature
+      - entity: plant.new_zealand_spinach
+      - attribute: temperature_status
+      - force_icon: true
+      - show_attribute: true
+      - icon: mdi:thermometer
+      - name: Hőmérséklet
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.new_zealand_spinach_dli
+      - min: 13
+      - max: 18
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity_sub: sensor.new_zealand_spinach_dli
+      - entity: plant.new_zealand_spinach
+      - attribute: dli_status
+      - force_icon: true
+      - show_attribute: true
+      - icon: mdi:counter
+      - name: Napi Fényintegrál

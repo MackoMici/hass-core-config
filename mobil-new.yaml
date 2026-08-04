@@ -1,0 +1,101 @@
+streamline_templates: !include lovelace/streamline_templates.yaml
+decluttering_templates: !include lovelace/decluttering_templates.yaml
+
+views:
+  - path: kezdolap
+    icon: mdi:home
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - !include lovelace/home-new.yaml
+          - !include lovelace/popup-new.yaml
+          - !include lovelace/menu-new.yaml
+  - path: vilagitas
+    icon: mdi:dome-light
+    sections:
+      - type: grid
+        cards:
+          - !include lovelace/vilagitas-new.yaml
+          - !include lovelace/popup-new.yaml
+          - !include lovelace/menu-new.yaml
+  - path: futes
+    icon: mdi:radiator
+    sections:
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - !include lovelace/futes-new.yaml
+              - !include lovelace/furdo-new.yaml
+              - !include lovelace/grafikon-new.yaml
+              - !include lovelace/popup-new.yaml
+              - !include lovelace/menu-new.yaml
+  - path: klima
+    icon: mdi:air-conditioner
+    sections:
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - !include lovelace/klima-new.yaml
+              - !include lovelace/grafikon-new.yaml
+              - !include lovelace/popup-new.yaml
+              - !include lovelace/menu-new.yaml
+  - path: kapcsolok
+    icon: mdi:light-switch
+    sections:
+      - type: grid
+        cards:
+          - !include lovelace/kapcsolok-new.yaml
+          - !include lovelace/popup-new.yaml
+          - !include lovelace/menu-new.yaml
+  - path: parasitas
+    icon: mdi:scent
+    sections:
+      - type: grid
+        cards:
+          - type: vertical-stack
+            cards:
+              - !include lovelace/parasitas-new.yaml
+              - !include lovelace/parasitas-grafikon-new.yaml
+              - !include lovelace/popup-new.yaml
+              - !include lovelace/menu-new.yaml
+  - path: noveny
+    icon: mdi:leaf
+    sections:
+      - type: grid
+        cards:
+          - !include lovelace/noveny-new.yaml
+          - !include lovelace/popup-new.yaml
+          - !include lovelace/menu-new.yaml
+  - path: tv
+    icon: mdi:television
+    sections:
+      - type: grid
+        cards:
+          - !include lovelace/tv-new.yaml
+          - !include lovelace/popup-new.yaml
+          - !include lovelace/menu-new.yaml
+  - path: tablet
+    icon: mdi:tablet
+    sections:
+      - type: grid
+        cards:
+          - !include lovelace/tablet-new.yaml
+          - !include lovelace/popup-new.yaml
+          - !include lovelace/menu-new.yaml
+  - path: pihole
+    icon: mdi:pi-hole
+    sections:
+      - type: grid
+        cards:
+          - !include lovelace/pi-hole-new.yaml
+  - path: system
+    icon: mdi:information
+    sections:
+      - type: grid
+        cards:
+          - !include lovelace/system-new.yaml
+          - !include lovelace/popup-new.yaml
+          - !include lovelace/menu-new.yaml

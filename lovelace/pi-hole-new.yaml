@@ -1,0 +1,26 @@
+type: custom:pi-hole
+device_id: dc04a7edecb51d7cb10464f18eab4e95
+chart: {}
+collapsed_sections:
+  - switches
+  - actions
+  - pause
+badge:
+  hold_action:
+    action: none
+  double_tap_action:
+    action: none
+stats:
+  tap_action:
+    action: none
+  hold_action:
+    action: none
+  double_tap_action:
+    action: none
+info:
+  double_tap_action:
+    action: none
+  hold_action:
+    action: none
+  tap_action:
+    action: none

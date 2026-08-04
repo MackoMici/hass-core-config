@@ -1,0 +1,90 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: button
+    button_type: state
+    name: Otthon
+    scrolling_effect: true
+    show_icon: true
+    show_name: true
+    styles: |
+      .bubble-sub-button-2 > ha-icon {
+          color: var(${hass.states['binary_sensor.ivoviz_szekszard_ivoviz_szekszard'].state === 'off' ?
+          '--success-color' : '--error-color'}) !important;
+        }
+      }
+    sub_button:
+      main:
+        - show_background: true
+          show_state: false
+          show_icon: true
+          name: Időkép
+          tap_action:
+            action: navigate
+            navigation_path: "#weather_map"
+          scrolling_effect: false
+          show_name: false
+          show_last_changed: false
+          icon: mdi:map-clock-outline
+          state_background: true
+        - show_background: true
+          entity: binary_sensor.ivoviz_szekszard_ivoviz_szekszard
+          show_state: false
+          show_icon: true
+          name: Ivóvíz
+          tap_action:
+            action: navigate
+            navigation_path: "#ivoviz"
+          scrolling_effect: false
+          show_name: false
+          state_background: true
+      bottom: []
+    entity: weather.forecast_otthon
+    show_attribute: true
+    attribute: temperature
+    button_action:
+      tap_action:
+        action: navigate
+        navigation_path: "#weather_text"
+      hold_action:
+        action: none
+    tap_action:
+      action: navigate
+      navigation_path: "#weather"
+    hold_action:
+      action: none
+  - type: custom:streamline-card
+    template: person_template
+    variables:
+      - entity: person.hunyadvari_zoltan
+      - wi_fi_connection: sensor.sm_a536b_wi_fi_connection
+      - battery_level: sensor.sm_a536b_battery_level
+      - navigation_path: "#map_zoli"
+  - type: custom:streamline-card
+    template: person_template
+    variables:
+      - entity: person.szakacs_katalin
+      - wi_fi_connection: sensor.kata_sajat_wi_fi_connection
+      - battery_level: sensor.kata_sajat_battery_level
+      - navigation_path: "#map_kata"
+  - type: custom:bubble-card
+    card_type: calendar
+    rows: 6
+    sub_button:
+      main: []
+      bottom: []
+    entities:
+      - entity: calendar.magyar_nevnapok
+        color: yellow
+      - entity: calendar.ical_szakacs_katalin
+        color: purple
+      - entity: calendar.zoltan_hunyadvari_gmail_com
+        color: green
+      - entity: calendar.macko_mici_gmail_com
+        color: blue
+    days: 5
+    limit: 10
+    event_action:
+      tap_action:
+        action: none
+    show_end: true

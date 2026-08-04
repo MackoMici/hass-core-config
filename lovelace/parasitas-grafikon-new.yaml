@@ -1,0 +1,72 @@
+type: vertical-stack
+cards:
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.kulteri_paratartalom
+      - min: 80
+      - max: 20
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.kulteri_paratartalom
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.haloszoba_humidity
+      - min: 80
+      - max: 20
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.haloszoba_humidity
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.ebedlo_humidity
+      - min: 80
+      - max: 20
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.ebedlo_humidity
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.konyha_humidity
+      - min: 80
+      - max: 20
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.konyha_humidity
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.nappali_humidity
+      - min: 80
+      - max: 20
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.nappali_humidity
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.furdoszoba_paratartalom
+      - min: 80
+      - max: 20
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.furdoszoba_paratartalom
+  - type: custom:decluttering-card
+    template: minigraph_template
+    variables:
+      - entity: sensor.gyerekszoba_humidity
+      - min: 80
+      - max: 20
+  - type: custom:streamline-card
+    template: bubble_graph_template
+    variables:
+      - entity: sensor.gyerekszoba_humidity

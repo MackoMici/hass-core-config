@@ -52,16 +52,25 @@ Jöhet a mentés sima _svg_ fájlba mentsük le elsőre, majd _optimalizált svg
 
 ## Home Assistant
 
-A teljes kódot _yaml_ fájlban írtam, megtalálható a [repo](/floorplan.yaml)-ban, a decluttering card miatt, hogy ne legyenek ismétlések és mindent csak 1 helyen kelljen kijavítani. Bár így is van ismétlés, de azt később még javítva lesz. A _template_-k includolása után kettéosztjuk a felületet _custom:grid-layout_-tal, majd mivel vannak a felületen plusz gombok, így az egészet egy _horizontal-stack_ kártyában helyeztem el. utána már jöhet is a _floorplan_ kártya kialakítása.
+A teljes kódot _yaml_ fájlban írtam, megtalálható a [repo](/floorplan.yaml)-ban, a streamline és decluttering card-ok segítségével, hogy ne legyenek ismétlések és mindent csak 1 helyen kelljen kijavítani, illetve a mobil nézetben is fel lehesenn használni mindent. Így szinte minimális az olyan kód amit ha módosítani kell akkor azt több helyen kelljen megtenni. A _template_-k includolása után kettéosztjuk a felületet _custom:mod-card_-dal, majd mivel vannak a felületen plusz gombok, így az egészet egy _horizontal-stack_ kártyában helyeztem el. A kód végén jöhet is a _floorplan_ kártya kialakítása.
 ```
 - type: custom:floorplan-card
-  style: |
-    ha-card {
-        max-width: 100%;
-        margin: 0 auto;
-        background: none;
+  full_height: true
+  card_mod:
+    style: |
+      :host {
+        position: absolute !important;
+        top: 0;
+        margin: 0px !important;
+        padding: 0px !important;
+        height: 100%;
+        width: calc(var(--base-w) * 0.67) !important;
+        left: calc(50% - (var(--base-w) / 2) + (var(--base-w) * 0.33)) !important; /* 50vw helyett 50% */
+      }
+      ha-card {
+        background: transparent;
         box-shadow: none;
-    }
+      }
   config:
     image: /local/floorplan/House_2023_optimized.svg
     stylesheet: /local/floorplan/House_2023.css
@@ -96,9 +105,9 @@ A teljes kódot _yaml_ fájlban írtam, megtalálható a [repo](/floorplan.yaml)
 Ahhoz, hogy az értékek úgy nézzenek ki mintha a falon lennének a _css_ fájl lesz a segítségre, itt lehet a szint az árnyékot és a transzformáció megadni, nem kell aggódni, elsőre elég nehéz eltalálni hogyan kellen forgatni a szöveget, de a böngészőben _F12_ gombra megnyílik a szerkesztés és ott finomíthatunk rajta végül csak az értékeket kell átírni a _css_ fájlban:
 ```
 g#sensors text {
-  fill: #ffffff26;
+  fill: rgba(240, 243, 255, 0.15);
   position: fixed;
-  text-shadow: 2px 2px #191919;
+  text-shadow: 2px 2px rgb(0, 0, 0);
 }
 
 g#nappali text {
@@ -122,12 +131,14 @@ Következnek az entitások és a további szenzorok, itt állapottól függően 
 ```
 Például ha elérhetetlen egy eszköz akkor az piros körvonallal jelezze.
 ```
-g#entities .entities.entity-state-unavailable {
-  stroke: #ff000087;
+g#entities .entities.entity-state-unavailable,
+g#entities .motion.window-unavailable,
+g#entities .motion.door-unavailable {
+  stroke: rgba(255, 97, 116, 0.53);
   stroke-width: 2px;
 }
 ```
-Csak a képzelet szab határt, hogy mit hogyan szeretnénk jelezni a felületen, jó pár variáció van az én configomban is, amúgy a _css_ részét én sem vágom annyira, de vagy találok segítséget vagy valahol a neten van hozzá infó.
+Csak a képzelet szab határt, hogy mit hogyan szeretnénk jelezni a felületen, jó pár variáció van az én configomban is, amúgy a _css_ részét én sem vágom annyira, de vagy találok segítséget vagy valahol a neten van hozzá infó esetleg az AI tud segíteni, bár sokszor csak jó pár variáció után lesz tökéletes a válasz.
 Most pedig jöjjön a világítás, ahhoz hogy a lámpánk színe és erőssége a felületen is megjelenjen az alábbi kódot kell használni, figyelve a stílus formázásra, mert máshogy nekem sem akarta elfogadni. Nem probléma ha nem minden lámpa tud fényerőt vagy színt váltani attól még ugyanúgy fel lehet itt őket sorolni nem fog  hibát okozni.
 ```
 - name: Fények 2
@@ -139,7 +150,7 @@ Most pedig jöjjön a világítás, ahhoz hogy a lámpánk színe és erőssége
     - light.halo_main
     - light.nappali_asztali_lampa
     - light.aroma_diffuser_nightlight
-  tap_action:
+  double_tap_action:
     action: toggle
   state_action:
     action: call-service
@@ -170,23 +181,23 @@ Most pedig jöjjön a világítás, ahhoz hogy a lámpánk színe és erőssége
             saturate(calc( ${sat}% * 2 ))
             brightness(calc( ${entity.attributes.brightness} / 255));`
 ``` 
-Ott ahol lehet vezérelni a fényerőt vagy a színt ott nem csak a *tap_action* van használva hanem *hold_action* is, hogy a vezérlő elemeket elő lehessen hozni. Mivel elég hosszú a kód és nagyon sok hasonló információ van bennük így mindent nem írok ide részletesen csak a legfontosabbakat.
-Most lássuk hogyan is néz ki egy falugró ablak hívás, a _content_ részen belül lehet akár _include_-ot is csinálni vagy amit szeretnénk, ha nem vagyunk benne biztosan inkább szerkesszük meg egy másik _yaml_-ben vagy kattintgassuk össze és a kódot ide beillesztve működni fog.
+Ott ahol lehet vezérelni a fényerőt vagy a színt ott nem csak a *double_tap_action* van használva hanem *hold_action* is, hogy a vezérlő elemeket elő lehessen hozni. Mivel az új verzióban a _bubble card_-ot használom így ez a rész nagyon leegyszerűsödött.
+
 ```
-- name: Törölköző szárító
-  entity: switch.sonoff_furdoszoba_futes
-  tap_action: toggle
+- name: Fények 3
+  entities: 
+    - light.kamra_main
+    - light.wc_main
+    - light.nappali_asztali_lampa
   hold_action:
-    action: fire-dom-event
-    browser_mod:
-      service: browser_mod.popup
-      data:
-        style: *browser_mod
-        content:
-          type: custom:decluttering-card
-          template: mushroom_number_template
-          variables:
-            - entity: input_number.furdoszoba_futes
+    action: navigate
+    navigation_path: "#${entity.entity_id}"
+- name: Párásító
+  entity: fan.aroma_diffuser
+  tap_action:
+    action: navigate
+    navigation_path: "#parasitas"
+
 ```
 Ami sok gondot okozott a tablet visszajelzés, ott ugye a töltés és ha esetleg be van kapcsolva a tablet azt is szükséges jelezni, bár egyszerre két animáció nem fog megjelenni, de alapból amíg töltött addig nem tudta jelezni, hogy most épp be van kapcsolva vagy nincs a tablet képernyő, illetve fordítva, de sikerült megoldani. Itt azt is meg lehet nézni hogy _element_ van használva, mivel két külön entitást kell figyelni.
 ```
@@ -214,19 +225,84 @@ Ami sok gondot okozott a tablet visszajelzés, ott ugye a töltés és ha esetle
 
       return classes.join(' ');
 ```
-Az alábbi kóddal lettek elhelyezve a felületen az extra gombok, mivel itt egyenlőre nem sikerült olyan megoldást találni, hogy bármilyen felbontáson ugyan oda helyezze el a gombokat itt a tablet felületén kellett nézni, hogy a pozíció megfelelő-e.
+Az alábbi kóddal lettek elhelyezve a felületen az extra gombok, ami AI segítségével lett megoldva így már a mobitoron is jó helyre kerülnek a gombok ha elég nagy a felbonás.
 ```
-- type: custom:mod-card
+- type: horizontal-stack
   card_mod:
     style: |
       :host {
-        transform: translate( 0, 0 );
-        top: 310px;
-        right: 655px;
-        position: absolute;
-        width: 75px;
+        position: relative !important; /* Teljes képernyős rögzítés */
+        width: 100% !important;
+        height: calc(100vh - var(--header-height, 0px)) !important; /* Levonjuk a felső sáv magasságát, ha van */
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        justify-content: center !important; /* MONITORON EZ HÚZZA KÖZÉPRE AZ EGÉSZET */
+        
+        /* Alapértelmezett méret (a 16:10-es tableted felbontása) */
+        --base-w: 100vw;
       }
-  card:
-    type: vertical-stack
-    cards:
+      
+      /* HA A MONITOR SZÉLESEBB MINT A TABLET (16:10 felett, pl. 16:9-es monitor) */
+      @media (min-aspect-ratio: 16/10) {
+        :host {
+          /* Monitoron a sávok miatti valós magassághoz igazítjuk a virtuális szélességet */
+          --base-w: calc((100vh - var(--header-height, 0px)) * 1.6);
+        }
+        /* A horizontal-stack belső konténerét is rákényszerítjük a fix szélességre */
+        #root {
+          width: var(--base-w) !important;
+          max-width: var(--base-w) !important;
+          height: 100% !important;
+          display: flex !important;
+        }
+      }
+  cards:
+    # --- 1. ELEM: A SIDEBAR (A horizontal-stack bal oldala) ---
+    - !include lovelace/sidebar-new.yaml
+    - !include lovelace/popup-new.yaml
+    # --- 2. ELEM: PERSON CARDOK (Sima mod-card, ami egy darab horizontal-stack-et tartalmaz) ---
+    - type: custom:mod-card
+      card_mod:
+        style: |
+          :host {
+            /* FIXED helyett ABSOLUTE, és a top-ot a relative szülőhöz mérjük, így a felső sáv nem tolja rá a floorplanre */
+            position: absolute !important;
+            top: 10px !important; 
+            margin: 0px !important;
+            padding: 0px !important;
+            z-index: 4 !important;
+            
+            width: calc(var(--base-w) * 0.21) !important;
+            /* Nem a 50vw-ből (képernyő közép), hanem a konténer közepéből számolunk (50%), így a bal oldali HA sáv sem húzza el */
+            left: calc(50% - (var(--base-w) / 2) + (var(--base-w) * 0.53)) !important;
+          }
+      card:
+        type: horizontal-stack
+        cards:
+          - type: custom:streamline-card
+            template: tablet_person_template
+            variables:
+              - entity: person.hunyadvari_zoltan
+              - navigation_path: "#zoli"
+          - type: custom:streamline-card
+            template: tablet_person_template
+            variables:
+              - entity: person.szakacs_katalin
+              - navigation_path: "#kata"
+    # --- 3. ELEM: BUBBLE GOMBOK (Sima mod-card, ami egy darab vertical-stack-et tartalmaz) ---
+    - type: custom:mod-card
+      card_mod:
+        style: |
+          :host {
+            position: absolute !important; /* FIXED HELYETT ABSOLUTE */
+            margin: 0px !important;
+            padding: 0px !important;
+            z-index: 4 !important;
+            
+            width: calc(var(--base-w) * 0.06) !important; 
+            left: calc(50% - (var(--base-w) / 2) + (var(--base-w) * 0.34)) !important; /* 50vw helyett 50% */
+            
+            top: calc(var(--base-w) * 0.29) !important;
+          }
 ```

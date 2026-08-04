@@ -1,0 +1,136 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    card_type: button
+    button_type: switch
+    entity: switch.hipad_xpro_mozgaserzekeles
+    show_name: true
+    show_state: true
+    styles: |
+      .bubble-sub-button-1 > ha-icon {
+          color: var(${hass.states['sensor.tablet_wi_fi_connection'].state === '"MiciMacko 2,4GHz"' ?
+          '--success-color' : hass.states['sensor.tablet_wi_fi_connection'].state === '<not connected>' ?
+          '--error-color' : '--warning-color'}) !important;
+        }
+      }
+      .bubble-sub-button-2 > ha-icon {
+          color: var(${hass.states['sensor.hipad_xpro_battery_level'].state > 50 ?
+          '--success-color' : hass.states['sensor.hipad_xpro_battery_level'].state > 20 ?
+          '--warning-color' : '--error-color'}) !important;
+        }
+      }
+      .bubble-sub-button-3 > ha-icon {
+          color: var(${hass.states['binary_sensor.tablet_mqtt_connected'].state === 'on' ?
+          '--success-color' : '--error-color'}) !important;
+        }
+      }
+      ${icon.setAttribute("icon",
+      hass.states[[[entity]]].state === 'off' ? 'mdi:motion-sensor-off' : 'mdi:motion-sensor')}
+
+    sub_button:
+      main:
+        - entity: sensor.tablet_wi_fi_connection
+          state_background: false
+          show_attribute: false
+          <<: &none
+            - tap_action:
+                action: none
+        - entity: sensor.hipad_xpro_battery_level
+          state_background: false
+          show_state: true
+          <<: *none
+        - entity: binary_sensor.tablet_mqtt_connected
+          state_background: false
+          show_attribute: false
+          <<: *none
+      bottom:
+        - name: Group 3
+          buttons_layout: inline
+          group:
+            - entity: sensor.hipad_xpro_tablet_uptime
+              show_state: true
+              show_name: true
+              state_background: false
+              show_background: false
+              <<: *none
+        - name: Group 1
+          buttons_layout: inline
+          group:
+            - entity: number.hipad_xpro_kepernyo_fenyereje
+              show_state: true
+              <<: *none
+              sub_button_type: slider
+              slider_fill_orientation: left
+              slider_value_position: right
+              tap_to_slide: true
+      bottom_layout: rows
+    rows: 2.094
+  - type: picture-entity
+    show_state: false
+    show_name: false
+    camera_view: auto
+    fit_mode: cover
+    entity: camera.hipad_xpro
+    camera_image: camera.hipad_xpro
+    tap_action:
+      action: none
+    visibility:
+      - condition: state
+        entity: switch.hipad_xpro_mozgaserzekeles
+        state: "on"
+  - type: custom:streamline-card
+    template: sensor_template
+    variables:
+      - entity_1: sensor.tablet_battery_temperature
+      - entity_2: sensor.tablet_used_memory
+      - entity_3: sensor.tablet_app_used_memory
+      - tap_action:
+          action: navigate
+          navigation_path: "#tablet_stat"
+  - type: custom:bubble-card
+    card_type: button
+    button_type: state
+    entity: binary_sensor.joan_1_health_status
+    show_name: true
+    show_state: true
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+    button_action:
+      tap_action:
+        action: none
+      hold_action:
+        action: none
+    styles: |
+      .bubble-sub-button-1 > ha-icon {
+          color: var(${hass.states['sensor.joan_1_battery'].state > 50 ?
+          '--success-color' : hass.states['sensor.joan_1_battery'].state > 20 ?
+          '--warning-color' : '--error-color'}) !important;
+        }
+      }
+      .bubble-sub-button-2 > ha-icon {
+          color: var(${hass.states['binary_sensor.joan_1_online'].state === 'on' ?
+          '--success-color' : '--error-color'}) !important;
+        }
+      }
+    sub_button:
+      main:
+        - entity: sensor.joan_1_battery
+          state_background: false
+          show_state: true
+          <<: *none
+        - entity: binary_sensor.joan_1_online
+          state_background: false
+          show_attribute: false
+          <<: *none
+      bottom: []
+  - type: custom:streamline-card
+    template: sensor_template
+    variables:
+      - entity_1: sensor.joan_1_temperature
+      - entity_2: sensor.joan_1_wi_fi_signal_strength
+      - entity_3: sensor.joan_1_used_storage
+      - tap_action:
+          action: navigate
+          navigation_path: "#joan_stat"

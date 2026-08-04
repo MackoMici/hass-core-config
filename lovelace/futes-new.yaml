@@ -1,0 +1,74 @@
+type: vertical-stack
+cards:
+  - type: custom:bubble-card
+    entity: climate.honeywell_home_termosztat
+    tap_action:
+      action: none
+    button_action:
+      tap_action:
+        action: none
+      hold_action:
+        action: none
+    card_layout: large
+    show_name: true
+    icon: mdi:thermostat-auto
+    show_icon: true
+    card_type: button
+    button_type: state
+    styles: |
+      .bubble-icon {
+        color: ${ hass.states[[[entity]]].attributes.hvac_action === 'heating' ? "orange" : "" } !important;
+      }
+
+      ${icon.setAttribute("icon",
+      hass.states['input_boolean.futes_manualis_vezerles'].state === 'on' ?
+      'mdi:thermostat' : 'mdi:thermostat-auto')}
+
+      ${card.querySelector('.bubble-state').innerText = 
+      hass.states[[[entity]]].attributes.hvac_action === 'off' ? 'Az aktuális hőmérséklet ' +
+      (hass.states[[[entity]]].attributes.current_temperature) + '°C' :
+      'A kívánt hőmérséklet ' + (hass.states[[[entity]]].attributes.temperature) + '°C' }
+
+      ${card.querySelector('.bubble-name').innerText = "A kazán jelenleg " +
+      (hass.states[[[entity]]].attributes.hvac_action === 'heating' ? 'fűt.'
+      : hass.states[[[entity]]].attributes.hvac_action === 'idle' ? 'tétlen.' : 'ki van kapcsolva.') }
+    sub_button:
+      main:
+        - entity: input_boolean.elofutes
+          tap_action:
+            action: toggle
+        - entity: input_boolean.futes_manualis_vezerles
+          tap_action:
+            action: toggle
+        - icon: mdi:thermostat-cog
+          tap_action:
+            action: navigate
+            navigation_path: "#heating"
+          show_background: true
+          state_background: false
+          show_icon: true
+          show_name: false
+      bottom: []
+  - type: custom:bubble-card
+    card_type: climate
+    sub_button:
+      main:
+        - name: HVAC modes menu
+          select_attribute: hvac_modes
+          state_background: false
+          show_arrow: false
+          sub_button_type: select
+          hide_when_parent_unavailable: false
+      bottom: []
+    entity: climate.honeywell_home_termosztat
+    state_color: false
+    hide_temperature: false
+    tap_action:
+      action: none
+    main_buttons_position: bottom
+    rows: 1.719
+    visibility:
+      - condition: state
+        entity: input_boolean.futes_manualis_vezerles
+        state: "on"
+    show_state: true

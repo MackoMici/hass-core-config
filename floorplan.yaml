@@ -1,27 +1,207 @@
+streamline_templates: !include lovelace/streamline_templates.yaml
 decluttering_templates: !include lovelace/decluttering_templates.yaml
-apexcharts_card_templates: !include lovelace/apexcharts_card_templates.yaml
 
 views:
-  - type: custom:grid-layout
-    layout:
-      grid-gap: var(--custom-layout-card-padding)
-      grid-template-columns: 32% auto
-      grid-template-areas: |
-        "sidebar floorplan"
+  - panel: true
     badges: []
     cards:
       - type: horizontal-stack
-        view_layout:
-          grid-arena: floorplan
+        card_mod:
+          style: |
+            :host {
+              position: relative !important; /* Teljes képernyős rögzítés */
+              width: 100% !important;
+              height: calc(100vh - var(--header-height, 0px)) !important; /* Levonjuk a felső sáv magasságát, ha van */
+              margin: 0 !important;
+              padding: 0 !important;
+              display: flex !important;
+              justify-content: center !important; /* MONITORON EZ HÚZZA KÖZÉPRE AZ EGÉSZET */
+              
+              /* Alapértelmezett méret (a 16:10-es tableted felbontása) */
+              --base-w: 100vw;
+            }
+            
+            /* HA A MONITOR SZÉLESEBB MINT A TABLET (16:10 felett, pl. 16:9-es monitor) */
+            @media (min-aspect-ratio: 16/10) {
+              :host {
+                /* Monitoron a sávok miatti valós magassághoz igazítjuk a virtuális szélességet */
+                --base-w: calc((100vh - var(--header-height, 0px)) * 1.6);
+              }
+              /* A horizontal-stack belső konténerét is rákényszerítjük a fix szélességre */
+              #root {
+                width: var(--base-w) !important;
+                max-width: var(--base-w) !important;
+                height: 100% !important;
+                display: flex !important;
+              }
+            }
         cards:
-          - type: custom:floorplan-card
+          # --- 1. ELEM: A SIDEBAR (A horizontal-stack bal oldala) ---
+          - !include lovelace/sidebar-new.yaml
+          - !include lovelace/popup-new.yaml
+          # --- 2. ELEM: PERSON CARDOK (Sima mod-card, ami egy darab horizontal-stack-et tartalmaz) ---
+          - type: custom:mod-card
             card_mod:
               style: |
+                :host {
+                  /* FIXED helyett ABSOLUTE, és a top-ot a relative szülőhöz mérjük, így a felső sáv nem tolja rá a floorplanre */
+                  position: absolute !important;
+                  top: 10px !important; 
+                  margin: 0px !important;
+                  padding: 0px !important;
+                  z-index: 4 !important;
+                  
+                  width: calc(var(--base-w) * 0.21) !important;
+                  /* Nem a 50vw-ből (képernyő közép), hanem a konténer közepéből számolunk (50%), így a bal oldali HA sáv sem húzza el */
+                  left: calc(50% - (var(--base-w) / 2) + (var(--base-w) * 0.53)) !important;
+                }
+            card:
+              type: horizontal-stack
+              cards:
+                - type: custom:streamline-card
+                  template: tablet_person_template
+                  variables:
+                    - entity: person.hunyadvari_zoltan
+                    - navigation_path: "#zoli"
+                - type: custom:streamline-card
+                  template: tablet_person_template
+                  variables:
+                    - entity: person.szakacs_katalin
+                    - navigation_path: "#kata"
+          # --- 3. ELEM: BUBBLE GOMBOK (Sima mod-card, ami egy darab vertical-stack-et tartalmaz) ---
+          - type: custom:mod-card
+            card_mod:
+              style: |
+                :host {
+                  position: absolute !important; /* FIXED HELYETT ABSOLUTE */
+                  margin: 0px !important;
+                  padding: 0px !important;
+                  z-index: 4 !important;
+                  
+                  width: calc(var(--base-w) * 0.06) !important; 
+                  left: calc(50% - (var(--base-w) / 2) + (var(--base-w) * 0.34)) !important; /* 50vw helyett 50% */
+                  
+                  top: calc(var(--base-w) * 0.29) !important;
+                }
+            card:
+              type: vertical-stack
+              cards:
+                - type: custom:bubble-card
+                  card_type: button
+                  button_type: name
+                  sub_button:
+                    main: []
+                    bottom: []
+                  scrolling_effect: false
+                  show_name: false
+                  icon: mdi:information
+                  layout: vertical
+                  styles: &style |
+                    .bubble-button-card-container {
+                      background: none;
+                    }
+                  tap_action:
+                    action: navigate
+                    navigation_path: "#system"
+                - type: custom:bubble-card
+                  card_type: button
+                  button_type: name
+                  sub_button:
+                    main: []
+                    bottom: []
+                  scrolling_effect: false
+                  show_name: false
+                  icon: mdi:battery-alert
+                  layout: vertical
+                  styles: |
+                    .bubble-button-card-container {
+                      background: none;
+                    }
+                    .bubble-icon-container {
+                      background-color: ${hass.states['binary_sensor.elemek'].state === 'on' ? 'var(--warning-color)' : 'var(--success-color)'} !important;
+                    }
+                  tap_action:
+                    action: navigate
+                    navigation_path: "#batterys"
+                - type: custom:bubble-card
+                  card_type: button
+                  button_type: name
+                  sub_button:
+                    main: []
+                    bottom: []
+                  scrolling_effect: false
+                  show_name: false
+                  icon: mdi:alert
+                  layout: vertical
+                  styles: |
+                    .bubble-button-card-container {
+                      background: none;
+                    }
+                    .bubble-icon-container {
+                      background-color: ${hass.states['sensor.alert2_on_unacked_count'].state > 0 ? 'var(--warning-color)' : 'var(--success-color)'} !important;
+                    }
+                  tap_action:
+                    action: navigate
+                    navigation_path: "#alert2"
+                - type: custom:bubble-card
+                  card_type: button
+                  button_type: name
+                  sub_button:
+                    main: []
+                    bottom: []
+                  scrolling_effect: false
+                  show_name: false
+                  icon: mdi:leaf
+                  layout: vertical
+                  tap_action:
+                    action: navigate
+                    navigation_path: "#leaf"
+                  styles: |
+                    .bubble-button-card-container {
+                      background: none;
+                    }
+                    .bubble-icon-container {
+                      background-color: ${hass.states['sensor.noveny_problema'].state > 0 ? 'var(--warning-color)' : 'var(--success-color)'} !important;
+                    }
+                - type: custom:bubble-card
+                  card_type: button
+                  button_type: name
+                  sub_button:
+                    main: []
+                    bottom: []
+                  scrolling_effect: false
+                  show_name: false
+                  icon: mdi:robot-vacuum
+                  layout: vertical
+                  styles: *style
+                - type: custom:bubble-card
+                  card_type: button
+                  button_type: name
+                  sub_button:
+                    main: []
+                    bottom: []
+                  scrolling_effect: false
+                  show_name: false
+                  icon: mdi:pine-tree
+                  layout: vertical
+                  styles: *style
+          # --- FLOORPLAN CARD ---
+          - type: custom:floorplan-card
+            full_height: true
+            card_mod:
+              style: |
+                :host {
+                  position: absolute !important;
+                  top: 0;
+                  margin: 0px !important;
+                  padding: 0px !important;
+                  height: 100%;
+                  width: calc(var(--base-w) * 0.67) !important;
+                  left: calc(50% - (var(--base-w) / 2) + (var(--base-w) * 0.33)) !important; /* 50vw helyett 50% */
+                }
                 ha-card {
-                  max-width: 100%;
-                  margin: 0 auto;
-                  background: none;
-                  border: none;
+                  background: transparent;
+                  box-shadow: none;
                 }
             config:
               image: /local/floorplan/House_2023_optimized.svg
@@ -111,7 +291,7 @@ views:
                   - light.szoba_main
                   - light.nappali_asztali_lampa
                   - light.aroma_diffuser_nightlight
-                tap_action:
+                double_tap_action:
                   action: toggle
                 state_action:
                   action: call-service
@@ -146,70 +326,38 @@ views:
                   - light.kamra_main
                   - light.wc_main
                   - light.nappali_asztali_lampa
-                hold_action: more-info
+                hold_action:
+                  action: navigate
+                  navigation_path: "#${entity.entity_id}"
               - name: Párásító
                 entity: fan.aroma_diffuser
                 tap_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    service: browser_mod.popup
-                    data:
-                      style: &browser_mod
-                        |
-                        --popup-border-width: var(--ha-card-border-width);
-                        --popup-border-radius: var(--ha-card-border-radius);
-                      content:
-                        type: custom:layout-card
-                        layout_type: custom:grid-layout
-                        cards:
-                          - !include lovelace/parasitas.yaml
+                  action: navigate
+                  navigation_path: "#parasitas"
               - name: Törölköző szárító
                 entity: switch.sonoff_furdoszoba_futes
                 tap_action: toggle
                 hold_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    service: browser_mod.popup
-                    data:
-                      style: *browser_mod
-                      content:
-                        type: custom:decluttering-card
-                        template: mushroom_number_template
-                        variables:
-                          - entity: input_number.furdoszoba_futes
+                  action: navigate
+                  navigation_path: "#timer"
               - name: Szellőztetés
                 entity: switch.sonoff_furdo_szelloztetes
                 tap_action: toggle
               - name: Tv
                 entity: media_player.samsung_q80_series_65
                 tap_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    service: browser_mod.popup
-                    data:
-                      style: *browser_mod
-                      content:
-                        type: vertical-stack
-                        cards:
-                          !include lovelace/tv.yaml
+                  action: navigate
+                  navigation_path: "#tv"
+              - name: Illatosító
+                entity: switch.sonoff_illatosito
+                tap_action:
+                  action: navigate
+                  navigation_path: "#illatosito"
               - name: Klíma
                 entity: climate.gree_klima
                 tap_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    service: browser_mod.popup
-                    data:
-                      style: &browser_mod_1080
-                        |
-                        --popup-min-width: 1080px;
-                        --popup-border-width: var(--ha-card-border-width);
-                        --popup-border-radius: var(--ha-card-border-radius);
-                      content:
-                        type: custom:layout-card
-                        layout_type: custom:grid-layout
-                        cards:
-                          - !include lovelace/klima.yaml
-                          - !include lovelace/grafikon.yaml
+                  action: navigate
+                  navigation_path: "#klima"
               - name: Tablet
                 entities:
                   - switch.hipad_xpro_kepernyo
@@ -221,284 +369,24 @@ views:
                   service_data: |
                     >
                     let classes = [];
-
                     if (entities['binary_sensor.hipad_xpro_csatlakoztatva'].state === 'on')
                       classes.push('charging charge-state-on');
                     else
                       classes.push('charging charge-state-off')
-
                     if (entities['switch.hipad_xpro_kepernyo'].state === 'on')
                       classes.push('entities entity-state-on');
                     else
                       classes.push('entities entity-state-off');
-
                     return classes.join(' ');
                 tap_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    service: browser_mod.popup
-                    data:
-                      style: *browser_mod_1080
-                      content:
-                        !include lovelace/tablet.yaml
+                  action: navigate
+                  navigation_path: "#tablet"
               - name: Fűtés
                 entity: climate.honeywell_home_termosztat
                 tap_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    service: browser_mod.popup
-                    data:
-                      style: *browser_mod
-                      content:
-                        type: custom:layout-card
-                        layout_type: custom:grid-layout
-                        cards:
-                          - !include lovelace/futes.yaml
-                          - !include lovelace/grafikon.yaml
-                hold_action:
-                  action: fire-dom-event
-                  browser_mod:
-                    service: browser_mod.popup
-                    data:
-                      style: *browser_mod
-                      content:
-                        type: custom:layout-card
-                        layout_type: custom:grid-layout
-                        cards:
-                          - !include lovelace/schedule.yaml
+                  action: navigate
+                  navigation_path: "#futes"
                 state_action:
                   action: call-service
                   service: floorplan.class_set
                   service_data: entities entity-state-${entity.attributes.hvac_action}
-          - type: custom:mod-card
-            card_mod:
-              style: |
-                :host {
-                  transform: translate( 0, 0 );
-                  top: calc( var(--header-height) + 10px );
-                  right: 350px;
-                  position: absolute;
-                  width: 175px;
-                }
-            card:
-              type: horizontal-stack
-              cards:
-                - type: custom:decluttering-card
-                  template: person_template
-                  variables:
-                    - entity_person: person.hunyadvari_zoltan
-                    - background_url: /local/person/zoolesz.png
-                    - icon_person: mdi:face-man
-                    - entity_wifi: sensor.sm_a536b_wifi_connection
-                    - find_service: notify.mobile_app_sm_a536b
-                    - entity_battery: sensor.sm_a536b_battery_level
-                    - entity_device: device_tracker.sm_a536b
-                - type: custom:decluttering-card
-                  template: person_template
-                  variables:
-                    - entity_person: person.szakacs_katalin
-                    - background_url: /local/person/kata.png
-                    - icon_person: mdi:face-woman
-                    - entity_wifi: sensor.sm_a336b_wifi_connection
-                    - find_service: notify.mobile_app_sm_a336b
-                    - entity_battery: sensor.sm_a336b_battery_level
-                    - entity_device: device_tracker.sm_a336b
-          - type: custom:mod-card
-            card_mod:
-              style: |
-                :host {
-                  transform: translate( 0, 0 );
-                  top: 310px;
-                  right: 655px;
-                  position: absolute;
-                  width: 75px;
-                }
-            card:
-              type: vertical-stack
-              cards:
-                - type: custom:mushroom-template-card
-                  card_mod: &background_none
-                    style: |
-                      ha-card {
-                        background: none;
-                        box-shadow: none;
-                        border: none;
-                      }
-                  primary: ''
-                  secondary: ''
-                  icon: mdi:information-outline
-                  layout: vertical
-                  tap_action:
-                    action: fire-dom-event
-                    browser_mod:
-                      service: browser_mod.popup
-                      data:
-                        style: *browser_mod_1080
-                        content:
-                          type: custom:layout-card
-                          layout_type: custom:grid-layout
-                          layout:
-                            grid-template-columns: 25% 25% 25% 25%
-                            grid-template-rows:  auto
-                            grid-template-areas: |
-                              "HA Debian Network Tablet"
-                              "Grafikon Grafikon Grafikon Grafikon"
-                          cards:
-                            !include lovelace/system2.yaml
-                - type: custom:mushroom-template-card
-                  card_mod: *background_none
-                  primary: ''
-                  secondary: ''
-                  icon: mdi:robot-vacuum
-                  layout: vertical
-                  tap_action:
-                    action: fire-dom-event
-                    browser_mod:
-                      service: browser_mod.popup
-                      data:
-                        style: *browser_mod
-                        content:
-                          type: vertical-stack
-                          cards:
-                            !include lovelace/vacuum.yaml
-                - type: custom:mushroom-template-card
-                  card_mod: 
-                    style: |
-                      ha-card {
-                        box-shadow: none;
-                        background: none;  
-                        border: none;            
-                      }            
-                      ha-state-icon:after {
-                        {% if states('plant.new_zealand_spinach')  == "problem" %}
-                          content: "{{ states('sensor.noveny_problema') }}";
-                        {% endif %}
-                        background: rgb(var(--rgb-red-color));
-                        color: var(--card-background-color);
-                        position: absolute;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        font-weight: bolder;
-                        border-radius: 50%;
-                        top: -5px;
-                        right: -5px;
-                        width: 18px;
-                        height: 18px;
-                        font-size: 8px;
-                      }
-                  primary: ''
-                  secondary: ''
-                  icon: mdi:leaf
-                  icon_color: |
-                    {% if states(entity) == 'problem' %}
-                      var(--rgb-red-color)
-                    {% else %}
-                      var(--rgb-green-color)
-                    {% endif %}
-                  layout: vertical
-                  entity: plant.new_zealand_spinach
-                  tap_action:
-                    action: fire-dom-event
-                    browser_mod:
-                      service: browser_mod.popup
-                      data:
-                        style: *browser_mod
-                        content:
-                          type: vertical-stack
-                          cards:
-                            !include lovelace/novenyek.yaml
-                - type: custom:mushroom-template-card
-                  card_mod: *background_none
-                  primary: ''
-                  secondary: ''
-                  icon: mdi:pine-tree
-                  layout: vertical
-                  tap_action:
-                    action: fire-dom-event
-                    browser_mod:
-                      service: browser_mod.popup
-                      data:
-                        style: *browser_mod_1080
-                        content:
-                          type: vertical-stack
-                          cards:
-                            !include lovelace/karacsony.yaml
-                - type: custom:mushroom-template-card
-                  card_mod: 
-                    style: |
-                      ha-card {
-                        box-shadow: none;
-                        background: none;      
-                        border: none;        
-                      }            
-                      ha-state-icon:after {
-                        {% if states('sensor.devices_with_low_battery') | int > 0 %}
-                          content: "{{ states('sensor.devices_with_low_battery') }}";
-                        {% endif %}
-                        background: rgb(var(--rgb-red-color));
-                        color: var(--card-background-color);
-                        position: absolute;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        font-weight: bolder;
-                        border-radius: 50%;
-                        top: -5px;
-                        right: -5px;
-                        width: 18px;
-                        height: 18px;
-                        font-size: 8px;
-                      }
-                  primary: ''
-                  secondary: ''
-                  icon: mdi:battery-alert
-                  icon_color: |
-                    {% if states(entity) | int > 0 %}
-                      var(--rgb-red-color)
-                    {% endif %}
-                  entity: sensor.devices_with_low_battery
-                  layout: vertical
-                  tap_action:
-                    action: fire-dom-event
-                    browser_mod:
-                      service: browser_mod.popup
-                      data:
-                        style: *browser_mod
-                        content:
-                            !include lovelace/battery.yaml
-                  hold_action:
-                    action: fire-dom-event
-                    browser_mod:
-                      service: browser_mod.popup
-                      data:
-                        style: *browser_mod
-                        content:
-                          type: custom:mushroom-number-card
-                          tap_action: none
-                          hold_action: none
-                          doubletap_action: none
-                          entity: input_number.battery_threshold
-                  double_tap_action: none
-      - type: custom:popup-card
-        entity: light.kamra_main
-        card:
-          type: custom:decluttering-card
-          template: mushroom_light_template
-          variables:
-            - entity: light.kamra_main
-      - type: custom:popup-card
-        entity: light.wc_main
-        card:
-          type: custom:decluttering-card
-          template: mushroom_light_template
-          variables:              
-            - entity: light.wc_main
-      - type: custom:popup-card
-        entity: light.nappali_asztali_lampa
-        card:
-          type: custom:decluttering-card
-          template: mushroom_light_template
-          variables:              
-            - entity: light.nappali_asztali_lampa
-      - !include  lovelace/sidebar.yaml
